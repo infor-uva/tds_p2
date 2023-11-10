@@ -17,6 +17,11 @@ package uva.tds.practica2_grupo6;
  */
 public class Billete {
 
+	private String localizador;
+	private Recorrido recorrido;
+	private Usuario usuario;
+	private String estado;
+
 	/**
 	 * @param localizador
 	 * @param recorrido
@@ -29,33 +34,48 @@ public class Billete {
 	 *                                  "reservado"
 	 */
 	public Billete(String localizador, Recorrido recorrido, Usuario usuario, String estado) {
+		if (recorrido == null)
+			throw new NullPointerException("Recorrido no puede ser null");
+		if (usuario == null)
+			throw new NullPointerException("Usuario no puede ser null");
+		if (estado == null)
+			throw new NullPointerException("Estado no puede ser null");
+		if (localizador.length() < 1 || localizador.length() > 8)
+			throw new IllegalArgumentException("Localizador tiene que tener entre 1 y 8 caracteres");
+		if (!estado.equals("comprado") && !estado.equals("reservado"))
+			throw new IllegalArgumentException("Estado tiene que ser 'comprado' o 'reservado' ");
+		this.localizador = localizador;
+		this.recorrido = recorrido;
+		this.usuario = usuario;
+		this.estado = estado;
+
 	}
 
 	/**
-	 * Consult the locator of the ticket
+	 * Consults the locator of the ticket
 	 * 
 	 * @return localizador
 	 */
 	public String getLocalizador() {
-		return null;
+		return localizador;
 	}
 
 	/**
-	 * Consult the route of the ticket
+	 * Consults the route of the ticket
 	 * 
-	 * @return localizador
+	 * @return recorrido
 	 */
 	public Recorrido getRecorrido() {
-		return null;
+		return recorrido;
 	}
 
 	/**
-	 * Consult the user of the ticket
+	 * Consults the user of the ticket
 	 * 
-	 * @return localizador
+	 * @return usuario
 	 */
 	public Usuario getUsuario() {
-		return null;
+		return usuario;
 	}
 
 	/**
@@ -65,18 +85,22 @@ public class Billete {
 	 * <li>Reservado</li>
 	 * </ul>
 	 * 
-	 * @return localizador
+	 * @return estado
 	 */
 	public String getEstado() {
-		return null;
+		return estado;
 	}
 
 	/**
 	 * Set ticket as after booking
 	 * 
-	 * @throws IllegalStateException if the state of the ticket is not Booked
+	 * @throws IllegalStateException if the state of the ticket is not booked
 	 */
 	public void setComprado() {
+		if (!estado.equals("reservado"))
+			throw new IllegalStateException("Ticket tiene que estar reservado");
+		this.estado = "Comprado";
+				
 	}
 
 	/**
@@ -90,6 +114,16 @@ public class Billete {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		return false;
+		if (o == null)
+			throw new NullPointerException("El objeto no puede ser null");
+		// Compruebas que es un objeto billete
+		Billete tmp = (Billete) o;
+		// Comparamos los objetos
+		if(this.localizador.equals(tmp.getLocalizador()) && this.recorrido.equals(tmp.getRecorrido()) &&
+		this.usuario.equals(tmp.getUsuario()) && this.estado.equals(tmp.getEstado()) )
+			return true;
+		else {
+			return false;
+		}
 	}
 }

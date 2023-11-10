@@ -112,7 +112,7 @@ class BilleteTest {
 	@Test
 	void testEstadoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			new Billete("1234567890", recorrido, user, null);
+			new Billete("1234567", recorrido, user, null);
 		});
 	}
 
