@@ -1,0 +1,149 @@
+package uva.tds.practica2_grupo6;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/**
+ * Class dedicated to execute the tests for the methods of the instances of
+ * {@link Usuarios}. In this case the constructor, the getters and equals
+ * methods
+ * 
+ * @author diebomb
+ * 
+ * @author migudel
+ * 
+ * @author hugcubi
+ */
+
+class UsuarioTest {
+
+	private String nif;
+	private String nombre;
+	private Usuario user;
+	private Usuario sameUser;
+	private Usuario differentUser;
+
+	@BeforeEach
+	void setUp() {
+		nif = "32698478E";
+		nombre = "Geronimo";
+		user = new Usuario(nif, nombre);
+		sameUser = new Usuario(nif, nombre);
+		differentUser = new Usuario("ABC12345", nombre);
+	}
+
+	@Test
+	void testConstructorUsuarioValido() {
+		Usuario user = new Usuario("32698478E", "Geronimo");
+		assertEquals("32698478E", user.getNif());
+		assertEquals("Geronimo", user.getNombre());
+	}
+
+	@Test
+	void testConstructorUsuarioNifVacio() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifNull() {
+		assertThrows(NullPointerException.class, () -> {
+			new Usuario(null, "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNombreNull() {
+		assertThrows(NullPointerException.class, () -> {
+			new Usuario("32698478E", null);
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNombreLimiteInferior() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("32698478E", "");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNombreLimiteSuperior() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("32698478E", "GeronimoStiltons");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifLimiteInferiorDigitos() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("3269847E", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifLimiteSuperiorDigitos() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("326984789E", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifSinCaracter() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("3269847", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifInvalido() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("3269847P", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifInvalidoLetraInvalidaI() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("3269847I", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifInvalidoLetraInvalidaO() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("3269847O", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifInvalidoLetraInvalidaÑ() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("3269847Ñ", "Geronimo");
+		});
+	}
+
+	@Test
+	void testConstructorUsuarioNifInvalidoLetraInvalidaU() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Usuario("3269847U", "Geronimo");
+		});
+	}
+
+	@Test
+	void testEqualsValido() {
+		assertTrue(user.equals(user));
+		assertTrue(user.equals(sameUser));
+		assertFalse(user.equals(true));
+		assertFalse(user.equals(differentUser));
+	}
+
+	@Test
+	void testEqualsNoValido() {
+		assertThrows(NullPointerException.class, () -> {
+			user.equals(null);
+		});
+	}
+}
