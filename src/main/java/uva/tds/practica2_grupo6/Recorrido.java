@@ -22,6 +22,50 @@ import java.time.LocalTime;
  */
 public class Recorrido {
 
+	public static final String TRAIN = "train";
+	public static final String BUS = "bus";
+
+	/**
+	 * Identification of the route
+	 */
+	private String id;
+	/**
+	 * The origin of the route (where the route start)
+	 */
+	private String origin;
+	/**
+	 * The destination of the route (where the route ends)
+	 */
+	private String destination;
+	/**
+	 * The transport will be used in the route
+	 */
+	private String transport;
+	/**
+	 * The price of the route
+	 */
+	private double price;
+	/**
+	 * Date of the route
+	 */
+	private LocalDate date;
+	/**
+	 * Time of the route
+	 */
+	private LocalTime time;
+	/**
+	 * Number of seats on the route
+	 */
+	private int totalSeats;
+	/**
+	 * Number of available seats on the route
+	 */
+	private int numAvailableSeats;
+	/**
+	 * Duration in minutes of the route
+	 */
+	private int duration;
+
 	/**
 	 * Constructor
 	 * 
@@ -54,6 +98,50 @@ public class Recorrido {
 	 */
 	public Recorrido(String id, String origin, String destination, String transport, double price, LocalDate date,
 			LocalTime time, int numSeats, int duration) {
+		if (id == null)
+			throw new NullPointerException("id is null");
+		if (id.isEmpty())
+			throw new IllegalArgumentException("id is empty");
+		if (origin == null)
+			throw new NullPointerException("origin is null");
+		if (origin.isEmpty())
+			throw new IllegalArgumentException("origin is empty");
+		if (destination == null)
+			throw new NullPointerException("destination is null");
+		if (destination.isEmpty())
+			throw new IllegalArgumentException("destination is empty");
+		if (origin.equals(destination))
+			throw new IllegalArgumentException("origin and destination are the same");
+		if (transport == null)
+			throw new NullPointerException("transport is null");
+		if (!transport.equals(Recorrido.BUS) && !transport.equals(Recorrido.TRAIN))
+			throw new IllegalArgumentException("transport isn't " + Recorrido.BUS + " or " + Recorrido.TRAIN);
+		if (price < 0)
+			throw new IllegalArgumentException("price is less than 0");
+		if (date == null)
+			throw new NullPointerException("date is null");
+		if (time == null)
+			throw new NullPointerException("time is null");
+		if (numSeats < 1)
+			throw new IllegalArgumentException("numSeats is less than 1");
+		if (numSeats > 50 && transport.equals(Recorrido.BUS))
+			throw new IllegalArgumentException("numSeats is more than the limit of 50 for transport " + Recorrido.BUS);
+		if (numSeats > 250)
+//				&& transport.equals(Recorrido.TRAIN))
+			throw new IllegalArgumentException(
+					"numSeats is more than the limit of 250 for transport " + Recorrido.TRAIN);
+		if (duration <= 0)
+			throw new IllegalArgumentException("duration is equals or less to 0");
+		// Spend 1.5h
+		this.id = id;
+		this.origin = origin;
+		this.destination = destination;
+		this.transport = transport;
+		this.price = price;
+		this.date = date;
+		this.time = time;
+		this.totalSeats = this.numAvailableSeats = numSeats;
+		this.duration = duration;
 	}
 
 	/**
@@ -62,7 +150,7 @@ public class Recorrido {
 	 * @return id
 	 */
 	public String getID() {
-		return null;
+		return id;
 	}
 
 	/**
@@ -71,7 +159,7 @@ public class Recorrido {
 	 * @return origin
 	 */
 	public String getOrigin() {
-		return null;
+		return origin;
 	}
 
 	/**
@@ -80,7 +168,7 @@ public class Recorrido {
 	 * @return destination
 	 */
 	public String getDestination() {
-		return null;
+		return destination;
 	}
 
 	/**
@@ -89,7 +177,7 @@ public class Recorrido {
 	 * @return transport
 	 */
 	public String getTransport() {
-		return null;
+		return transport;
 	}
 
 	/**
@@ -98,7 +186,7 @@ public class Recorrido {
 	 * @return price
 	 */
 	public double getPrice() {
-		return -0.1;
+		return price;
 	}
 
 	/**
@@ -107,7 +195,7 @@ public class Recorrido {
 	 * @return date
 	 */
 	public LocalDate getDate() {
-		return null;
+		return date;
 	}
 
 	/**
@@ -116,7 +204,7 @@ public class Recorrido {
 	 * @return time
 	 */
 	public LocalTime getTime() {
-		return null;
+		return time;
 	}
 
 	/**
@@ -125,7 +213,7 @@ public class Recorrido {
 	 * @return date time of recorrido
 	 */
 	public LocalDateTime getDateTime() {
-		return null;
+		return LocalDateTime.of(date, time);
 	}
 
 	/**
@@ -134,7 +222,7 @@ public class Recorrido {
 	 * @return numAvailableSeats
 	 */
 	public int getNumAvailableSeats() {
-		return 0;
+		return numAvailableSeats;
 	}
 
 	/**
@@ -143,7 +231,7 @@ public class Recorrido {
 	 * @return the
 	 */
 	public int getTotalSeats() {
-		return 0;
+		return totalSeats;
 	}
 
 	/**
@@ -152,7 +240,7 @@ public class Recorrido {
 	 * @return duration
 	 */
 	public int getDuration() {
-		return 0;
+		return duration;
 	}
 
 	/**
@@ -164,6 +252,11 @@ public class Recorrido {
 	 * @throws IllegalStateException if the new date is the already the set
 	 */
 	public void updateDate(LocalDate newDate) {
+		if (newDate == null)
+			throw new NullPointerException("newDate is null");
+		if (date.equals(newDate))
+			throw new IllegalStateException("newDate is the already date");
+		date = newDate;
 	}
 
 	/**
@@ -175,6 +268,11 @@ public class Recorrido {
 	 * @throws IllegalStateException if the new time is the already the set
 	 */
 	public void updateTime(LocalTime newTime) {
+		if (newTime == null)
+			throw new NullPointerException("newTime is null");
+		if (time.equals(newTime))
+			throw new IllegalStateException("newTime is the already date");
+		time = newTime;
 	}
 
 	/**
@@ -186,6 +284,12 @@ public class Recorrido {
 	 * @throws IllegalStateException if the new date and time is the already the set
 	 */
 	public void updateDateTime(LocalDateTime newDateTime) {
+		if (newDateTime == null)
+			throw new NullPointerException("newDateTime is null");
+		if (getDateTime().equals(newDateTime))
+			throw new IllegalStateException("newDateTime is the already date");
+		date = newDateTime.toLocalDate();
+		time = newDateTime.toLocalTime();
 	}
 
 	/**
@@ -199,6 +303,41 @@ public class Recorrido {
 	 * @throws IllegalStateException if the new date and time is the already the set
 	 */
 	public void updateDateTime(LocalDate newDate, LocalTime newTime) {
+		if (newDate == null)
+			throw new NullPointerException("newDate is null");
+		if (newTime == null)
+			throw new NullPointerException("newTime is null");
+		if (getDateTime().equals(LocalDateTime.of(newDate, newTime)))
+			throw new IllegalStateException("the new Date Time is the already date");
+		date = newDate;
+		time = newTime;
+	}
+
+	/**
+	 * Decrease the number of available seats
+	 * 
+	 * TODO Marcarlo como coverage
+	 * 
+	 * @param numSeats to decrease
+	 * 
+	 * @throws IllegalArgumentException if the number of seats is less than 1 or
+	 *                                  more than 50 if the transport is bus or 250
+	 *                                  if the transport is train
+	 * @throws IllegalStateException    if the number of seats to decremented is
+	 *                                  greater than the number of available sites
+	 */
+	public void decreaseAvailableSeats(int numSeats) {
+		if (numSeats < 1)
+			throw new IllegalArgumentException("numSeats is less than 1");
+		if (numSeats > 50 && transport.equals(Recorrido.BUS))
+			throw new IllegalArgumentException("numSeats is more than the limit of 50 for transport " + Recorrido.BUS);
+		if (numSeats > 250)
+//				&& transport.equals(Recorrido.TRAIN))
+			throw new IllegalArgumentException(
+					"numSeats is more than the limit of 250 for transport " + Recorrido.TRAIN);
+		if (numSeats > numAvailableSeats)
+			throw new IllegalStateException("this decrease is greater than the number of available seats");
+		this.numAvailableSeats -= numSeats;
 	}
 
 	/**
@@ -212,6 +351,13 @@ public class Recorrido {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		return false;
+		if (o == null)
+			throw new NullPointerException("o is null");
+		if (this == o)
+			return true;
+		if (!(o instanceof Recorrido))
+			return false;
+		Recorrido r = (Recorrido) o;
+		return id.equals(r.id);
 	}
 }
