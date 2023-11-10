@@ -15,6 +15,9 @@ package uva.tds.practica2_grupo6;
  * @version 09/10/23
  */
 public class Usuario {
+	
+	private String nif;
+	private String nombre;
 
 	/**
 	 * Constructor
@@ -36,7 +39,35 @@ public class Usuario {
 	 *                                  letter
 	 */
 	public Usuario(String nif, String nombre) {
-
+		if(nif == null) {
+			throw new NullPointerException("Nif nulo\n");
+		}
+		if(nombre == null) {
+			throw new NullPointerException("Nombre nulo\n");
+		}
+		if(nif.isEmpty()){
+			throw new IllegalArgumentException("Nif vacio\n");
+		}
+		if(nombre.isEmpty()) {
+			throw new IllegalArgumentException("Nombre vacio\n");
+		}
+		if(nombre.length()>15) {
+			throw new IllegalArgumentException("Nombre demasiado largo\n");
+		}
+		if(nif.length()<=8) {
+			throw new IllegalArgumentException("Nif demasiado corto\n");
+		}
+		if(nif.length()>9) {
+			throw new IllegalArgumentException("Nif demasiado largo\n");
+		}
+		if(!Character.isLetter(nif.charAt(8))) {
+			throw new IllegalArgumentException("Nif no contiene la letra\n");
+		}
+		if(nif.charAt(8) == 'P' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ') {
+			throw new IllegalArgumentException("Nif contiene la letra erronea\n");
+		}
+		this.nif=nif;
+		this.nombre=nombre;
 	}
 
 	/**
@@ -45,7 +76,7 @@ public class Usuario {
 	 * @return nif
 	 */
 	public String getNif() {
-		return null;
+		return this.nif;
 	}
 
 	/**
@@ -54,7 +85,7 @@ public class Usuario {
 	 * @return nombre
 	 */
 	public String getNombre() {
-		return null;
+		return this.nombre;
 	}
 
 	/**

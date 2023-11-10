@@ -31,7 +31,7 @@ class UsuarioTest {
 		nombre = "Geronimo";
 		user = new Usuario(nif, nombre);
 		sameUser = new Usuario(nif, nombre);
-		differentUser = new Usuario("ABC12345", nombre);
+		differentUser = new Usuario("79105889B", nombre);
 	}
 
 	@Test
