@@ -18,7 +18,7 @@ import java.time.LocalTime;
  * @author hugcubi
  * @author migudel
  * 
- * @version 09/11/23
+ * @version 10/11/23
  */
 public class Recorrido {
 
@@ -338,6 +338,34 @@ public class Recorrido {
 		if (numSeats > numAvailableSeats)
 			throw new IllegalStateException("this decrease is greater than the number of available seats");
 		this.numAvailableSeats -= numSeats;
+	}
+
+
+	/**
+	 * Increase the number of available seats
+	 * 
+	 * TODO Marcarlo como coverage
+	 * 
+	 * @param numSeats to increase
+	 * 
+	 * @throws IllegalArgumentException if the number of seats is less than 1 or
+	 *                                  more than 50 if the transport is bus or 250
+	 *                                  if the transport is train
+	 * @throws IllegalStateException    if the number of seats exceeds the total
+	 *                                  number of seats
+	 */
+	public void increaseAvailableSeats(int numSeats) {
+		if (numSeats < 1)
+			throw new IllegalArgumentException("numSeats is less than 1");
+		if (numSeats > 50 && transport.equals(Recorrido.BUS))
+			throw new IllegalArgumentException("numSeats is more than the limit of 50 for transport " + Recorrido.BUS);
+		if (numSeats > 250)
+//				&& transport.equals(Recorrido.TRAIN))
+			throw new IllegalArgumentException(
+					"numSeats is more than the limit of 250 for transport " + Recorrido.TRAIN);
+		if (numSeats + numAvailableSeats > totalSeats)
+			throw new IllegalStateException("this increase will exceed the total number of seats for this route");
+		this.numAvailableSeats += numSeats;
 	}
 
 	/**
