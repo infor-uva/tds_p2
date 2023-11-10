@@ -345,7 +345,8 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateDateTimeConDateTimeActual() {
-		assertThrows(NullPointerException.class, () -> {
+		// TODO Especificar que fue modificado, cambio de null a state
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDateTime(recorrido.getDateTime());
 		});
 	}
