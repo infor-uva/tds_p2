@@ -1,5 +1,7 @@
 package uva.tds.practica2_grupo6;
 
+import java.util.*;
+
 /**
  * Class dedicated for the representation of the User.
  * 
@@ -15,6 +17,8 @@ package uva.tds.practica2_grupo6;
  * @version 09/10/23
  */
 public class Usuario {
+	
+	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
 	
 	private String nif;
 	private String nombre;
@@ -63,8 +67,16 @@ public class Usuario {
 		if(!Character.isLetter(nif.charAt(8))) {
 			throw new IllegalArgumentException("Nif no contiene la letra\n");
 		}
-		if(nif.charAt(8) == 'P' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ') {
+		if(nif.charAt(8) == 'U' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ') {
 			throw new IllegalArgumentException("Nif contiene la letra erronea\n");
+		}
+		//sacar si el valor de la letra corresponde con la division del numero
+		String cifras=nif.substring(0, nif.length()-1);
+		char letra=nif.charAt(8);
+		int numero=Integer.parseInt(cifras);
+		int resto=numero%23;
+		if(resto != letrasNif.indexOf(letra)) {
+			throw new IllegalArgumentException("La letra del nif no corresponde con las cifras del nif\n");
 		}
 		this.nif=nif;
 		this.nombre=nombre;
@@ -99,6 +111,16 @@ public class Usuario {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		return false;
+		if(o == null) {
+			throw new NullPointerException("El objeto es nulo\n");
+		}
+		if(getClass() != o.getClass()) {
+			return false;
+		}
+		if(this == o) {
+			return true;
+		}
+		Usuario user=(Usuario) o;
+		return Objects.equals(nif, user.getNif()) && Objects.equals(nombre, user.getNombre());
 	}
 }
