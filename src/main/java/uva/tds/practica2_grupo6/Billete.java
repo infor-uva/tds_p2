@@ -99,7 +99,7 @@ public class Billete {
 	public void setComprado() {
 		if (!estado.equals("reservado"))
 			throw new IllegalStateException("Ticket tiene que estar reservado");
-		this.estado = "Comprado";
+		this.estado = "comprado";
 				
 	}
 
