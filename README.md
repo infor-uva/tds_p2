@@ -33,7 +33,10 @@ Trabajo asignado:
 - Feature 5.1 - Comprar billetes
 - Feature 7 - Obtención precio total billetes de un usuario y obtención recorridos disponibles en una fecha
 
-Tiempo empleado: `4h 30min`
+Tiempo empleado: 
+- Fase Red: `4h 30min`
+- Fase Green: `2h 25min` (Implementación Recorrido)
+    
 ### Hugo Cubino Cubino
 Trabajo asignado:
 - Feature 3 - Billete
