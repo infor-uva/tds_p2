@@ -131,7 +131,6 @@ public class Recorrido {
 					"numSeats is more than the limit of 250 for transport " + Recorrido.TRAIN);
 		if (duration <= 0)
 			throw new IllegalArgumentException("duration is equals or less to 0");
-		// Spend 1.5h
 		this.id = id;
 		this.origin = origin;
 		this.destination = destination;
@@ -333,7 +332,6 @@ public class Recorrido {
 		if (numSeats > 50 && transport.equals(Recorrido.BUS))
 			throw new IllegalArgumentException("numSeats is more than the limit of 50 for transport " + Recorrido.BUS);
 		if (numSeats > 250)
-//				&& transport.equals(Recorrido.TRAIN))
 			throw new IllegalArgumentException(
 					"numSeats is more than the limit of 250 for transport " + Recorrido.TRAIN);
 		if (numSeats > numAvailableSeats)
@@ -360,7 +358,6 @@ public class Recorrido {
 		if (numSeats > 50 && transport.equals(Recorrido.BUS))
 			throw new IllegalArgumentException("numSeats is more than the limit of 50 for transport " + Recorrido.BUS);
 		if (numSeats > 250)
-//				&& transport.equals(Recorrido.TRAIN))
 			throw new IllegalArgumentException(
 					"numSeats is more than the limit of 250 for transport " + Recorrido.TRAIN);
 		if (numSeats + numAvailableSeats > totalSeats)
