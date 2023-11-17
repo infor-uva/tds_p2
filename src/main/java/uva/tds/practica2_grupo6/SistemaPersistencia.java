@@ -54,12 +54,12 @@ import java.util.List;
  * 
  * @version 17/11/23
  */
-public class System {
+public class SistemaPersistencia {
 
 	/**
 	 * Instance the System
 	 */
-	public System() {
+	public SistemaPersistencia() {
 	}
 
 	/**

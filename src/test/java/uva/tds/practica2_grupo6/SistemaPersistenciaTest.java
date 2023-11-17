@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Class made for tests the methods of {@link System}
+ * Class made for tests the methods of {@link SistemaPersistencia}
  * 
  * @author hugcubi
  * @author diebomb
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  * 
  * @version 17/11/23
  */
-class SystemTest {
+class SistemaPersistenciaTest {
 
 	private static final double ERROR_MARGIN = 0.00001;
 	private static final String BUS = "bus";
@@ -46,7 +46,7 @@ class SystemTest {
 	private int duration;
 	private Recorrido recorrido;
 	private Recorrido differentRecorrido;
-	private System system;
+	private SistemaPersistencia sistema;
 	private int numSeats;
 	private LocalDateTime newDateTime;
 	private LocalDate newDate;
@@ -75,29 +75,29 @@ class SystemTest {
 		newDate = LocalDate.of(2024, 2, 4);
 		newTime = LocalTime.of(12, 2, 4);
 
-		system = new System();
+		sistema = new SistemaPersistencia();
 	}
 
 	/**
-	 * FINDME Tests for {@link System#system()}
+	 * FINDME Tests for {@link SistemaPersistencia#system()}
 	 */
 	@Test
 	void testConstructor() {
 		// TODO Completar tras fusión en develop
 		// Asegurar que todo lo que se encarga de inicializar el constructor lo hace
-		System system = new System();
-		assertNotNull(system);
-		assertNotNull(system.getRecorridos());
-		assertEquals(0, system.getRecorridos().size());
+		SistemaPersistencia sistema = new SistemaPersistencia();
+		assertNotNull(sistema);
+		assertNotNull(sistema.getRecorridos());
+		assertEquals(0, sistema.getRecorridos().size());
 	}
 
 	/**
-	 * FINDME Tests for {@link System#addRecorrido(Recorrido)}
+	 * FINDME Tests for {@link SistemaPersistencia#addRecorrido(Recorrido)}
 	 */
 	@Test
 	void testAddRecorridoValido() {
-		system.addRecorrido(recorrido);
-		List<Recorrido> recorridos = system.getRecorridos();
+		sistema.addRecorrido(recorrido);
+		List<Recorrido> recorridos = sistema.getRecorridos();
 		List<Recorrido> recorridosCheck = new ArrayList<>();
 		recorridosCheck.add(recorrido);
 		assertEquals(recorridosCheck, recorridos);
@@ -106,16 +106,16 @@ class SystemTest {
 	@Test
 	void testAddRecorridoConRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.addRecorrido(null);
+			sistema.addRecorrido(null);
 		});
 	}
 
 	@Test
 	void testAddRecorridoConRecorridoYaEnSystem() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertEquals(recorrido, differentRecorrido);
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.addRecorrido(differentRecorrido);
+			sistema.addRecorrido(differentRecorrido);
 		});
 	}
 
@@ -126,155 +126,155 @@ class SystemTest {
 	void testRemoveRecorridoValido() {
 		List<Recorrido> recorridos = new ArrayList<>();
 		recorridos.add(recorrido);
-		system.addRecorrido(recorrido);
-		assertEquals(recorrido, system.getRecorridos());
-		assertEquals(0, system.getAssociatedBilletesToRoute(id));
-		system.removeRecorrido(id);
+		sistema.addRecorrido(recorrido);
+		assertEquals(recorrido, sistema.getRecorridos());
+		assertEquals(0, sistema.getAssociatedBilletesToRoute(id));
+		sistema.removeRecorrido(id);
 		recorridos.remove(0);
-		assertEquals(recorrido, system.getRecorridos());
+		assertEquals(recorrido, sistema.getRecorridos());
 	}
 
 	@Test
 	void testRemoveRecorridoConRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.removeRecorrido(null);
+			sistema.removeRecorrido(null);
 		});
 	}
 
 	@Test
 	void testRemoveRecorridoConRecorridoFueraSystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.removeRecorrido(id);
+			sistema.removeRecorrido(id);
 		});
 	}
 
 	@Test
 	void testRemoveRecorridoConRecorridoEnSystemConBilletesAsociados() {
 		Usuario usuario = new Usuario("32698478E", "Geronimo");
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 
-		system.comprarBilletes("T12345", usuario, recorrido, 1);
+		sistema.comprarBilletes("T12345", usuario, recorrido, 1);
 		List<Billete> billetes = new ArrayList<>();
 		billetes.add(new Billete("T12345", recorrido, usuario, ESTADO_COMPRADO));
-		assertEquals(billetes, system.getAssociatedBilletesToRoute(id));
+		assertEquals(billetes, sistema.getAssociatedBilletesToRoute(id));
 
 		assertThrows(IllegalStateException.class, () -> {
-			system.removeRecorrido(id);
+			sistema.removeRecorrido(id);
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#getPrecioTotalBilletesUsuario(String)}
+	 * FINDME Tests for {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}
 	 */
 	@Test
 	void testGetPrecioTotalBilletesUsuarioBus() {
-		system.comprarBilletes("32698478E", user, recorrido, 5);
-		assertEquals(5.0, system.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
+		sistema.comprarBilletes("32698478E", user, recorrido, 5);
+		assertEquals(5.0, sistema.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioPrecioRecorridoTren() {
-		system.comprarBilletes("32698478E", user, differentRecorrido, 5);
-		assertEquals(4.5, system.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
+		sistema.comprarBilletes("32698478E", user, differentRecorrido, 5);
+		assertEquals(4.5, sistema.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioVacio() {
 		assertThrows(NullPointerException.class, () -> {
-			system.getPrecioTotalBilletesUsuario(null);
+			sistema.getPrecioTotalBilletesUsuario(null);
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioSinBilletes() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("79105889B");
+			sistema.getPrecioTotalBilletesUsuario("79105889B");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifLimiteInferiorDigitos() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847E");
+			sistema.getPrecioTotalBilletesUsuario("3269847E");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifLimiteSuperiorDigitos() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("326984789E");
+			sistema.getPrecioTotalBilletesUsuario("326984789E");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifSinCaracter() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847");
+			sistema.getPrecioTotalBilletesUsuario("3269847");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalido() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847P");
+			sistema.getPrecioTotalBilletesUsuario("3269847P");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaI() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847I");
+			sistema.getPrecioTotalBilletesUsuario("3269847I");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaO() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847O");
+			sistema.getPrecioTotalBilletesUsuario("3269847O");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaÑ() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847Ñ");
+			sistema.getPrecioTotalBilletesUsuario("3269847Ñ");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaU() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847U");
+			sistema.getPrecioTotalBilletesUsuario("3269847U");
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#getRecorridosDisponiblesFecha(LocalDate)}
+	 * FINDME Tests for {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}
 	 */
 	@Test
 	void testGetRecorridosDisponiblesFecha() {
 		ArrayList<Recorrido> recorridos = new ArrayList<>();
 		recorridos.add(recorrido);
 		recorridos.add(differentRecorrido);
-		system.addRecorrido(recorrido);
-		system.addRecorrido(differentRecorrido);
-		assertEquals(recorridos, system.getRecorridosDisponiblesFecha(date));
+		sistema.addRecorrido(recorrido);
+		sistema.addRecorrido(differentRecorrido);
+		assertEquals(recorridos, sistema.getRecorridosDisponiblesFecha(date));
 	}
 
 	@Test
 	void testGetRecorridosDisponiblesFechaSinFecha() {
 		assertThrows(NullPointerException.class, () -> {
-			system.getRecorridosDisponiblesFecha(null);
+			sistema.getRecorridosDisponiblesFecha(null);
 		});
 	}
 
 	@Test
 	void testGetRecorridosDisponiblesFechaSinRecorridos() {
-		system.addRecorrido(recorrido);
-		system.addRecorrido(differentRecorrido);
+		sistema.addRecorrido(recorrido);
+		sistema.addRecorrido(differentRecorrido);
 		LocalDate date1 = LocalDate.of(15, 10, 24);
 		assertThrows(IllegalStateException.class, () -> {
-			system.getRecorridosDisponiblesFecha(date1);
+			sistema.getRecorridosDisponiblesFecha(date1);
 		});
 	}
 
@@ -284,312 +284,312 @@ class SystemTest {
 	@Test
 	void testGetAssociatedBilletesToRouteValido() {
 		String localizator = "123";
-		system.addRecorrido(recorrido);
-		system.reservarBilletes(localizator, user, recorrido, 1);
-		system.comprarBilletes(localizator, differentUser, recorrido, 2);
+		sistema.addRecorrido(recorrido);
+		sistema.reservarBilletes(localizator, user, recorrido, 1);
+		sistema.comprarBilletes(localizator, differentUser, recorrido, 2);
 
 		List<Billete> expected = new ArrayList<>();
 		expected.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
 		expected.add(new Billete(localizator, recorrido, differentUser, ESTADO_COMPRADO));
 		expected.add(new Billete(localizator, recorrido, differentUser, ESTADO_COMPRADO));
 
-		assertEquals(expected, system.getAssociatedBilletesToRoute(id));
+		assertEquals(expected, sistema.getAssociatedBilletesToRoute(id));
 	}
 
 	@Test
 	void testGetAssociatedBilletesToRouteConRouteNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.getAssociatedBilletesToRoute(null);
+			sistema.getAssociatedBilletesToRoute(null);
 		});
 	}
 
 	@Test
 	void testGetAssociatedBilletesToRouteConRouteConRouteFueraDeSystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.getAssociatedBilletesToRoute(id);
+			sistema.getAssociatedBilletesToRoute(id);
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#getDateOfRecorrido(String)}
+	 * FINDME Tests for {@link SistemaPersistencia#getDateOfRecorrido(String)}
 	 */
 	@Test
 	void testGetDateOfRecorridoValidoConIDLimiteInferior() {
 		String id = "1";
 		Recorrido r = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
-		system.addRecorrido(r);
-		assertEquals(r.getDate(), system.getDateOfRecorrido(id));
+		sistema.addRecorrido(r);
+		assertEquals(r.getDate(), sistema.getDateOfRecorrido(id));
 		fail(); // TODO Eliminar en fase verde
 	}
 
 	@Test
 	void testGetDateOfRecorridoConIDNull() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getDateOfRecorrido(null);
+			sistema.getDateOfRecorrido(null);
 		});
 	}
 
 	@Test
 	void testGetDateOfRecorridoNoValidoConIDLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getDateOfRecorrido("");
+			sistema.getDateOfRecorrido("");
 		});
 	}
 
 	@Test
 	void testGetDateOfRecorridoNoValidoConRecorridoFueraDeSystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.getDateOfRecorrido(id);
+			sistema.getDateOfRecorrido(id);
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#getTimeOfRecorrido(String)}
+	 * FINDME Tests for {@link SistemaPersistencia#getTimeOfRecorrido(String)}
 	 */
 	@Test
 	void testGetTimeOfRecorridoValidoConIDLimiteInferior() {
 		String id = "1";
 		Recorrido r = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
-		system.addRecorrido(r);
-		assertEquals(r.getTime(), system.getTimeOfRecorrido(id));
+		sistema.addRecorrido(r);
+		assertEquals(r.getTime(), sistema.getTimeOfRecorrido(id));
 		fail(); // TODO Eliminar en fase verde
 	}
 
 	@Test
 	void testGetTimeOfRecorridoNoValidoConIDNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.getTimeOfRecorrido(null);
+			sistema.getTimeOfRecorrido(null);
 		});
 	}
 
 	@Test
 	void testGetTimeOfRecorridoNoValidoConIDLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getTimeOfRecorrido("");
+			sistema.getTimeOfRecorrido("");
 		});
 	}
 
 	@Test
 	void testGetTimeOfRecorridoNoValidoConRecorridoFueraDeSystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.getTimeOfRecorrido(id);
+			sistema.getTimeOfRecorrido(id);
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#getDateTimeOfRecorrido(String)}
+	 * FINDME Tests for {@link SistemaPersistencia#getDateTimeOfRecorrido(String)}
 	 */
 	@Test
 	void testGetDateTimeOfRecorridoValidoConIDLimiteInferior() {
 		String id = "1";
 		Recorrido r = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
-		system.addRecorrido(r);
-		assertEquals(r.getDateTime(), system.getDateTimeOfRecorrido(id));
+		sistema.addRecorrido(r);
+		assertEquals(r.getDateTime(), sistema.getDateTimeOfRecorrido(id));
 		fail(); // TODO Eliminar en fase verde
 	}
 
 	@Test
 	void testGetDateTimeOfRecorridoNoValidoConIDNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.getDateTimeOfRecorrido(null);
+			sistema.getDateTimeOfRecorrido(null);
 		});
 	}
 
 	@Test
 	void testGetDateTimeOfRecorridoNoValidoConIDLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getDateTimeOfRecorrido("");
+			sistema.getDateTimeOfRecorrido("");
 		});
 	}
 
 	@Test
 	void testGetDateTimeOfRecorridoNoValidoConRecorridoFueraDeSystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.getDateTimeOfRecorrido(id);
+			sistema.getDateTimeOfRecorrido(id);
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#updateRecorridoDate(String, LocalDate)}
+	 * FINDME Tests for {@link SistemaPersistencia#updateRecorridoDate(String, LocalDate)}
 	 */
 	@Test
 	void testUpdateRecorridoDateValido() {
-		system.addRecorrido(recorrido);
-		assertNotEquals(newDate, system.getDateOfRecorrido(recorrido.getID()));
-		system.updateRecorridoDate(id, newDate);
-		assertEquals(newDate, system.getDateOfRecorrido(recorrido.getID()));
+		sistema.addRecorrido(recorrido);
+		assertNotEquals(newDate, sistema.getDateOfRecorrido(recorrido.getID()));
+		sistema.updateRecorridoDate(id, newDate);
+		assertEquals(newDate, sistema.getDateOfRecorrido(recorrido.getID()));
 	}
 
 	@Test
 	void testUpdateRecorridoDateConRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorridoDate(null, newDate);
+			sistema.updateRecorridoDate(null, newDate);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoDateConRecorridoFueraDelsystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorridoDate(id, newDate);
+			sistema.updateRecorridoDate(id, newDate);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoDateConDateNull() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorridoDate(id, null);
+			sistema.updateRecorridoDate(id, null);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoDateConDateAnterior() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorridoDate(id, recorrido.getDate());
+			sistema.updateRecorridoDate(id, recorrido.getDate());
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#updateRecorridoTime(String, LocalTime)}
+	 * FINDME Tests for {@link SistemaPersistencia#updateRecorridoTime(String, LocalTime)}
 	 */
 	@Test
 	void testUpdateRecorridoTimeValido() {
-		system.addRecorrido(recorrido);
-		assertNotEquals(newTime, system.getTimeOfRecorrido(recorrido.getID()));
-		system.updateRecorridoTime(id, newTime);
-		assertEquals(newTime, system.getTimeOfRecorrido(recorrido.getID()));
+		sistema.addRecorrido(recorrido);
+		assertNotEquals(newTime, sistema.getTimeOfRecorrido(recorrido.getID()));
+		sistema.updateRecorridoTime(id, newTime);
+		assertEquals(newTime, sistema.getTimeOfRecorrido(recorrido.getID()));
 	}
 
 	@Test
 	void testUpdateRecorridoTimeConRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorridoTime(null, newTime);
+			sistema.updateRecorridoTime(null, newTime);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoTimeConRecorridoFueraDelsystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorridoTime(id, newTime);
+			sistema.updateRecorridoTime(id, newTime);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoTimeConTimeNull() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorridoTime(id, null);
+			sistema.updateRecorridoTime(id, null);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoTimeConTimeAnterior() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorridoTime(id, recorrido.getTime());
+			sistema.updateRecorridoTime(id, recorrido.getTime());
 		});
 	}
 
 	/**
 	 * FINDME Tests for
-	 * {@link System#updateRecorridoDateTime(String, LocalDateTime)}
+	 * {@link SistemaPersistencia#updateRecorridoDateTime(String, LocalDateTime)}
 	 */
 	@Test
 	void testUpdateRecorridoDateTimeValido() {
-		system.addRecorrido(recorrido);
-		assertNotEquals(newDateTime, system.getDateTimeOfRecorrido(recorrido.getID()));
-		system.updateRecorridoDateTime(id, newDateTime);
-		assertEquals(newDateTime, system.getDateTimeOfRecorrido(recorrido.getID()));
+		sistema.addRecorrido(recorrido);
+		assertNotEquals(newDateTime, sistema.getDateTimeOfRecorrido(recorrido.getID()));
+		sistema.updateRecorridoDateTime(id, newDateTime);
+		assertEquals(newDateTime, sistema.getDateTimeOfRecorrido(recorrido.getID()));
 	}
 
 	@Test
 	void testUpdateRecorridoDateTimeConRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorridoDateTime(null, newDateTime);
+			sistema.updateRecorridoDateTime(null, newDateTime);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoDateTimeConRecorridoFueraDelsystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorridoDateTime(id, newDateTime);
+			sistema.updateRecorridoDateTime(id, newDateTime);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoDateTimeConDateTimeNull() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorridoDateTime(id, null);
+			sistema.updateRecorridoDateTime(id, null);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoDateTimeConDateYTimeAnterior() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorridoDateTime(id, recorrido.getDateTime());
+			sistema.updateRecorridoDateTime(id, recorrido.getDateTime());
 		});
 	}
 
 	/**
 	 * FINDME Tests for
-	 * {@link System#updateRecorrido(String, LocalDate, LocalTime)}
+	 * {@link SistemaPersistencia#updateRecorrido(String, LocalDate, LocalTime)}
 	 */
 	@Test
 	void testUpdateRecorridoValido() {
-		system.addRecorrido(recorrido);
-		assertNotEquals(newDateTime, system.getDateTimeOfRecorrido(recorrido.getID()));
-		system.updateRecorrido(id, newDateTime.toLocalDate(), newDateTime.toLocalTime());
-		assertEquals(newDateTime, system.getDateTimeOfRecorrido(recorrido.getID()));
+		sistema.addRecorrido(recorrido);
+		assertNotEquals(newDateTime, sistema.getDateTimeOfRecorrido(recorrido.getID()));
+		sistema.updateRecorrido(id, newDateTime.toLocalDate(), newDateTime.toLocalTime());
+		assertEquals(newDateTime, sistema.getDateTimeOfRecorrido(recorrido.getID()));
 	}
 
 	@Test
 	void testUpdateRecorridoConRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorrido(null, newDate, newTime);
+			sistema.updateRecorrido(null, newDate, newTime);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoConRecorridoFueraDelsystem() {
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorrido(id, newDate, newTime);
+			sistema.updateRecorrido(id, newDate, newTime);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoConDateNull() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorrido(id, null, newTime);
+			sistema.updateRecorrido(id, null, newTime);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoConTimeNull() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(NullPointerException.class, () -> {
-			system.updateRecorrido(id, newDate, null);
+			sistema.updateRecorrido(id, newDate, null);
 		});
 	}
 
 	@Test
 	void testUpdateRecorridoConDateYTimeAnterior() {
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
-			system.updateRecorrido(id, recorrido.getDate(), recorrido.getTime());
+			sistema.updateRecorrido(id, recorrido.getDate(), recorrido.getTime());
 		});
 	}
 
 	/**
 	 * FINDME Tests for
-	 * {@link System#comprarBilletes(String, Usuario, Recorrido, int)}
+	 * {@link SistemaPersistencia#comprarBilletes(String, Usuario, Recorrido, int)}
 	 */
 	@Test
 	void testComprarBilletesValidoBusLimiteInferior() {
-		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, recorrido, 1);
+		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, recorrido, 1);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
 		for (int i = 0; i < 1; i++) {
 			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
@@ -600,7 +600,7 @@ class SystemTest {
 
 	@Test
 	void testComprarBilletesValidosBusLimiteSuperior() {
-		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, recorrido, 150);
+		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, recorrido, 150);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
 		for (int i = 0; i < 150; i++) {
 			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
@@ -611,7 +611,7 @@ class SystemTest {
 
 	@Test
 	void testComprarBilletesValidoTrenLimiteInferior() {
-		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, differentRecorrido, 1);
+		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, differentRecorrido, 1);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
 		for (int i = 0; i < 1; i++) {
 			Billete billeteComprobacion = new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO);
@@ -622,7 +622,7 @@ class SystemTest {
 
 	@Test
 	void testComprarBilletesValidosTrenLimiteSuperior() {
-		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, differentRecorrido, 250);
+		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, differentRecorrido, 250);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
 		for (int i = 0; i < 250; i++) {
 			Billete billeteComprobacion = new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO);
@@ -634,111 +634,111 @@ class SystemTest {
 	@Test
 	void testComprarBilleteBusInvalidoLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletes("ABC12345", user, recorrido, 0);
+			sistema.comprarBilletes("ABC12345", user, recorrido, 0);
 		});
 	}
 
 	@Test
 	void testComprarBilleteTrainInvalidoLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletes("ABC12345", user, differentRecorrido, 0);
+			sistema.comprarBilletes("ABC12345", user, differentRecorrido, 0);
 		});
 	}
 
 	@Test
 	void testComprarBilleteBusInvalidoLimiteSuperior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletes("ABC12345", user, recorrido, 151);
+			sistema.comprarBilletes("ABC12345", user, recorrido, 151);
 		});
 	}
 
 	@Test
 	void testComprarBilleteTrainInvalidoLimiteSuperior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletes("ABC12345", user, differentRecorrido, 251);
+			sistema.comprarBilletes("ABC12345", user, differentRecorrido, 251);
 		});
 	}
 
 	@Test
 	void testComprarBilleteBusInvalidoLimiteSuperiorDemasiadaCompras() {
-		system.comprarBilletes("ABC12345", user, recorrido, 149);
+		sistema.comprarBilletes("ABC12345", user, recorrido, 149);
 		assertThrows(IllegalStateException.class, () -> {
-			system.comprarBilletes("ABC12345", differentUser, recorrido, 2);
+			sistema.comprarBilletes("ABC12345", differentUser, recorrido, 2);
 		});
 	}
 
 	@Test
 	void testComprarBilleteTrainInvalidoLimiteSuperiorDemasiadaCompras() {
-		system.comprarBilletes("ABC12345", user, differentRecorrido, 249);
+		sistema.comprarBilletes("ABC12345", user, differentRecorrido, 249);
 		assertThrows(IllegalStateException.class, () -> {
-			system.comprarBilletes("ABC12345", differentUser, differentRecorrido, 2);
+			sistema.comprarBilletes("ABC12345", differentUser, differentRecorrido, 2);
 		});
 	}
 
 	@Test
 	void testComprarBilleteLocalizadorInvalido() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletes("", user, differentRecorrido, 1);
+			sistema.comprarBilletes("", user, differentRecorrido, 1);
 		});
 	}
 
 	@Test
 	void testComprarBilleteLocalizadorNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.comprarBilletes(null, user, differentRecorrido, 1);
+			sistema.comprarBilletes(null, user, differentRecorrido, 1);
 		});
 	}
 
 	@Test
 	void testComprarBilleteLocalizadorYaUsadoMismoRecorrido() {
-		system.comprarBilletes("ABC12345", user, differentRecorrido, 2);
+		sistema.comprarBilletes("ABC12345", user, differentRecorrido, 2);
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletes("ABC12345", differentUser, differentRecorrido, 1);
+			sistema.comprarBilletes("ABC12345", differentUser, differentRecorrido, 1);
 		});
 	}
 
 	@Test
 	void testComprarBilleteLocalizadorYaUsadoDistinoRecorridoRecorrido() {
-		system.comprarBilletes("ABC12345", user, differentRecorrido, 2);
+		sistema.comprarBilletes("ABC12345", user, differentRecorrido, 2);
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletes("ABC12345", differentUser, recorrido, 1);
+			sistema.comprarBilletes("ABC12345", differentUser, recorrido, 1);
 		});
 	}
 
 	@Test
 	void testComprarBilleteUsuarioNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.comprarBilletes("ABC12345", null, differentRecorrido, 1);
+			sistema.comprarBilletes("ABC12345", null, differentRecorrido, 1);
 		});
 	}
 
 	@Test
 	void testComprarBilleteRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.comprarBilletes("ABC12345", user, null, 1);
+			sistema.comprarBilletes("ABC12345", user, null, 1);
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#comprarBilletesReservados(String)}
+	 * FINDME Tests for {@link SistemaPersistencia#comprarBilletesReservados(String)}
 	 */
 	@Test
 	void testComprarBilletesReservadosValidoLimiteInferior() {
 		String localizator = "1";
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		List<Billete> bookedTicketsCheck = new ArrayList<>();
 		// TODO Implementar en billete (Actualizar constructor billete)
 		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
 		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
 		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		List<Billete> bookedTickets = system.reservarBilletes(localizator, user, recorrido, 3);
+		List<Billete> bookedTickets = sistema.reservarBilletes(localizator, user, recorrido, 3);
 		assertEquals(bookedTicketsCheck, bookedTickets);
 
 		List<Billete> buyedTicketsCheck = new ArrayList<>();
 		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
 		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
 		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		List<Billete> buyedTickets = system.comprarBilletesReservados(localizator);
+		List<Billete> buyedTickets = sistema.comprarBilletesReservados(localizator);
 		assertEquals(buyedTicketsCheck, buyedTickets);
 
 		assertNotEquals(bookedTickets, buyedTickets);
@@ -747,19 +747,19 @@ class SystemTest {
 	@Test
 	void testComprarBilletesReservadosValidoLimiteSuperior() {
 		String localizator = "12345678";
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		List<Billete> bookedTicketsCheck = new ArrayList<>();
 		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
 		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
 		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		List<Billete> bookedTickets = system.reservarBilletes(localizator, user, recorrido, 3);
+		List<Billete> bookedTickets = sistema.reservarBilletes(localizator, user, recorrido, 3);
 		assertEquals(bookedTicketsCheck, bookedTickets);
 
 		List<Billete> buyedTicketsCheck = new ArrayList<>();
 		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
 		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
 		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		List<Billete> buyedTickets = system.comprarBilletesReservados(localizator);
+		List<Billete> buyedTickets = sistema.comprarBilletesReservados(localizator);
 		assertEquals(buyedTicketsCheck, buyedTickets);
 
 		assertNotEquals(bookedTickets, buyedTickets);
@@ -768,21 +768,21 @@ class SystemTest {
 	@Test
 	void testComprarBilletesReservadosConLocatorNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.comprarBilletesReservados(null);
+			sistema.comprarBilletesReservados(null);
 		});
 	}
 
 	@Test
 	void testComprarBilletesReservadosLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletesReservados("");
+			sistema.comprarBilletesReservados("");
 		});
 	}
 
 	@Test
 	void testComprarBilletesReservadosLimiteSuperior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.comprarBilletesReservados("123456789");
+			sistema.comprarBilletesReservados("123456789");
 		});
 	}
 
@@ -790,23 +790,23 @@ class SystemTest {
 	void testComprarBilletesReservadosSinBilletesReservadosEnSystemOConLocalizatorIncorrecto() {
 		String localizator = "12345678";
 		String localizator2 = "87654321";
-		system.addRecorrido(recorrido);
+		sistema.addRecorrido(recorrido);
 		assertNotEquals(localizator, localizator2);
 		assertThrows(IllegalStateException.class, () -> {
-			system.comprarBilletesReservados(localizator2);
+			sistema.comprarBilletesReservados(localizator2);
 		});
 	}
 
 	/**
 	 * FINDME Tests for
-	 * {@link System#reservarBilletes(String, Usuario, Recorrido, int)}
+	 * {@link SistemaPersistencia#reservarBilletes(String, Usuario, Recorrido, int)}
 	 */
 	@Test
 	void testReservarBilletesExitosamente() {
 		int plazasDisponibles = recorrido.getNumAvailableSeats();
 		int numBilletesReservar = 6;
 		// Realiza la reserva de los billetes
-		List<Billete> reservado = system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
+		List<Billete> reservado = sistema.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
 
 		assertEquals(plazasDisponibles - numBilletesReservar, recorrido.getNumAvailableSeats());
 
@@ -821,28 +821,28 @@ class SystemTest {
 	@Test
 	void testReservarBilleteLocalizadorInvalido() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.reservarBilletes("", user, recorrido, 1);
+			sistema.reservarBilletes("", user, recorrido, 1);
 		});
 	}
 
 	@Test
 	void testReservarBilleteLocalizadorNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.reservarBilletes(null, user, recorrido, 1);
+			sistema.reservarBilletes(null, user, recorrido, 1);
 		});
 	}
 
 	@Test
 	void testReservarBilleteUsuarioNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.reservarBilletes("ABC12345", null, recorrido, 1);
+			sistema.reservarBilletes("ABC12345", null, recorrido, 1);
 		});
 	}
 
 	@Test
 	void testReservarBilleteRecorridoNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.reservarBilletes("ABC12345", user, null, 1);
+			sistema.reservarBilletes("ABC12345", user, null, 1);
 		});
 	}
 
@@ -852,10 +852,10 @@ class SystemTest {
 		int numBilletesReservar = plazasDisponibles + 1;
 
 		// Intenta reservar más billetes de los disponibles
-		system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
+		sistema.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
 
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
+			sistema.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
 		});
 
 	}
@@ -865,29 +865,29 @@ class SystemTest {
 		int numBilletesReservar = recorrido.getTotalSeats() / 2;
 
 		// Intenta reservar más billetes de los disponibles
-		system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
+		sistema.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
 
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.reservarBilletes("ABC12345", user, recorrido, 2);
+			sistema.reservarBilletes("ABC12345", user, recorrido, 2);
 		});
 
 	}
 
 	/**
-	 * FINDME Tests for {@link System#anularReserva(String, int)}
+	 * FINDME Tests for {@link SistemaPersistencia#anularReserva(String, int)}
 	 */
 	@Test
 	void testAnularReservaAumentaPlazasDisponiblesLimiteInferior() {
 		int numBilletesReservar = 6;
 
 		// Realiza la reserva de los billetes
-		system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
+		sistema.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
 
 		int plazasDisponiblesAntes = recorrido.getNumAvailableSeats();
 		int numBilletesAnular = 1;
 
 		// Realiza la anulación de la reserva
-		system.anularReserva("ABC12345", numBilletesAnular);
+		sistema.anularReserva("ABC12345", numBilletesAnular);
 
 		int plazasDisponiblesDespues = recorrido.getNumAvailableSeats();
 
@@ -898,14 +898,14 @@ class SystemTest {
 	@Test
 	void testNoSePuedeAnularReservaSiLocalizadorNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.anularReserva(null, 1);
+			sistema.anularReserva(null, 1);
 		});
 	}
 
 	@Test
 	void testNoSePuedeAnularReservaSiLocalizadorVacío() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.anularReserva("", 1);
+			sistema.anularReserva("", 1);
 		});
 	}
 
@@ -914,23 +914,23 @@ class SystemTest {
 		int numBilletesAnular = 2;
 		// Intenta anular la reserva sin reservar previamente
 		assertThrows(IllegalStateException.class, () -> {
-			system.anularReserva("ABC12345", numBilletesAnular);
+			sistema.anularReserva("ABC12345", numBilletesAnular);
 		});
 	}
 
 	@Test
 	void testNoSePuedeAnularReservaSiLocalizadorLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.anularReserva("ABCD12345", 0);
+			sistema.anularReserva("ABCD12345", 0);
 		});
 	}
 
 	@Test
 	void testNoSePuedeAnularReservaSiLocalizadorPerteneceABilletesComprados() {
 		String locator = "ABC12345";
-		system.comprarBilletes(locator, user, recorrido, 3);
+		sistema.comprarBilletes(locator, user, recorrido, 3);
 		assertThrows(IllegalStateException.class, () -> {
-			system.anularReserva(locator, 2);
+			sistema.anularReserva(locator, 2);
 		});
 	}
 
@@ -938,26 +938,26 @@ class SystemTest {
 	void testNoSePuedeAnularReservaSiMayorNumeroDeAnulacionesQueBilletesReservados() {
 		String locator = "ABC12345";
 		int numBilletesAnular = 3;
-		system.reservarBilletes(locator, user, recorrido, 1);
+		sistema.reservarBilletes(locator, user, recorrido, 1);
 		assertThrows(IllegalStateException.class, () -> {
-			system.anularReserva(locator, numBilletesAnular);
+			sistema.anularReserva(locator, numBilletesAnular);
 		});
 	}
 
 	/**
-	 * FINDME Tests for {@link System#devolverBilletes(String, int)}
+	 * FINDME Tests for {@link SistemaPersistencia#devolverBilletes(String, int)}
 	 */
 	@Test
 	void testDevolverBilletesAumentaPlazasDisponiblesLimiteInferior() {
 		int numBilletesComprar = 6;
 
 		// Realiza la reserva de los billetes
-		system.comprarBilletes("ABC12345", user, recorrido, numBilletesComprar);
+		sistema.comprarBilletes("ABC12345", user, recorrido, numBilletesComprar);
 		int plazasDisponiblesAntes = recorrido.getNumAvailableSeats();
 		int numBilletesDevolver = 1;
 
 		// Realiza la anulación de la reserva
-		system.devolverBilletes("ABC12345", numBilletesDevolver);
+		sistema.devolverBilletes("ABC12345", numBilletesDevolver);
 
 		int plazasDisponiblesDespues = recorrido.getNumAvailableSeats();
 
@@ -968,21 +968,21 @@ class SystemTest {
 	@Test
 	void testNoSePuedeDevolverBilletesSiLocalizadorNull() {
 		assertThrows(NullPointerException.class, () -> {
-			system.devolverBilletes(null, 1);
+			sistema.devolverBilletes(null, 1);
 		});
 	}
 
 	@Test
 	void testNoSePuedeDevolverBilletesSiLocalizadorVacío() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.devolverBilletes("", 1);
+			sistema.devolverBilletes("", 1);
 		});
 	}
 
 	@Test
 	void testNoSePuedeDevolverBilletesSiLocalizadorLimiteInferior() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.devolverBilletes("ABCD12345", 0);
+			sistema.devolverBilletes("ABCD12345", 0);
 		});
 	}
 
@@ -991,7 +991,7 @@ class SystemTest {
 		int numBilletesDevolver = 2;
 		// Intenta anular la reserva sin reservar previamente
 		assertThrows(IllegalStateException.class, () -> {
-			system.devolverBilletes("ABC12345", numBilletesDevolver);
+			sistema.devolverBilletes("ABC12345", numBilletesDevolver);
 		});
 	}
 
@@ -999,19 +999,19 @@ class SystemTest {
 	void testNoSePuedeDevolverBilleteSiReservados() {
 		String locator = "ABC12345";
 		int numBilletesDevolver = 2;
-		system.reservarBilletes(locator, user, recorrido, 5);
+		sistema.reservarBilletes(locator, user, recorrido, 5);
 
 		assertThrows(IllegalStateException.class, () -> {
-			system.devolverBilletes(locator, numBilletesDevolver);
+			sistema.devolverBilletes(locator, numBilletesDevolver);
 		});
 	}
 
 	@Test
 	void testNoSePuedeDevolverBilletesConNumLimiteInferior() {
 		String locator = "ABC12345";
-		system.comprarBilletes(locator, user, recorrido, 1);
+		sistema.comprarBilletes(locator, user, recorrido, 1);
 		assertThrows(IllegalStateException.class, () -> {
-			system.devolverBilletes(locator, 0);
+			sistema.devolverBilletes(locator, 0);
 		});
 	}
 
@@ -1019,9 +1019,9 @@ class SystemTest {
 	void testNoSePuedeDevolverBilletesSiMayorNumeroDeDevolucionesQueBilletesComprados() {
 		String locator = "ABC12345";
 		int numBilletesDevolver = 3;
-		system.comprarBilletes(locator, user, recorrido, 1);
+		sistema.comprarBilletes(locator, user, recorrido, 1);
 		assertThrows(IllegalStateException.class, () -> {
-			system.devolverBilletes(locator, numBilletesDevolver);
+			sistema.devolverBilletes(locator, numBilletesDevolver);
 		});
 	}
 }
