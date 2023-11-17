@@ -13,11 +13,16 @@ import org.junit.jupiter.api.Test;
  * Class dedicated to execute the tests for the methods of the instances of
  * {@link Recorrido}. In this case the constructor
  * 
+ * Ratio Code To Test: 
+ * 	Recorrido:		113 lines
+ * 	RecorridoTest:	306 lines
+ * 	Ratio: 306/113 ~= 2.71
+ * 
  * @author diebomb
  * @author hugcubi
  * @author migudel
  * 
- * @version 10/10/2023
+ * @version 17/10/2023
  */
 class RecorridoTest {
 	/**
@@ -154,7 +159,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConIdNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(null, origin, destination, transport, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -168,7 +173,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConOriginNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, null, destination, transport, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -182,7 +187,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConDestinationNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, null, transport, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -203,7 +208,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConTransportNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, destination, null, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -224,14 +229,14 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConDateNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, destination, transport, price, null, time, numAvailableSeats, duration);
 		});
 	}
 
 	@Test
 	void testConstructorNoValidoConTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, destination, transport, price, date, null, numAvailableSeats, duration);
 		});
 	}
@@ -294,7 +299,7 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateDateConDateNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDate(null);
 		});
 	}
@@ -308,7 +313,7 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateTimeConTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateTime(null);
 		});
 	}
@@ -322,14 +327,14 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateDateTimeConDateNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDateTime(null, newTime);
 		});
 	}
 
 	@Test
 	void testUpdateDateTimeConTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDateTime(newDate, null);
 		});
 	}
@@ -343,7 +348,7 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateDateTimeConDateTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDateTime(null);
 		});
 	}
@@ -510,7 +515,7 @@ class RecorridoTest {
 
 	@Test
 	void testEqualsNoValidoConNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.equals(null);
 		});
 	}

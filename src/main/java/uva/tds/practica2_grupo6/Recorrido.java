@@ -18,7 +18,7 @@ import java.time.LocalTime;
  * @author hugcubi
  * @author migudel
  * 
- * @version 10/11/23
+ * @version 17/11/23
  */
 public class Recorrido {
 
@@ -79,18 +79,18 @@ public class Recorrido {
 	 * @param numSeats
 	 * @param duration    in minutes
 	 * 
-	 * @throws NullPointerException     if id is null
+	 * @throws IllegalArgumentException if id is null
 	 * @throws IllegalArgumentException if id have less than 1 character
-	 * @throws NullPointerException     if origin is null
+	 * @throws IllegalArgumentException if origin is null
 	 * @throws IllegalArgumentException if origin have less than 1 character
-	 * @throws NullPointerException     if destination is null
+	 * @throws IllegalArgumentException if destination is null
 	 * @throws IllegalArgumentException if destination have less than 1 character
 	 * @throws IllegalArgumentException if origin and destination are the same
-	 * @throws NullPointerException     if transport is null
+	 * @throws IllegalArgumentException if transport is null
 	 * @throws IllegalArgumentException if transport is not a bus or train
 	 * @throws IllegalArgumentException if price is less than 0
-	 * @throws NullPointerException     if date is null
-	 * @throws NullPointerException     if time is null
+	 * @throws IllegalArgumentException if date is null
+	 * @throws IllegalArgumentException if time is null
 	 * @throws IllegalArgumentException if numSeats is less than 1 or more than 50
 	 *                                  in the case of bus or more than 250 in the
 	 *                                  case of train
@@ -99,35 +99,34 @@ public class Recorrido {
 	public Recorrido(String id, String origin, String destination, String transport, double price, LocalDate date,
 			LocalTime time, int numSeats, int duration) {
 		if (id == null)
-			throw new NullPointerException("id is null");
+			throw new IllegalArgumentException("id is null");
 		if (id.isEmpty())
 			throw new IllegalArgumentException("id is empty");
 		if (origin == null)
-			throw new NullPointerException("origin is null");
+			throw new IllegalArgumentException("origin is null");
 		if (origin.isEmpty())
 			throw new IllegalArgumentException("origin is empty");
 		if (destination == null)
-			throw new NullPointerException("destination is null");
+			throw new IllegalArgumentException("destination is null");
 		if (destination.isEmpty())
 			throw new IllegalArgumentException("destination is empty");
 		if (origin.equals(destination))
 			throw new IllegalArgumentException("origin and destination are the same");
 		if (transport == null)
-			throw new NullPointerException("transport is null");
+			throw new IllegalArgumentException("transport is null");
 		if (!transport.equals(Recorrido.BUS) && !transport.equals(Recorrido.TRAIN))
 			throw new IllegalArgumentException("transport isn't " + Recorrido.BUS + " or " + Recorrido.TRAIN);
 		if (price < 0)
 			throw new IllegalArgumentException("price is less than 0");
 		if (date == null)
-			throw new NullPointerException("date is null");
+			throw new IllegalArgumentException("date is null");
 		if (time == null)
-			throw new NullPointerException("time is null");
+			throw new IllegalArgumentException("time is null");
 		if (numSeats < 1)
 			throw new IllegalArgumentException("numSeats is less than 1");
 		if (numSeats > 50 && transport.equals(Recorrido.BUS))
 			throw new IllegalArgumentException("numSeats is more than the limit of 50 for transport " + Recorrido.BUS);
 		if (numSeats > 250)
-//				&& transport.equals(Recorrido.TRAIN))
 			throw new IllegalArgumentException(
 					"numSeats is more than the limit of 250 for transport " + Recorrido.TRAIN);
 		if (duration <= 0)
@@ -248,12 +247,12 @@ public class Recorrido {
 	 * 
 	 * @param newDate
 	 * 
-	 * @throws NullPointerException  if newDate is null
-	 * @throws IllegalStateException if the new date is the already the set
+	 * @throws IllegalArgumentException if newDate is null
+	 * @throws IllegalStateException    if the new date is the already the set
 	 */
 	public void updateDate(LocalDate newDate) {
 		if (newDate == null)
-			throw new NullPointerException("newDate is null");
+			throw new IllegalArgumentException("newDate is null");
 		if (date.equals(newDate))
 			throw new IllegalStateException("newDate is the already date");
 		date = newDate;
@@ -264,12 +263,12 @@ public class Recorrido {
 	 * 
 	 * @param newTime
 	 * 
-	 * @throws NullPointerException  if newTime is null
-	 * @throws IllegalStateException if the new time is the already the set
+	 * @throws IllegalArgumentException if newTime is null
+	 * @throws IllegalStateException    if the new time is the already the set
 	 */
 	public void updateTime(LocalTime newTime) {
 		if (newTime == null)
-			throw new NullPointerException("newTime is null");
+			throw new IllegalArgumentException("newTime is null");
 		if (time.equals(newTime))
 			throw new IllegalStateException("newTime is the already date");
 		time = newTime;
@@ -280,12 +279,13 @@ public class Recorrido {
 	 * 
 	 * @param newDateTime
 	 * 
-	 * @throws NullPointerException  if newDateTime is null
-	 * @throws IllegalStateException if the new date and time is the already the set
+	 * @throws IllegalArgumentException if newDateTime is null
+	 * @throws IllegalStateException    if the new date and time is the already the
+	 *                                  set
 	 */
 	public void updateDateTime(LocalDateTime newDateTime) {
 		if (newDateTime == null)
-			throw new NullPointerException("newDateTime is null");
+			throw new IllegalArgumentException("newDateTime is null");
 		if (getDateTime().equals(newDateTime))
 			throw new IllegalStateException("newDateTime is the already date");
 		date = newDateTime.toLocalDate();
@@ -298,15 +298,16 @@ public class Recorrido {
 	 * @param newDate
 	 * @param newTime
 	 * 
-	 * @throws NullPointerException  if newDate is null
-	 * @throws NullPointerException  if newTime is null
-	 * @throws IllegalStateException if the new date and time is the already the set
+	 * @throws IllegalArgumentException if newDate is null
+	 * @throws IllegalArgumentException if newTime is null
+	 * @throws IllegalStateException    if the new date and time is the already the
+	 *                                  set
 	 */
 	public void updateDateTime(LocalDate newDate, LocalTime newTime) {
 		if (newDate == null)
-			throw new NullPointerException("newDate is null");
+			throw new IllegalArgumentException("newDate is null");
 		if (newTime == null)
-			throw new NullPointerException("newTime is null");
+			throw new IllegalArgumentException("newTime is null");
 		if (getDateTime().equals(LocalDateTime.of(newDate, newTime)))
 			throw new IllegalStateException("the new Date Time is the already date");
 		date = newDate;
@@ -339,7 +340,6 @@ public class Recorrido {
 			throw new IllegalStateException("this decrease is greater than the number of available seats");
 		this.numAvailableSeats -= numSeats;
 	}
-
 
 	/**
 	 * Increase the number of available seats
@@ -375,12 +375,12 @@ public class Recorrido {
 	 * 
 	 * @return if are the same
 	 * 
-	 * @throws NullPointerException if o is null
+	 * @throws IllegalArgumentException if o is null
 	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o == null)
-			throw new NullPointerException("o is null");
+			throw new IllegalArgumentException("o is null");
 		if (this == o)
 			return true;
 		if (!(o instanceof Recorrido))
