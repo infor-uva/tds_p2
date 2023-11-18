@@ -17,8 +17,8 @@ import java.util.List;
  * <li>Remove a Recorrido of system<br>
  * {@link SistemaPersistencia#removeRecorrido(String))}</li>
  * <li>Consult the list of recorridos in system<br>
- * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price accumulated by a
- * user<br>
+ * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
+ * accumulated by a user<br>
  * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}</li>
  * <li>Consult the list of Recorridos that have a specific date<br>
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
@@ -56,17 +56,23 @@ import java.util.List;
  * @version 18/11/23
  */
 public class System {
-	
+
 	/**
 	 * List of routes registered in the system
 	 */
 	private List<Recorrido> routes;
+	
+	/**
+	 * List of tickets registered in the system
+	 */
+	private List<Billete> tickets;
 
 	/**
 	 * Instance the System
 	 */
 	public System() {
 		routes = new ArrayList<>();
+		tickets = new ArrayList<>();
 	}
 
 	/**
@@ -80,10 +86,8 @@ public class System {
 	public void addRecorrido(Recorrido route) {
 		if (route == null)
 			throw new IllegalArgumentException("route is null");
-		for (Recorrido tmp : routes) {
-			if (route.equals(tmp))
-				throw new IllegalStateException("the route is already in the system");
-		}
+		if (getRecorrido(route.getID()) != null)
+			throw new IllegalStateException("route is already in the system");
 		routes.add(route);
 	}
 
@@ -97,6 +101,32 @@ public class System {
 	 * @throws IllegalStateException    if route has associated tickets
 	 */
 	public void removeRecorrido(String id) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (getAssociatedBilletesToRoute(id).size() != 0)
+			throw new IllegalStateException("the route has associated tickets");
+		routes.remove(route);
+
+	}
+
+	/**
+	 * Consult the id's route
+	 * 
+	 * @param id of the route
+	 * 
+	 * @return id's route or null if the route isn't in the system
+	 * 
+	 * @throws IllegalArgumentException if the id is null
+	 */
+	public Recorrido getRecorrido(String id) {
+		if (id == null)
+			throw new IllegalArgumentException("id is null");
+		for (Recorrido route : routes) {
+			if (route.getID().equals(id))
+				return route;
+		}
+		return null;
 	}
 
 	/**
@@ -107,7 +137,16 @@ public class System {
 	public List<Recorrido> getRecorridos() {
 		return routes;
 	}
-
+	
+	/**
+	 * Consult the list of tickets in system
+	 * 
+	 * @return list of tickets in system
+	 */
+	public List<Billete> getBilletes() {
+		return tickets;
+	}
+	
 	/**
 	 * Returns the price of all the tickets associated with a user, if the tickets
 	 * are valid. In addition, it should be checked whether the journey is by train
@@ -160,7 +199,15 @@ public class System {
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 */
 	public List<Billete> getAssociatedBilletesToRoute(String id) {
-		return null;
+		Recorrido route;
+		List<Billete> list = new ArrayList<>();
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		for (Billete ticket : tickets) {
+			if (ticket.getRecorrido().equals(route))
+				list.add(ticket);
+		}
+		return list;
 	}
 
 	/**
@@ -214,7 +261,7 @@ public class System {
 	/**
 	 * Update the date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -228,7 +275,7 @@ public class System {
 	/**
 	 * Update the time of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -242,7 +289,7 @@ public class System {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id          of the route
 	 * @param newDateTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -256,7 +303,7 @@ public class System {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * @param newTime
 	 * 

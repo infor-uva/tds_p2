@@ -87,8 +87,8 @@ class SystemTest {
 		// Asegurar que todo lo que se encarga de inicializar el constructor lo hace
 		System system = new System();
 		assertNotNull(system);
-		assertNotNull(system.getRecorridos());
-		assertEquals(0, system.getRecorridos().size());
+		assertEquals(new ArrayList<>(), system.getRecorridos());
+		assertEquals(new ArrayList<>(), system.getBilletes());
 	}
 
 	/**
@@ -128,11 +128,11 @@ class SystemTest {
 		List<Recorrido> recorridos = new ArrayList<>();
 		recorridos.add(recorrido);
 		system.addRecorrido(recorrido);
-		assertEquals(recorrido, system.getRecorridos());
-		assertEquals(0, system.getAssociatedBilletesToRoute(id));
+		assertEquals(recorridos, system.getRecorridos());
+		assertEquals(new ArrayList<>(), system.getAssociatedBilletesToRoute(id));
 		system.removeRecorrido(id);
 		recorridos.remove(0);
-		assertEquals(recorrido, system.getRecorridos());
+		assertEquals(recorridos, system.getRecorridos());
 	}
 
 	@Test
@@ -161,6 +161,29 @@ class SystemTest {
 
 		assertThrows(IllegalStateException.class, () -> {
 			system.removeRecorrido(id);
+		});
+	}
+	
+	/**
+	 * FINDME Tests for {@link System#getRecorrido(String)}
+	 */
+	@Test
+	void testGetRecorridoValido() {
+		system.addRecorrido(recorrido);
+		assertEquals(recorrido, system.getRecorrido(recorrido.getID()));
+	}
+	
+	@Test
+	void testGetRecorridoConIDNull() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			system.getRecorrido(null);
+		});
+	}
+
+	@Test
+	void testGetRecorridoConRecorridoFueraDeSistema() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			system.getRecorrido(id);
 		});
 	}
 
