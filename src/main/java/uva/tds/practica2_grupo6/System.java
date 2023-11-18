@@ -3,6 +3,7 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,14 +53,20 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 18/11/23
  */
 public class System {
+	
+	/**
+	 * List of routes registered in the system
+	 */
+	private List<Recorrido> routes;
 
 	/**
 	 * Instance the System
 	 */
 	public System() {
+		routes = new ArrayList<>();
 	}
 
 	/**
@@ -71,6 +78,13 @@ public class System {
 	 * @throws IllegalStateException    if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
+		if (route == null)
+			throw new IllegalArgumentException("route is null");
+		for (Recorrido tmp : routes) {
+			if (route.equals(tmp))
+				throw new IllegalStateException("the route is already in the system");
+		}
+		routes.add(route);
 	}
 
 	/**
@@ -91,7 +105,7 @@ public class System {
 	 * @return list of routes in system
 	 */
 	public List<Recorrido> getRecorridos() {
-		return null;
+		return routes;
 	}
 
 	/**

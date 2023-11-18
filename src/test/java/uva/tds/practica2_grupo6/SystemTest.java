@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 18/11/23
  */
 class SystemTest {
 
@@ -102,20 +102,21 @@ class SystemTest {
 		recorridosCheck.add(recorrido);
 		assertEquals(recorridosCheck, recorridos);
 	}
-
+	
 	@Test
 	void testAddRecorridoConRecorridoNull() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			system.addRecorrido(null);
 		});
 	}
-
+	
 	@Test
 	void testAddRecorridoConRecorridoYaEnSystem() {
+		Recorrido otherRecorrido = new Recorrido(id, destination, origin, transport, price, date, newTime, numSeats, duration);
 		system.addRecorrido(recorrido);
-		assertEquals(recorrido, differentRecorrido);
-		assertThrows(IllegalArgumentException.class, () -> {
-			system.addRecorrido(differentRecorrido);
+		assertEquals(recorrido, otherRecorrido);
+		assertThrows(IllegalStateException.class, () -> {
+			system.addRecorrido(otherRecorrido);
 		});
 	}
 
