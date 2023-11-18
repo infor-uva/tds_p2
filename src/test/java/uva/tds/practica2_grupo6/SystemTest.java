@@ -465,15 +465,15 @@ class SystemTest {
 			system.updateRecorridoDate(id, null);
 		});
 	}
-
+	
 	@Test
-	void testUpdateRecorridoDateConDateAnterior() {
+	void testUpdateRecorridoDateConValoresActuales() {
 		system.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
 			system.updateRecorridoDate(id, recorrido.getDate());
 		});
 	}
-
+	
 	/**
 	 * FINDME Tests for {@link System#updateRecorridoTime(String, LocalTime)}
 	 */
@@ -506,9 +506,9 @@ class SystemTest {
 			system.updateRecorridoTime(id, null);
 		});
 	}
-
+	
 	@Test
-	void testUpdateRecorridoTimeConTimeAnterior() {
+	void testUpdateRecorridoTimeConValoresActuales() {
 		system.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
 			system.updateRecorridoTime(id, recorrido.getTime());
@@ -548,9 +548,9 @@ class SystemTest {
 			system.updateRecorridoDateTime(id, null);
 		});
 	}
-
+	
 	@Test
-	void testUpdateRecorridoDateTimeConDateYTimeAnterior() {
+	void testUpdateRecorridoDateTimeConValoresActuales() {
 		system.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
 			system.updateRecorridoDateTime(id, recorrido.getDateTime());
@@ -598,9 +598,9 @@ class SystemTest {
 			system.updateRecorrido(id, newDate, null);
 		});
 	}
-
+	
 	@Test
-	void testUpdateRecorridoConDateYTimeAnterior() {
+	void testUpdateRecorridoConValoresActuales() {
 		system.addRecorrido(recorrido);
 		assertThrows(IllegalStateException.class, () -> {
 			system.updateRecorrido(id, recorrido.getDate(), recorrido.getTime());

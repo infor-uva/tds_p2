@@ -223,7 +223,8 @@ public class System {
 	 *                                  id
 	 */
 	public LocalDate getDateOfRecorrido(String id) {
-		return null;
+		// TODO revisar todos los tests para comprobar lo de id vacio
+		return getRecorrido(id).getDate();
 	}
 
 	/**
@@ -239,7 +240,7 @@ public class System {
 	 *                                  id
 	 */
 	public LocalTime getTimeOfRecorrido(String id) {
-		return null;
+		return getRecorrido(id).getTime();
 	}
 
 	/**
@@ -255,7 +256,7 @@ public class System {
 	 *                                  id
 	 */
 	public LocalDateTime getDateTimeOfRecorrido(String id) {
-		return null;
+		return getRecorrido(id).getDateTime();
 	}
 
 	/**
@@ -270,6 +271,14 @@ public class System {
 	 * @throws IllegalStateException    if the new date is the already the set
 	 */
 	public void updateRecorridoDate(String id, LocalDate newDate) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newDate == null)
+			throw new IllegalArgumentException("newDate is null");
+		if (route.getDate().equals(newDate))
+			throw new IllegalArgumentException("newDate is already set");
+		route.updateDate(newDate);
 	}
 
 	/**
@@ -284,6 +293,14 @@ public class System {
 	 * @throws IllegalStateException    if the new time is the already the set
 	 */
 	public void updateRecorridoTime(String id, LocalTime newTime) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newTime == null)
+			throw new IllegalArgumentException("newTime is null");
+		if (route.getTime().equals(newTime))
+			throw new IllegalArgumentException("newTime is already set");
+		route.updateTime(newTime);
 	}
 
 	/**
@@ -298,6 +315,14 @@ public class System {
 	 * @throws IllegalStateException    if the new Date time is the already the set
 	 */
 	public void updateRecorridoDateTime(String id, LocalDateTime newDateTime) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newDateTime == null)
+			throw new IllegalArgumentException("newDateTime is null");
+		if (route.getDateTime().equals(newDateTime))
+			throw new IllegalArgumentException("newDateTime is already set");
+		route.updateDateTime(newDateTime);
 	}
 
 	/**
@@ -314,6 +339,16 @@ public class System {
 	 * @throws IllegalStateException    if the new Date time is the already the set
 	 */
 	public void updateRecorrido(String id, LocalDate newDate, LocalTime newTime) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newDate == null)
+			throw new IllegalArgumentException("newDateTime is null");
+		if (newTime == null)
+			throw new IllegalArgumentException("newTime is null");
+		if (route.getDateTime().equals(LocalDateTime.of(newDate, newTime)))
+			throw new IllegalStateException("newDateTime is already set");
+		route.updateDateTime(newDate, newTime);
 	}
 
 	/**
