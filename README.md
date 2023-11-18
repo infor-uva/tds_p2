@@ -35,7 +35,7 @@ Trabajo asignado:
 
 Tiempo empleado: 
 - Fase Red: `4h 30min`
-- Fase Green: `2h 25min` (Implementación Recorrido)
+- Fase Green: `2h 25min` (Implementación Recorrido) + `15 min` (Implementación F4.1)
     
 ### Hugo Cubino Cubino
 Trabajo asignado:
