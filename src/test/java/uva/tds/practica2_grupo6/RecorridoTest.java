@@ -3,8 +3,8 @@ package uva.tds.practica2_grupo6;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,10 +13,16 @@ import org.junit.jupiter.api.Test;
  * Class dedicated to execute the tests for the methods of the instances of
  * {@link Recorrido}. In this case the constructor
  * 
+ * Ratio Code To Test: 
+ * 	Recorrido:		113 lines
+ * 	RecorridoTest:	306 lines
+ * 	Ratio: 306/113 ~= 2.71
+ * 
  * @author diebomb
  * @author hugcubi
  * @author migudel
- * @version 29/10/23 11:41
+ * 
+ * @version 17/10/2023
  */
 class RecorridoTest {
 	/**
@@ -45,6 +51,8 @@ class RecorridoTest {
 	private Recorrido recorrido;
 	private Recorrido sameRecorrido;
 	private Recorrido differentRecorrido;
+	private Recorrido busRecorrido;
+	private Recorrido trainRecorrido;
 	private LocalDate newDate;
 	private LocalTime newTime;
 	private LocalDateTime newDateTime;
@@ -68,6 +76,8 @@ class RecorridoTest {
 		newDate = LocalDate.of(2025, 12, 30);
 		newTime = LocalTime.of(16, 20, 37);
 		newDateTime = LocalDateTime.of(2030, 5, 6, 19, 15, 13);
+		busRecorrido = new Recorrido("B123", origin, destination, BUS, price, date, time, 50, duration);
+		trainRecorrido = new Recorrido("B123", origin, destination, TRAIN, price, date, time, 250, duration);
 	}
 
 	@Test
@@ -149,7 +159,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConIdNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(null, origin, destination, transport, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -163,7 +173,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConOriginNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, null, destination, transport, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -177,7 +187,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConDestinationNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, null, transport, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -198,7 +208,7 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConTransportNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, destination, null, price, date, time, numAvailableSeats, duration);
 		});
 	}
@@ -219,14 +229,14 @@ class RecorridoTest {
 
 	@Test
 	void testConstructorNoValidoConDateNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, destination, transport, price, null, time, numAvailableSeats, duration);
 		});
 	}
 
 	@Test
 	void testConstructorNoValidoConTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Recorrido(id, origin, destination, transport, price, date, null, numAvailableSeats, duration);
 		});
 	}
@@ -289,7 +299,7 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateDateConDateNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDate(null);
 		});
 	}
@@ -303,7 +313,7 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateTimeConTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateTime(null);
 		});
 	}
@@ -317,14 +327,14 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateDateTimeConDateNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDateTime(null, newTime);
 		});
 	}
 
 	@Test
 	void testUpdateDateTimeConTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDateTime(newDate, null);
 		});
 	}
@@ -338,15 +348,158 @@ class RecorridoTest {
 
 	@Test
 	void testUpdateDateTimeConDateTimeNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.updateDateTime(null);
 		});
 	}
 
 	@Test
 	void testUpdateDateTimeConDateTimeActual() {
-		assertThrows(NullPointerException.class, () -> {
+		// TODO Especificar que fue modificado, cambio de null a state
+		assertThrows(IllegalStateException.class, () -> {
 			recorrido.updateDateTime(recorrido.getDateTime());
+		});
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsValidoLimiteInferior() {
+		int numSeats = 1;
+		assertEquals(busRecorrido.getTotalSeats(), busRecorrido.getNumAvailableSeats());
+		busRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(busRecorrido.getTotalSeats() - numSeats, busRecorrido.getNumAvailableSeats());
+
+		assertEquals(trainRecorrido.getTotalSeats(), trainRecorrido.getNumAvailableSeats());
+		trainRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(trainRecorrido.getTotalSeats() - numSeats, trainRecorrido.getNumAvailableSeats());
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsValidoLimiteSuperior() {
+		int numSeats = 50;
+		assertEquals(busRecorrido.getTotalSeats(), busRecorrido.getNumAvailableSeats());
+		busRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(busRecorrido.getTotalSeats() - numSeats, busRecorrido.getNumAvailableSeats());
+		
+		numSeats = 250;
+		assertEquals(trainRecorrido.getTotalSeats(), trainRecorrido.getNumAvailableSeats());
+		trainRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(trainRecorrido.getTotalSeats() - numSeats, trainRecorrido.getNumAvailableSeats());
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsConNumSeatsLimiteInferiorBus() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			busRecorrido.decreaseAvailableSeats(0);
+		});
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsConNumSeatsLimiteInferiorTrain() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			trainRecorrido.decreaseAvailableSeats(0);
+		});
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsConNumSeatsLimiteSuperiorBus() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			busRecorrido.decreaseAvailableSeats(51);
+		});
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsConNumSeatsLimiteSuperiorTrain() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			trainRecorrido.decreaseAvailableSeats(251);
+		});
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsConNumSeatsMayorQueNumAivailableSeatsBus() {
+		busRecorrido.decreaseAvailableSeats(45);
+		assertThrows(IllegalStateException.class, () -> {			
+			busRecorrido.decreaseAvailableSeats(6);
+		});
+	}
+	
+	@Test
+	void testDecreaseAvailableSeatsConNumSeatsMayorQueNumAivailableSeatsTrain() {
+		trainRecorrido.decreaseAvailableSeats(245);
+		assertThrows(IllegalStateException.class, () -> {			
+			trainRecorrido.decreaseAvailableSeats(6);
+		});
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsValidoLimiteInferior() {
+		int numSeats = 1;
+		busRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(busRecorrido.getTotalSeats() - numSeats, busRecorrido.getNumAvailableSeats());
+		busRecorrido.increaseAvailableSeats(numSeats);
+		assertEquals(busRecorrido.getTotalSeats(), busRecorrido.getNumAvailableSeats());
+
+		trainRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(trainRecorrido.getTotalSeats() - numSeats, trainRecorrido.getNumAvailableSeats());
+		trainRecorrido.increaseAvailableSeats(numSeats);
+		assertEquals(trainRecorrido.getTotalSeats(), trainRecorrido.getNumAvailableSeats());
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsValidoLimiteSuperior() {
+		int numSeats = 50;
+		busRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(busRecorrido.getTotalSeats() - numSeats, busRecorrido.getNumAvailableSeats());
+		busRecorrido.increaseAvailableSeats(numSeats);
+		assertEquals(busRecorrido.getTotalSeats(), busRecorrido.getNumAvailableSeats());
+		
+		numSeats = 250;
+		trainRecorrido.decreaseAvailableSeats(numSeats);
+		assertEquals(trainRecorrido.getTotalSeats() - numSeats, trainRecorrido.getNumAvailableSeats());
+		trainRecorrido.increaseAvailableSeats(numSeats);
+		assertEquals(trainRecorrido.getTotalSeats(), trainRecorrido.getNumAvailableSeats());
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsConNumSeatsLimiteInferiorBus() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			busRecorrido.increaseAvailableSeats(0);
+		});
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsConNumSeatsLimiteInferiorTrain() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			trainRecorrido.increaseAvailableSeats(0);
+		});
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsConNumSeatsLimiteSuperiorBus() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			busRecorrido.increaseAvailableSeats(51);
+		});
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsConNumSeatsLimiteSuperiorTrain() {
+		assertThrows(IllegalArgumentException.class, () -> {			
+			trainRecorrido.increaseAvailableSeats(251);
+		});
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsConNumSeatsMayorQueNumAivailableSeatsBus() {
+		busRecorrido.decreaseAvailableSeats(5);
+		assertThrows(IllegalStateException.class, () -> {			
+			busRecorrido.increaseAvailableSeats(6);
+		});
+	}
+	
+	@Test
+	void testIncreaseAvailableSeatsConNumSeatsMayorQueNumAivailableSeatsTrain() {
+		busRecorrido.decreaseAvailableSeats(5);
+		assertThrows(IllegalStateException.class, () -> {			
+			trainRecorrido.increaseAvailableSeats(6);
 		});
 	}
 
@@ -361,8 +514,8 @@ class RecorridoTest {
 	}
 
 	@Test
-	void testEqualsNoValidoCon() {
-		assertThrows(NullPointerException.class, () -> {
+	void testEqualsNoValidoConNull() {
+		assertThrows(IllegalArgumentException.class, () -> {
 			recorrido.equals(null);
 		});
 	}
