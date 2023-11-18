@@ -105,7 +105,7 @@ class SystemTest {
 
 	@Test
 	void testAddRecorridoConRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.addRecorrido(null);
 		});
 	}
@@ -136,7 +136,7 @@ class SystemTest {
 
 	@Test
 	void testRemoveRecorridoConRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.removeRecorrido(null);
 		});
 	}
@@ -180,7 +180,7 @@ class SystemTest {
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioVacio() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.getPrecioTotalBilletesUsuario(null);
 		});
 	}
@@ -263,7 +263,7 @@ class SystemTest {
 
 	@Test
 	void testGetRecorridosDisponiblesFechaSinFecha() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.getRecorridosDisponiblesFecha(null);
 		});
 	}
@@ -298,7 +298,7 @@ class SystemTest {
 
 	@Test
 	void testGetAssociatedBilletesToRouteConRouteNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.getAssociatedBilletesToRoute(null);
 		});
 	}
@@ -357,7 +357,7 @@ class SystemTest {
 
 	@Test
 	void testGetTimeOfRecorridoNoValidoConIDNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.getTimeOfRecorrido(null);
 		});
 	}
@@ -390,7 +390,7 @@ class SystemTest {
 
 	@Test
 	void testGetDateTimeOfRecorridoNoValidoConIDNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.getDateTimeOfRecorrido(null);
 		});
 	}
@@ -422,7 +422,7 @@ class SystemTest {
 
 	@Test
 	void testUpdateRecorridoDateConRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorridoDate(null, newDate);
 		});
 	}
@@ -437,7 +437,7 @@ class SystemTest {
 	@Test
 	void testUpdateRecorridoDateConDateNull() {
 		system.addRecorrido(recorrido);
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorridoDate(id, null);
 		});
 	}
@@ -463,7 +463,7 @@ class SystemTest {
 
 	@Test
 	void testUpdateRecorridoTimeConRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorridoTime(null, newTime);
 		});
 	}
@@ -478,7 +478,7 @@ class SystemTest {
 	@Test
 	void testUpdateRecorridoTimeConTimeNull() {
 		system.addRecorrido(recorrido);
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorridoTime(id, null);
 		});
 	}
@@ -505,7 +505,7 @@ class SystemTest {
 
 	@Test
 	void testUpdateRecorridoDateTimeConRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorridoDateTime(null, newDateTime);
 		});
 	}
@@ -520,7 +520,7 @@ class SystemTest {
 	@Test
 	void testUpdateRecorridoDateTimeConDateTimeNull() {
 		system.addRecorrido(recorrido);
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorridoDateTime(id, null);
 		});
 	}
@@ -547,7 +547,7 @@ class SystemTest {
 
 	@Test
 	void testUpdateRecorridoConRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorrido(null, newDate, newTime);
 		});
 	}
@@ -562,7 +562,7 @@ class SystemTest {
 	@Test
 	void testUpdateRecorridoConDateNull() {
 		system.addRecorrido(recorrido);
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorrido(id, null, newTime);
 		});
 	}
@@ -570,7 +570,7 @@ class SystemTest {
 	@Test
 	void testUpdateRecorridoConTimeNull() {
 		system.addRecorrido(recorrido);
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.updateRecorrido(id, newDate, null);
 		});
 	}
@@ -684,7 +684,7 @@ class SystemTest {
 
 	@Test
 	void testComprarBilleteLocalizadorNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.comprarBilletes(null, user, differentRecorrido, 1);
 		});
 	}
@@ -707,14 +707,14 @@ class SystemTest {
 
 	@Test
 	void testComprarBilleteUsuarioNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.comprarBilletes("ABC12345", null, differentRecorrido, 1);
 		});
 	}
 
 	@Test
 	void testComprarBilleteRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.comprarBilletes("ABC12345", user, null, 1);
 		});
 	}
@@ -767,7 +767,7 @@ class SystemTest {
 
 	@Test
 	void testComprarBilletesReservadosConLocatorNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.comprarBilletesReservados(null);
 		});
 	}
@@ -827,21 +827,21 @@ class SystemTest {
 
 	@Test
 	void testReservarBilleteLocalizadorNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.reservarBilletes(null, user, recorrido, 1);
 		});
 	}
 
 	@Test
 	void testReservarBilleteUsuarioNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.reservarBilletes("ABC12345", null, recorrido, 1);
 		});
 	}
 
 	@Test
 	void testReservarBilleteRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.reservarBilletes("ABC12345", user, null, 1);
 		});
 	}
@@ -897,7 +897,7 @@ class SystemTest {
 
 	@Test
 	void testNoSePuedeAnularReservaSiLocalizadorNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.anularReserva(null, 1);
 		});
 	}
@@ -967,7 +967,7 @@ class SystemTest {
 
 	@Test
 	void testNoSePuedeDevolverBilletesSiLocalizadorNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.devolverBilletes(null, 1);
 		});
 	}
