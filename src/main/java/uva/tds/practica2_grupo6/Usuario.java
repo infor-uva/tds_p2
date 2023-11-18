@@ -30,9 +30,9 @@ public class Usuario {
 	 * @param nombre
 	 * 
 	 * @throws IllegalArgumentException if the NIF is empty
-	 * @throws NullPointerException     if the NIF is null
+	 * @throws IllegalArgumentException     if the NIF is null
 	 * @throws IllegalArgumentException if the name is empty
-	 * @throws NullPointerException     if the name is null
+	 * @throws IllegalArgumentException     if the name is null
 	 * @throws IllegalArgumentException if the number of characters in the name
 	 *                                  exceeds 15
 	 * @throws IllegalArgumentException if the number of NIF digits exceeds 8
@@ -44,10 +44,10 @@ public class Usuario {
 	 */
 	public Usuario(String nif, String nombre) {
 		if(nif == null) {
-			throw new NullPointerException("Nif nulo\n");
+			throw new IllegalArgumentException("Nif nulo\n");
 		}
 		if(nombre == null) {
-			throw new NullPointerException("Nombre nulo\n");
+			throw new IllegalArgumentException("Nombre nulo\n");
 		}
 		if(nif.isEmpty()){
 			throw new IllegalArgumentException("Nif vacio\n");
@@ -107,12 +107,12 @@ public class Usuario {
 	 * 
 	 * @return if are the same
 	 * 
-	 * @throws NullPointerException if o is a null
+	 * @throws IllegalArgumentException if o is a null
 	 */
 	@Override
 	public boolean equals(Object o) {
 		if(o == null) {
-			throw new NullPointerException("El objeto es nulo\n");
+			throw new IllegalArgumentException("El objeto es nulo\n");
 		}
 		if(getClass() != o.getClass()) {
 			return false;

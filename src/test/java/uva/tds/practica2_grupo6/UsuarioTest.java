@@ -50,14 +50,14 @@ class UsuarioTest {
 
 	@Test
 	void testConstructorUsuarioNifNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Usuario(null, "Geronimo");
 		});
 	}
 
 	@Test
 	void testConstructorUsuarioNombreNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Usuario("32698478E", null);
 		});
 	}
@@ -142,7 +142,7 @@ class UsuarioTest {
 
 	@Test
 	void testEqualsNoValido() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			user.equals(null);
 		});
 	}
