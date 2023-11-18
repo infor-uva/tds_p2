@@ -96,7 +96,7 @@ class BilleteTest {
 
 	@Test
 	public void testUsuarioNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Billete("1234567890", recorrido, null, ESTADO_COMPRADO);
 		});
 
@@ -104,14 +104,14 @@ class BilleteTest {
 
 	@Test
 	public void testRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Billete("1234567890", null, user, ESTADO_COMPRADO);
 		});
 	}
 
 	@Test
 	void testEstadoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Billete("1234567", recorrido, user, null);
 		});
 	}
@@ -153,7 +153,7 @@ class BilleteTest {
 
 	@Test
 	void testEqualsNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			ticket.equals(null);
 		});
 	}

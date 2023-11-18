@@ -29,17 +29,17 @@ public class Billete {
 	 * @param estado
 	 * @throws IllegalArgumentException si localizador tiene menos de 1 y mas de 8
 	 *                                  caracteres
-	 * @throws NullPointerException     si recorrido, usuario o estado son null
+	 * @throws IllegalArgumentException     si recorrido, usuario o estado son null
 	 * @throws IllegalArgumentException si estado es diferente de "comprado" y
 	 *                                  "reservado"
 	 */
 	public Billete(String localizador, Recorrido recorrido, Usuario usuario, String estado) {
 		if (recorrido == null)
-			throw new NullPointerException("Recorrido no puede ser null");
+			throw new IllegalArgumentException("Recorrido no puede ser null");
 		if (usuario == null)
-			throw new NullPointerException("Usuario no puede ser null");
+			throw new IllegalArgumentException("Usuario no puede ser null");
 		if (estado == null)
-			throw new NullPointerException("Estado no puede ser null");
+			throw new IllegalArgumentException("Estado no puede ser null");
 		if (localizador.length() < 1 || localizador.length() > 8)
 			throw new IllegalArgumentException("Localizador tiene que tener entre 1 y 8 caracteres");
 		if (!estado.equals("comprado") && !estado.equals("reservado"))
@@ -110,12 +110,12 @@ public class Billete {
 	 * 
 	 * @return if are the same
 	 * 
-	 * @throws NullPointerException if o is null
+	 * @throws IllegalArgumentException if o is null
 	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o == null)
-			throw new NullPointerException("El objeto no puede ser null");
+			throw new IllegalArgumentException("El objeto no puede ser null");
 		// Compruebas que es un objeto billete
 		Billete tmp = (Billete) o;
 		// Comparamos los objetos
