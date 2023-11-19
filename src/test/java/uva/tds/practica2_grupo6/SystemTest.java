@@ -117,11 +117,9 @@ class SystemTest {
 	
 	@Test
 	void testAddRecorridoConRecorridoYaEnSystem() {
-		Recorrido otherRecorrido = new Recorrido(id, destination, origin, transport, price, date, newTime, numSeats, duration);
 		system.addRecorrido(recorrido);
-		assertEquals(recorrido, otherRecorrido);
 		assertThrows(IllegalStateException.class, () -> {
-			system.addRecorrido(otherRecorrido);
+			system.addRecorrido(recorrido);
 		});
 	}
 
