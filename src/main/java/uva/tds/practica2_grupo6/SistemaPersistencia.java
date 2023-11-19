@@ -7,7 +7,8 @@ import java.util.List;
 
 /**
  * Class dedicated for the management of the different instances of
- * {@link Recorrido}, {@link Billete} and {@link Usuario}.
+ * {@link Recorrido}, {@link Billete} and {@link Usuario} based in external
+ * database.
  * 
  * The management will be based on:
  * <ul>
@@ -16,8 +17,8 @@ import java.util.List;
  * <li>Remove a Recorrido of system<br>
  * {@link SistemaPersistencia#removeRecorrido(String))}</li>
  * <li>Consult the list of recorridos in system<br>
- * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price accumulated by a
- * user<br>
+ * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
+ * accumulated by a user<br>
  * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}</li>
  * <li>Consult the list of Recorridos that have a specific date<br>
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
@@ -57,9 +58,16 @@ import java.util.List;
 public class SistemaPersistencia {
 
 	/**
+	 * External database which will manage the management of the routes, tickets and
+	 * user
+	 */
+	private IDatabaseManager database;
+
+	/**
 	 * Instance the System
 	 */
-	public SistemaPersistencia() {
+	public SistemaPersistencia(IDatabaseManager database) {
+		this.database = database;
 	}
 
 	/**
@@ -71,6 +79,13 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
+		try {			
+			database.addRecorrido(route);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
 	}
 
 	/**
@@ -83,6 +98,17 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if route has associated tickets
 	 */
 	public void removeRecorrido(String id) {
+		List<Billete> tmp;
+		try {			
+			tmp = getAssociatedBilletesToRoute(id);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
+		if (tmp.size() > 0) 
+			throw new IllegalStateException("the route has associated tickets");
+		database.eliminarRecorrido(id);
 	}
 
 	/**
@@ -91,7 +117,7 @@ public class SistemaPersistencia {
 	 * @return list of routes in system
 	 */
 	public List<Recorrido> getRecorridos() {
-		return null;
+		return database.getRecorridos();
 	}
 
 	/**
@@ -146,7 +172,15 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 */
 	public List<Billete> getAssociatedBilletesToRoute(String id) {
-		return null;
+		Recorrido route = null;
+		try {
+			route = database.getRecorrido(id);
+		} catch (IllegalArgumentException e) {
+			throw e;
+		}
+		if (route == null)
+			throw new IllegalStateException("the route isn't in the system");
+		return database.getBilletesDeRecorrido(id);
 	}
 
 	/**
@@ -200,7 +234,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -214,7 +248,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the time of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -228,7 +262,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id          of the route
 	 * @param newDateTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -242,7 +276,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * @param newTime
 	 * 

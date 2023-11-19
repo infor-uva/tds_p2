@@ -10,9 +10,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.easymock.EasyMock;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,6 +42,7 @@ class SistemaPersistenciaTest {
 	private Usuario user;
 	private Usuario differentUser;
 	private String id;
+	private String idLI;
 	private String origin;
 	private String destination;
 	private String transport;
@@ -45,13 +51,19 @@ class SistemaPersistenciaTest {
 	private LocalTime time;
 	private int duration;
 	private Recorrido recorrido;
+	private Recorrido recorridoLI;
 	private Recorrido differentRecorrido;
-	private SistemaPersistencia sistema;
 	private int numSeats;
 	private LocalDateTime newDateTime;
 	private LocalDate newDate;
 	private LocalTime newTime;
 
+	@Mock
+	private IDatabaseManager database;
+	
+	@TestSubject
+	private SistemaPersistencia sistema;
+	
 	@BeforeEach
 	void setUp() {
 		nif = "32698478E";
@@ -59,6 +71,7 @@ class SistemaPersistenciaTest {
 		user = new Usuario(nif, nombre);
 		differentUser = new Usuario("79105889B", nombre);
 		id = "c12345";
+		idLI = "c";
 		origin = "Valladolid";
 		destination = "Galicia";
 		transport = BUS;
@@ -68,14 +81,17 @@ class SistemaPersistenciaTest {
 		numSeats = 20;
 		duration = 30;
 		recorrido = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		recorridoLI = new Recorrido(idLI, origin, destination, transport, price, date, time, numSeats, duration);
 		transport = TRAIN;
 		differentRecorrido = new Recorrido("dif", origin, destination, transport, price, date, time, numSeats,
 				duration);
 		newDateTime = LocalDateTime.of(2023, 5, 14, 22, 56, 20);
 		newDate = LocalDate.of(2024, 2, 4);
 		newTime = LocalTime.of(12, 2, 4);
-
-		sistema = new SistemaPersistencia();
+		
+		database = EasyMock.mock(IDatabaseManager.class);
+		
+		sistema = new SistemaPersistencia(database);
 	}
 
 	/**
@@ -83,12 +99,14 @@ class SistemaPersistenciaTest {
 	 */
 	@Test
 	void testConstructor() {
-		// TODO Completar tras fusión en develop
-		// Asegurar que todo lo que se encarga de inicializar el constructor lo hace
-		SistemaPersistencia sistema = new SistemaPersistencia();
+		EasyMock.expect(database.getRecorridos()).andReturn(new ArrayList<>()).times(1);
+		EasyMock.replay(database);
+		
+		SistemaPersistencia sistema = new SistemaPersistencia(database);
 		assertNotNull(sistema);
-		assertNotNull(sistema.getRecorridos());
-		assertEquals(0, sistema.getRecorridos().size());
+		assertEquals(Collections.emptyList(), sistema.getRecorridos());
+		
+		EasyMock.verify(database);
 	}
 
 	/**
@@ -96,44 +114,88 @@ class SistemaPersistenciaTest {
 	 */
 	@Test
 	void testAddRecorridoValido() {
+		ArrayList<Recorrido> returned = new ArrayList<>();
+		returned.add(recorrido);
+		
+		database.addRecorrido(recorrido);
+		EasyMock.expectLastCall();
+		EasyMock.expect(database.getRecorridos()).andReturn(returned).times(1);
+		EasyMock.replay(database);
+		
 		sistema.addRecorrido(recorrido);
 		List<Recorrido> recorridos = sistema.getRecorridos();
 		List<Recorrido> recorridosCheck = new ArrayList<>();
 		recorridosCheck.add(recorrido);
 		assertEquals(recorridosCheck, recorridos);
+		
+		EasyMock.verify(database);
 	}
 
 	@Test
 	void testAddRecorridoConRecorridoNull() {
+		database.addRecorrido(null);
+		EasyMock.expectLastCall().andThrow(new IllegalArgumentException());
+		EasyMock.replay(database);
+		
 		assertThrows(IllegalArgumentException.class, () -> {
 			sistema.addRecorrido(null);
 		});
+		
+		EasyMock.verify(database);
 	}
 
 	@Test
 	void testAddRecorridoConRecorridoYaEnSystem() {
+		database.addRecorrido(recorrido);
+		EasyMock.expectLastCall();
+		database.addRecorrido(recorrido);
+		EasyMock.expectLastCall().andThrow(new IllegalStateException());
+		EasyMock.replay(database);
+		
 		sistema.addRecorrido(recorrido);
-		assertEquals(recorrido, differentRecorrido);
-		assertThrows(IllegalArgumentException.class, () -> {
-			sistema.addRecorrido(differentRecorrido);
+		assertEquals(recorrido, recorrido);
+		assertThrows(IllegalStateException.class, () -> {
+			sistema.addRecorrido(recorrido);
 		});
+		
+		EasyMock.verify(database);
 	}
 
 	/**
 	 * FINDME Tests for {@link System#removeRecorrido(String))}
 	 */
 	@Test
-	void testRemoveRecorridoValido() {
+	@Tag("Coberage") // TODO Revisar
+	void testRemoveRecorridoValidoConIDLimiteInferior() {
+		ArrayList<Recorrido> returned = new ArrayList<>();
+		returned.add(recorridoLI);
+		
+		database.addRecorrido(recorridoLI);
+		EasyMock.expectLastCall();
+		EasyMock.expect(database.getRecorridos()).andReturn(returned).times(1);
+		EasyMock.expect(database.getRecorrido(idLI)).andReturn(recorridoLI).times(1);
+		EasyMock.expect(database.getBilletesDeRecorrido(idLI)).andReturn(new ArrayList<>()).times(1);
+		EasyMock.expect(database.getRecorrido(idLI)).andReturn(recorridoLI).times(1);
+		EasyMock.expect(database.getBilletesDeRecorrido(idLI)).andReturn(new ArrayList<>()).times(1);
+		database.eliminarRecorrido(idLI);
+		EasyMock.expectLastCall().times(1);
+		EasyMock.expect(database.getRecorridos()).andReturn(new ArrayList<>()).times(1);
+		EasyMock.replay(database);
+		
 		List<Recorrido> recorridos = new ArrayList<>();
-		recorridos.add(recorrido);
-		sistema.addRecorrido(recorrido);
-		assertEquals(recorrido, sistema.getRecorridos());
-		assertEquals(0, sistema.getAssociatedBilletesToRoute(id));
-		sistema.removeRecorrido(id);
+		recorridos.add(recorridoLI);
+		sistema.addRecorrido(recorridoLI);
+		assertEquals(recorridos, sistema.getRecorridos());
+		assertEquals(Collections.emptyList(), sistema.getAssociatedBilletesToRoute(idLI));
+		sistema.removeRecorrido(idLI);
 		recorridos.remove(0);
-		assertEquals(recorrido, sistema.getRecorridos());
+		assertEquals(recorridos, sistema.getRecorridos());
+		
+		EasyMock.verify(database);
 	}
 
+	// TODO Por aquí
+	
 	@Test
 	void testRemoveRecorridoConRecorridoNull() {
 		assertThrows(IllegalArgumentException.class, () -> {
