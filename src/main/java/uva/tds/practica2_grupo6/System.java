@@ -97,6 +97,7 @@ public class System {
 	 * @param id of the route
 	 * 
 	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if the id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalStateException    if route has associated tickets
 	 */
@@ -118,10 +119,13 @@ public class System {
 	 * @return id's route or null if the route isn't in the system
 	 * 
 	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if the id is empty
 	 */
 	public Recorrido getRecorrido(String id) {
 		if (id == null)
 			throw new IllegalArgumentException("id is null");
+		if (id.isEmpty())
+			throw new IllegalArgumentException("id is empty");
 		for (Recorrido route : routes) {
 			if (route.getID().equals(id))
 				return route;
@@ -223,8 +227,10 @@ public class System {
 	 *                                  id
 	 */
 	public LocalDate getDateOfRecorrido(String id) {
-		// TODO revisar todos los tests para comprobar lo de id vacio
-		return getRecorrido(id).getDate();
+		Recorrido r;
+		if ((r = getRecorrido(id)) == null)
+			throw new IllegalStateException("no route in the system with this id");
+		return r.getDate();
 	}
 
 	/**
@@ -240,7 +246,10 @@ public class System {
 	 *                                  id
 	 */
 	public LocalTime getTimeOfRecorrido(String id) {
-		return getRecorrido(id).getTime();
+		Recorrido r;
+		if ((r = getRecorrido(id)) == null)
+			throw new IllegalStateException("no route in the system with this id");
+		return r.getTime();
 	}
 
 	/**
@@ -256,7 +265,10 @@ public class System {
 	 *                                  id
 	 */
 	public LocalDateTime getDateTimeOfRecorrido(String id) {
-		return getRecorrido(id).getDateTime();
+		Recorrido r;
+		if ((r = getRecorrido(id)) == null)
+			throw new IllegalStateException("no route in the system with this id");
+		return r.getDateTime();
 	}
 
 	/**
@@ -277,7 +289,7 @@ public class System {
 		if (newDate == null)
 			throw new IllegalArgumentException("newDate is null");
 		if (route.getDate().equals(newDate))
-			throw new IllegalArgumentException("newDate is already set");
+			throw new IllegalStateException("newDate is already set");
 		route.updateDate(newDate);
 	}
 
@@ -299,7 +311,7 @@ public class System {
 		if (newTime == null)
 			throw new IllegalArgumentException("newTime is null");
 		if (route.getTime().equals(newTime))
-			throw new IllegalArgumentException("newTime is already set");
+			throw new IllegalStateException("newTime is already set");
 		route.updateTime(newTime);
 	}
 
@@ -321,7 +333,7 @@ public class System {
 		if (newDateTime == null)
 			throw new IllegalArgumentException("newDateTime is null");
 		if (route.getDateTime().equals(newDateTime))
-			throw new IllegalArgumentException("newDateTime is already set");
+			throw new IllegalStateException("newDateTime is already set");
 		route.updateDateTime(newDateTime);
 	}
 
