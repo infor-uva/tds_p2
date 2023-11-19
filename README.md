@@ -33,8 +33,7 @@ Trabajo asignado:
 - Feature 5.1 - Comprar billetes
 - Feature 7 - Obtención precio total billetes de un usuario y obtención recorridos disponibles en una fecha
 
-Tiempo empleado: 
-- Fase Red: `4h 30min`
+Tiempo empleado: `4h 30min`
     
 ### Hugo Cubino Cubino
 Trabajo asignado:
