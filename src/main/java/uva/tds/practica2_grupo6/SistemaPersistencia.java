@@ -3,6 +3,7 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,7 +80,7 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
-		try {			
+		try {
 			database.addRecorrido(route);
 		} catch (IllegalArgumentException e1) {
 			throw e1;
@@ -89,24 +90,40 @@ public class SistemaPersistencia {
 	}
 
 	/**
+	 * Check of the id is not null and have at less one character different of
+	 * spaces \n
+	 * 
+	 * @param id
+	 * 
+	 * @throws IllegalArgumentException if id is null
+	 * @throws IllegalArgumentException if id is empty
+	 */
+	private void checkID(String id) {
+		if (id == null)
+			throw new IllegalArgumentException("is is null");
+		if (id.isBlank())
+			throw new IllegalArgumentException("is is empty");
+	}
+
+	/**
 	 * Remove a route of system
 	 * 
 	 * @param id of the route
 	 * 
 	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalStateException    if route has associated tickets
 	 */
 	public void removeRecorrido(String id) {
+		checkID(id);
 		List<Billete> tmp;
-		try {			
+		try {
 			tmp = getAssociatedBilletesToRoute(id);
-		} catch (IllegalArgumentException e1) {
-			throw e1;
 		} catch (IllegalStateException e2) {
 			throw e2;
 		}
-		if (tmp.size() > 0) 
+		if (tmp.size() > 0)
 			throw new IllegalStateException("the route has associated tickets");
 		database.eliminarRecorrido(id);
 	}
@@ -169,16 +186,12 @@ public class SistemaPersistencia {
 	 * @return list of tickets
 	 * 
 	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 */
 	public List<Billete> getAssociatedBilletesToRoute(String id) {
-		Recorrido route = null;
-		try {
-			route = database.getRecorrido(id);
-		} catch (IllegalArgumentException e) {
-			throw e;
-		}
-		if (route == null)
+		checkID(id);
+		if (database.getRecorrido(id) == null)
 			throw new IllegalStateException("the route isn't in the system");
 		return database.getBilletesDeRecorrido(id);
 	}
@@ -196,7 +209,11 @@ public class SistemaPersistencia {
 	 *                                  id
 	 */
 	public LocalDate getDateOfRecorrido(String id) {
-		return null;
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		return route.getDate();
 	}
 
 	/**
@@ -212,7 +229,11 @@ public class SistemaPersistencia {
 	 *                                  id
 	 */
 	public LocalTime getTimeOfRecorrido(String id) {
-		return null;
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		return route.getTime();
 	}
 
 	/**
@@ -228,7 +249,11 @@ public class SistemaPersistencia {
 	 *                                  id
 	 */
 	public LocalDateTime getDateTimeOfRecorrido(String id) {
-		return null;
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		return route.getDateTime();
 	}
 
 	/**
@@ -312,7 +337,14 @@ public class SistemaPersistencia {
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		return null;
+		// TODO eliminar
+		List<Billete> billetes = new ArrayList<>();
+		for (int i = 0; i < numBilletesReservar; i++) {
+			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
+			billetes.add(ticket);
+			database.addBillete(ticket);
+		}
+		return billetes;
 	}
 
 	/**
@@ -382,7 +414,14 @@ public class SistemaPersistencia {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		return null;
+		// TODO eliminar
+		List<Billete> billetes = new ArrayList<>();
+		for (int i = 0; i < numBilletes; i++) {
+			Billete ticket = new Billete(localizador, recorrido, usr, "comprado");
+			billetes.add(ticket);
+			database.addBillete(ticket);
+		}
+		return billetes;
 	}
 
 	/**
