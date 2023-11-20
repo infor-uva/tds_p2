@@ -119,7 +119,7 @@ class BilleteTest {
 	@Test
 	void testEstadoDiferenteDeCompradoYReservado() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			new Billete("1234567890", recorrido, user, "OtroEstado");
+			new Billete("ABC12345", recorrido, user, "OtroEstado");
 		});
 	}
 
