@@ -168,27 +168,34 @@ class SystemTest {
 	 */
 	@Test
 	void testGetPrecioTotalBilletesUsuarioBus() {
-		system.comprarBilletes("32698478E", user, recorrido, 5);
+		system.comprarBilletes("32698478", user, recorrido, 5);
 		assertEquals(5.0, system.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioPrecioRecorridoTren() {
-		system.comprarBilletes("32698478E", user, differentRecorrido, 5);
+		system.comprarBilletes("32698479", user, differentRecorrido, 5);
 		assertEquals(4.5, system.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
 	}
 
 	@Test
-	void testGetPrecioTotalBilletesUsuarioVacio() {
+	void testGetPrecioTotalBilletesUsuarioNulo() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			system.getPrecioTotalBilletesUsuario(null);
+		});
+	}
+	
+	@Test
+	void testGetPrecioTotalBilletesUsuarioVacio() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			system.getPrecioTotalBilletesUsuario("");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioSinBilletes() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("79105889B");
+			system.getPrecioTotalBilletesUsuario("39545696W");
 		});
 	}
 
@@ -209,42 +216,42 @@ class SystemTest {
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifSinCaracter() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847");
+			system.getPrecioTotalBilletesUsuario("326984788");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalido() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847P");
+			system.getPrecioTotalBilletesUsuario("32698478P");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaI() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847I");
+			system.getPrecioTotalBilletesUsuario("32698478I");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaO() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847O");
+			system.getPrecioTotalBilletesUsuario("32698478O");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaÑ() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847Ñ");
+			system.getPrecioTotalBilletesUsuario("32698478Ñ");
 		});
 	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioConNifInvalidoLetraInvalidaU() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("3269847U");
+			system.getPrecioTotalBilletesUsuario("32698478U");
 		});
 	}
 
