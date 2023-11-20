@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Class dedicated for the management of the different instances of
@@ -12,83 +13,94 @@ import java.util.List;
  * The management will be based on:
  * <ul>
  * <li>Add a Recorrido in to the system<br>
- * {@link SistemaPersistencia#addRecorrido(Recorrido)}</li>
+ * {@link System#addRecorrido(Recorrido)}</li>
  * <li>Remove a Recorrido of system<br>
- * {@link SistemaPersistencia#removeRecorrido(String))}</li>
+ * {@link System#removeRecorrido(Recorrido)}</li>
  * <li>Consult the list of recorridos in system<br>
- * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price accumulated by a
+ * {@link System#getRecorridos()}</li> Consult the total price accumulated by a
  * user<br>
- * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}</li>
+ * {@link System#getPrecioTotalBilletesUsuario(String)}</li>
  * <li>Consult the list of Recorridos that have a specific date<br>
- * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
+ * {@link System#getRecorridosDisponiblesFecha(LocalDate)}</li>
  * <li>Consult the list of Billetes which are associated to the recorrido
  * route<br>
- * {@link SistemaPersistencia#getAssociatedBilletesToRoute(String))}</li>
+ * {@link System#getAssociatedBilletesToRoute(Recorrido)}</li>
  * <li>Consult the date of the route which have the id specified<br>
- * {@link SistemaPersistencia#getDateOfRecorrido(String)}</li>
+ * {@link System#getDateOfRecorrido(String)}</li>
  * <li>Consult the time of the route which have the id specified<br>
- * {@link SistemaPersistencia#getTimeOfRecorrido(String)}</li>
+ * {@link System#getTimeOfRecorrido(String)}</li>
  * <li>Consult the date and time of the route which have the id specified<br>
- * {@link SistemaPersistencia#getDateTimeOfRecorrido(String)}</li>
+ * {@link System#getDateTimeOfRecorrido(String)}</li>
  * <li>Update the date of a recorrido<br>
- * {@link SistemaPersistencia#updateRecorridoDate(String, LocalDate)}</li>
+ * {@link System#updateRecorridoDate(Recorrido, LocalDate)}</li>
  * <li>Update the time of a recorrido<br>
- * {@link SistemaPersistencia#updateRecorridoTime(String, LocalTime)}</li>
+ * {@link System#updateRecorridoTime(Recorrido, LocalTime)}</li>
  * <li>Update the time and date of a recorrido<br>
- * {@link SistemaPersistencia#updateRecorrido(String, LocalDate, LocalTime)}</li>
+ * {@link System#updateRecorrido(Recorrido, LocalDate, LocalTime)}</li>
  * <li>Reserve tickets for a Recorrido and a Usuario<br>
- * {@link SistemaPersistencia#reservarBilletes(String, Usuario, Recorrido, int)}</li>
+ * {@link System#reservarBilletes(String, Usuario, Recorrido, int)}</li>
  * <li>Cancel a reservation<br>
- * {@link SistemaPersistencia#anularReserva(String, int)}</li>
+ * {@link System#anularReserva(String, int)}</li>
  * <li>Return the tickets<br>
- * {@link SistemaPersistencia#devolverBilletes(String, int)}</li>
+ * {@link System#devolverBilletes(String, int)}</li>
  * <li>Buy tickets for a Recorrido and a Usuario<br>
- * {@link SistemaPersistencia#comprarBilletes(String, Usuario, Recorrido, int)}</li>
+ * {@link System#comprarBilletes(String, Usuario, Recorrido, int)}</li>
  * <li>Buy reserved tickets (the previously reserved lot)<br>
- * {@link SistemaPersistencia#comprarBilletesReservados(String)}</li>
+ * {@link System#comprarBilletesReservados(String)}</li>
  * </ul>
  * 
  * @author hugcubi
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 09/11/23
  */
 public class System {
+	/**
+	 * List of routes registered in the system
+	 */
+	private List<Recorrido> routes;
+	
+	/**
+	 * List of tickets registered in the system
+	 */
+	private List<Billete> tickets;
 
 	/**
 	 * Instance the System
 	 */
 	public System() {
+		routes = new ArrayList<>();
+		tickets = new ArrayList<>();
 	}
 
 	/**
-	 * Add a route in to the system
+	 * Add a Recorrido in to the system
 	 * 
 	 * @param route to add
 	 * 
-	 * @throws IllegalArgumentException if route is null
-	 * @throws IllegalStateException    if route is already in the system
+	 * @throws NullPointerException  if route is null
+	 * @throws IllegalStateException if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
 	}
 
 	/**
-	 * Remove a route of system
+	 * Remove a Recorrido of system
 	 * 
-	 * @param id of the route
+	 * @param route to remove
 	 * 
-	 * @throws IllegalArgumentException if the id is null
-	 * @throws IllegalStateException    if id's route isn't in the system
-	 * @throws IllegalStateException    if route has associated tickets
+	 * @throws NullPointerException  if route is null
+	 * @throws IllegalStateException if route is not in the system
+	 * @throws IllegalStateException if route has associated billetes
 	 */
-	public void removeRecorrido(String id) {
+	public void removeRecorrido(String route) {
 	}
 
 	/**
-	 * Consult the list of routes in system
+	 * Consult the list of recorridos in system
 	 * 
-	 * @return list of routes in system
+	 * @return list of recorridos in system
 	 */
 	public List<Recorrido> getRecorridos() {
 		return null;
@@ -104,7 +116,7 @@ public class System {
 	 * 
 	 * @return total price
 	 *
-	 * @throws IllegalArgumentException if the NIF is null.
+	 * @throws NullPointerException     if the NIF is null.
 	 * @throws IllegalArgumentException if the nif is empty
 	 * 
 	 * @throws IllegalArgumentException if the number of NIF digits exceeds 8
@@ -128,24 +140,24 @@ public class System {
 	 * @param fecha
 	 * @return list of routes or an empty list if there are no routes for that date.
 	 *
-	 * @throws IllegalArgumentException if the date is null.
-	 * @throws IllegalStateException    if the date does not have associated route.
+	 * @throws NullPointerException  if the date is null.
+	 * @throws IllegalStateException if the date does not have associated route.
 	 */
 	public List<Recorrido> getRecorridosDisponiblesFecha(LocalDate fecha) {
 		return null;
 	}
 
 	/**
-	 * Consult the list of tickets which are associated to the route
+	 * Consult the list of Billetes which are associated to the recorrido route
 	 * 
-	 * @param id of the route
+	 * @param route
 	 * 
-	 * @return list of tickets
+	 * @return list of Billetes
 	 * 
-	 * @throws IllegalArgumentException if the id is null
-	 * @throws IllegalStateException    if id's route isn't in the system
+	 * @throws NullPointerException  if route is null
+	 * @throws IllegalStateException if route isn't in the system
 	 */
-	public List<Billete> getAssociatedBilletesToRoute(String id) {
+	public List<Billete> getAssociatedBilletesToRoute(String route) {
 		return null;
 	}
 
@@ -156,7 +168,7 @@ public class System {
 	 * 
 	 * @return the date of the route
 	 * 
-	 * @throws IllegalArgumentException if id is null
+	 * @throws NullPointerException     if id is null
 	 * @throws IllegalArgumentException if id have less than 1 character
 	 * @throws IllegalStateException    if there is no route in the system with that
 	 *                                  id
@@ -172,7 +184,7 @@ public class System {
 	 * 
 	 * @return the time of the route
 	 * 
-	 * @throws IllegalArgumentException if id is null
+	 * @throws NullPointerException     if id is null
 	 * @throws IllegalArgumentException if id have less than 1 character
 	 * @throws IllegalStateException    if there is no route in the system with that
 	 *                                  id
@@ -188,7 +200,7 @@ public class System {
 	 * 
 	 * @return the DateTime of the route
 	 * 
-	 * @throws IllegalArgumentException if id is null
+	 * @throws NullPointerException     if id is null
 	 * @throws IllegalArgumentException if id have less than 1 character
 	 * @throws IllegalStateException    if there is no route in the system with that
 	 *                                  id
@@ -198,61 +210,61 @@ public class System {
 	}
 
 	/**
-	 * Update the date of a route
+	 * Update the date of a recorrido
 	 * 
-	 * @param id of the route
+	 * @param route
 	 * @param newDate
 	 * 
-	 * @throws IllegalArgumentException if id is null
-	 * @throws IllegalStateException    if id's route isn't in the system
-	 * @throws IllegalArgumentException if newDate is null
-	 * @throws IllegalStateException    if the new date is the already the set
+	 * @throws NullPointerException  if route is null
+	 * @throws IllegalStateException if route is not in the system
+	 * @throws NullPointerException  if newDate is null
+	 * @throws IllegalStateException if the new date is the already the set
 	 */
-	public void updateRecorridoDate(String id, LocalDate newDate) {
+	public void updateRecorridoDate(String route, LocalDate newDate) {
 	}
 
 	/**
-	 * Update the time of a route
+	 * Update the time of a recorrido
 	 * 
-	 * @param id of the route
+	 * @param route
 	 * @param newTime
 	 * 
-	 * @throws IllegalArgumentException if id is null
-	 * @throws IllegalStateException    if id's route isn't in the system
-	 * @throws IllegalArgumentException if newTime is null
-	 * @throws IllegalStateException    if the new time is the already the set
+	 * @throws NullPointerException  if route is null
+	 * @throws IllegalStateException if route is not in the system
+	 * @throws NullPointerException  if newTime is null
+	 * @throws IllegalStateException if the new time is the already the set
 	 */
-	public void updateRecorridoTime(String id, LocalTime newTime) {
+	public void updateRecorridoTime(String route, LocalTime newTime) {
 	}
 
 	/**
-	 * Update the time and date of a route
+	 * Update the time and date of a recorrido
 	 * 
-	 * @param id of the route
+	 * @param route
 	 * @param newDateTime
 	 * 
-	 * @throws IllegalArgumentException if id is null
-	 * @throws IllegalStateException    if id's route isn't in the system
-	 * @throws IllegalArgumentException if newDateTime is null
-	 * @throws IllegalStateException    if the new Date time is the already the set
+	 * @throws NullPointerException  if route is null
+	 * @throws IllegalStateException if route is not in the system
+	 * @throws NullPointerException  if newDateTime is null
+	 * @throws IllegalStateException if the new Date time is the already the set
 	 */
-	public void updateRecorridoDateTime(String id, LocalDateTime newDateTime) {
+	public void updateRecorridoDateTime(String route, LocalDateTime newDateTime) {
 	}
 
 	/**
-	 * Update the time and date of a route
+	 * Update the time and date of a recorrido
 	 * 
-	 * @param id of the route
+	 * @param route
 	 * @param newDate
 	 * @param newTime
 	 * 
-	 * @throws IllegalArgumentException if id is null
-	 * @throws IllegalStateException    if id's route isn't in the system
-	 * @throws IllegalArgumentException if newDate is null
-	 * @throws IllegalArgumentException if newTime is null
-	 * @throws IllegalStateException    if the new Date time is the already the set
+	 * @throws NullPointerException  if route is null
+	 * @throws IllegalStateException if route is not in the system
+	 * @throws NullPointerException  if newDate is null
+	 * @throws NullPointerException  if newTime is null
+	 * @throws IllegalStateException if the new Date time is the already the set
 	 */
-	public void updateRecorrido(String id, LocalDate newDate, LocalTime newTime) {
+	public void updateRecorrido(String route, LocalDate newDate, LocalTime newTime) {
 	}
 
 	/**
@@ -272,13 +284,45 @@ public class System {
 	 * @throws IllegalArgumentException if the identifier is empty.
 	 * @throws IllegalArgumentException if a locator that has been used previously
 	 *                                  is passed.
-	 * @throws IllegalArgumentException if user is null.
-	 * @throws IllegalArgumentException if recorrido is null.
-	 * @throws IllegalArgumentException if recorrido is null.
+	 * @throws NullPointerException     if user is null.
+	 * @throws NullPointerException     if recorrido is null.
+	 * @throws NullPointerException     if recorrido is null.
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		return null;
+		if(user == null)
+			throw new IllegalArgumentException("El usuario no puede ser null");
+		if(recorrido == null)
+			throw new IllegalArgumentException("El recorrido no puede ser null");
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (numBilletesReservar > recorrido.getNumAvailableSeats())
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es mayor a los asientos disponibles");
+		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats())
+			throw new IllegalArgumentException("No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(recorrido))
+				throw new IllegalArgumentException("Ese localizador ya ha sido utilizado");
+		}
+		int count = 0;
+		for(Recorrido recorridos: this.routes) {
+			if(recorrido.equals(recorridos))
+				count += 1;
+		}
+		if (count == 0)
+			throw new IllegalArgumentException("El recorrido no existe en el sistema");
+		
+		List<Billete> billetesReservados = new ArrayList<Billete>();
+		for (int i = 0; i < numBilletesReservar; i++) {
+			Billete billete = new Billete(localizador,recorrido, user, "reservado");
+			billetesReservados.add(billete);
+		}
+		recorrido.decreaseAvailableSeats(numBilletesReservar);
+		tickets.addAll(billetesReservados);
+		return billetesReservados;
+		
 	}
 
 	/**
@@ -288,7 +332,7 @@ public class System {
 	 * @param localizador
 	 * @param numBilletesAnular
 	 * 
-	 * @throws IllegalArgumentException if the localizador is null
+	 * @throws NullPointerException     if the localizador is null
 	 * @throws IllegalArgumentException if the localizador is empty
 	 * @throws IllegalStateException    if the locator isn't in the system
 	 * @throws IllegalStateException    if the locator belongs to tickets that are
@@ -309,7 +353,7 @@ public class System {
 	 * @param localizador         of the lot or tickets (it's the same)
 	 * @param numBilletesDevolver
 	 * 
-	 * @throws IllegalArgumentException if the localizador is null
+	 * @throws NullPointerException     if the localizador is null
 	 * @throws IllegalArgumentException if the localizador is empty
 	 * @throws IllegalStateException    if the locator isn't in the system
 	 * @throws IllegalStateException    if the tickets to be returned have not been
@@ -333,13 +377,13 @@ public class System {
 	 * 
 	 * @return lot of tickets bought
 	 * 
-	 * @throws IllegalArgumentException if the localizador is null
+	 * @throws NullPointerException     if the localizador is null
 	 * @throws IllegalArgumentException if the localizador is empty
 	 * @throws IllegalArgumentException if the locator has already been used in
 	 *                                  another ticket, either on the same route or
 	 *                                  another route
-	 * @throws IllegalArgumentException if the usr is null
-	 * @throws IllegalArgumentException if the recorrido is null
+	 * @throws NullPointerException     if the usr is null
+	 * @throws NullPointerException     if the recorrido is null
 	 * @throws IllegalArgumentException if the number of tickets is greater or less
 	 *                                  than the limit of available seats per
 	 *                                  vehicle
@@ -358,7 +402,7 @@ public class System {
 	 *
 	 * @return lot of tickets bought
 	 * 
-	 * @throws IllegalArgumentException if the locator is null
+	 * @throws NullPointerException     if the localizador is null
 	 * @throws IllegalArgumentException if locator is less than 1 character or more
 	 *                                  than 8 characters
 	 * @throws IllegalStateException    if there are no tickets booked in the system
@@ -368,3 +412,19 @@ public class System {
 		return null;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
