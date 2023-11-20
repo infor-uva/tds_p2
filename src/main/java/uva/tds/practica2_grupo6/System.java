@@ -61,7 +61,7 @@ public class System {
 	 * List of routes registered in the system
 	 */
 	private List<Recorrido> routes;
-	
+
 	/**
 	 * List of tickets registered in the system
 	 */
@@ -141,7 +141,7 @@ public class System {
 	public List<Recorrido> getRecorridos() {
 		return routes;
 	}
-	
+
 	/**
 	 * Consult the list of tickets in system
 	 * 
@@ -150,7 +150,7 @@ public class System {
 	public List<Billete> getBilletes() {
 		return tickets;
 	}
-	
+
 	/**
 	 * Returns the price of all the tickets associated with a user, if the tickets
 	 * are valid. In addition, it should be checked whether the journey is by train
@@ -386,7 +386,14 @@ public class System {
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		return null;
+		// TODO eliminar
+		List<Billete> billetes = new ArrayList<>();
+		for (int i = 0; i < numBilletesReservar; i++) {
+			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
+			billetes.add(ticket);
+			this.tickets.add(ticket);
+		}
+		return billetes;
 	}
 
 	/**
@@ -456,7 +463,14 @@ public class System {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		return null;
+		// TODO eliminar
+		List<Billete> billetes = new ArrayList<>();
+		for (int i = 0; i < numBilletes; i++) {
+			Billete ticket = new Billete(localizador, recorrido, usr, "comprado");
+			billetes.add(ticket);
+			this.tickets.add(ticket);
+		}
+		return billetes;
 	}
 
 	/**
