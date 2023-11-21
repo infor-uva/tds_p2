@@ -519,4 +519,23 @@ class RecorridoTest {
 			recorrido.equals(null);
 		});
 	}
+	
+	@Test
+	void testClone() {
+		// Comprobar con numSeas y numAvailableSeats no iguales
+		recorrido.decreaseAvailableSeats(5);
+		
+		Recorrido clone = recorrido.clone();
+		assertEquals(recorrido, clone);
+		assertNotSame(recorrido, clone);
+		busRecorrido = new Recorrido("B123", origin, destination, BUS, price, date, time, 50, duration);
+		assertEquals(recorrido.getID(), clone.getID());
+		assertEquals(recorrido.getOrigin(), clone.getOrigin());
+		assertEquals(recorrido.getDestination(), clone.getDestination());
+		assertEquals(recorrido.getTransport(), clone.getTransport());
+		assertEquals(recorrido.getPrice(), clone.getPrice(), ERROR_MARGIN);
+		assertEquals(recorrido.getDateTime(), clone.getDateTime());
+		assertEquals(recorrido.getTotalSeats(), clone.getTotalSeats());
+		assertEquals(recorrido.getNumAvailableSeats(), clone.getNumAvailableSeats());
+	}
 }

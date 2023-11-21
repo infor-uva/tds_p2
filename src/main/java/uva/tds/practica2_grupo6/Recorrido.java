@@ -20,7 +20,7 @@ import java.time.LocalTime;
  * 
  * @version 17/11/23
  */
-public class Recorrido {
+public class Recorrido implements Cloneable {
 
 	public static final String TRAIN = "train";
 	public static final String BUS = "bus";
@@ -384,5 +384,22 @@ public class Recorrido {
 			return false;
 		Recorrido r = (Recorrido) o;
 		return id.equals(r.id);
+	}
+
+	/**
+	 * Create a copy of this instance of Recorrido with the same values of the
+	 * attributes but not are the same object.
+	 * In case if the clone is not supported a null will be returned
+	 * 
+	 * @return null or clone of the instance
+	 */
+	@Override
+	public Recorrido clone() {
+		try {
+			return (Recorrido) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
