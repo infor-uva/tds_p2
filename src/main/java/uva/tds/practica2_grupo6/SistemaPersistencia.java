@@ -3,6 +3,7 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,11 +56,21 @@ import java.util.List;
  * @version 17/11/23
  */
 public class SistemaPersistencia {
+	
+	private static final String BUS = "bus";
+	private static final String TRAIN = "train";
+	private static final String ESTADO_RESERVADO = "reservado";
+	private static final String ESTADO_COMPRADO = "comprado";
+
+
+	
+	private IDatabaseManager database;
 
 	/**
 	 * Instance the System
 	 */
-	public SistemaPersistencia() {
+	public SistemaPersistencia(IDatabaseManager database) {
+		this.database=database;
 	}
 
 	/**
@@ -118,7 +129,16 @@ public class SistemaPersistencia {
 	 *                                  tickets.
 	 */
 	public double getPrecioTotalBilletesUsuario(String nif) {
-		return -1.0;
+		ArrayList<Billete> tikets = database.getBilletesDeUsuario(nif);
+		double salida=0;
+		for (Billete tiket : tikets) {
+			double price=tiket.getRecorrido().getPrice();
+			if (tiket.getRecorrido().equals(TRAIN))
+				salida+=(price*0.9);
+			else
+				salida+=price;
+		}
+		return salida;
 	}
 
 	/**
@@ -348,7 +368,14 @@ public class SistemaPersistencia {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		return null;
+		List<Billete> salida=new ArrayList<>();
+		for (int i=0;i<numBilletes;i++) {
+			Billete aux=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
+			salida.add(aux);
+			database.addBillete(aux);
+			database.addUsuario(usr);
+		}
+		return salida;
 	}
 
 	/**

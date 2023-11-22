@@ -10,9 +10,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.easymock.EasyMock;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -46,11 +51,16 @@ class SistemaPersistenciaTest {
 	private int duration;
 	private Recorrido recorrido;
 	private Recorrido differentRecorrido;
-	private SistemaPersistencia sistema;
 	private int numSeats;
 	private LocalDateTime newDateTime;
 	private LocalDate newDate;
 	private LocalTime newTime;
+	
+	@Mock
+	private IDatabaseManager database;
+	
+	@TestSubject
+	private SistemaPersistencia sistema;
 
 	@BeforeEach
 	void setUp() {
@@ -74,8 +84,10 @@ class SistemaPersistenciaTest {
 		newDateTime = LocalDateTime.of(2023, 5, 14, 22, 56, 20);
 		newDate = LocalDate.of(2024, 2, 4);
 		newTime = LocalTime.of(12, 2, 4);
+		
+		database = EasyMock.mock(IDatabaseManager.class);
 
-		sistema = new SistemaPersistencia();
+		sistema = new SistemaPersistencia(database);
 	}
 
 	/**
@@ -83,12 +95,14 @@ class SistemaPersistenciaTest {
 	 */
 	@Test
 	void testConstructor() {
-		// TODO Completar tras fusión en develop
-		// Asegurar que todo lo que se encarga de inicializar el constructor lo hace
-		SistemaPersistencia sistema = new SistemaPersistencia();
+		EasyMock.expect(database.getRecorridos()).andReturn(new ArrayList<>()).times(1);
+		EasyMock.replay(database);
+		
+		SistemaPersistencia sistema = new SistemaPersistencia(database);
 		assertNotNull(sistema);
-		assertNotNull(sistema.getRecorridos());
-		assertEquals(0, sistema.getRecorridos().size());
+		assertEquals(Collections.emptyList(), sistema.getRecorridos());
+		
+		EasyMock.verify(database);
 	}
 
 	/**
@@ -166,16 +180,34 @@ class SistemaPersistenciaTest {
 	/**
 	 * FINDME Tests for {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}
 	 */
+	@Tag("Coberaje")
 	@Test
 	void testGetPrecioTotalBilletesUsuarioBus() {
 		sistema.comprarBilletes("32698478E", user, recorrido, 5);
 		assertEquals(5.0, sistema.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
+		
 	}
 
+	@Tag("Coberaje")
 	@Test
 	void testGetPrecioTotalBilletesUsuarioPrecioRecorridoTren() {
-		sistema.comprarBilletes("32698478E", user, differentRecorrido, 5);
-		assertEquals(4.5, sistema.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
+		//sistema.comprarBilletes("32698478E", user, differentRecorrido, 5);
+		//assertEquals(4.5, sistema.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
+		ArrayList<Billete> returned = new ArrayList<>();
+		String localizador="T12345";
+		for (int i =0;i<5;i++) {
+			Billete tiket =new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO);
+			returned.add(tiket);
+			database.addBillete(tiket);
+		}
+		EasyMock.expectLastCall();
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
+		EasyMock.replay(database);
+		
+		List<Billete> billetesCheck = sistema.comprarBilletes(localizador, user, differentRecorrido, 5);
+		assertEquals(4.5, sistema.getPrecioTotalBilletesUsuario(nif), ERROR_MARGIN);
+		
+		EasyMock.verify(database);
 	}
 
 	@Test
