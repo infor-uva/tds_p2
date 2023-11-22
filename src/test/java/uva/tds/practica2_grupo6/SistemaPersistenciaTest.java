@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Test;
 class SistemaPersistenciaTest {
 
 	private static final double ERROR_MARGIN = 0.00001;
-	private static final String BUS = "bus";
-	private static final String TRAIN = "train";
+	private static final String BUS = Recorrido.BUS;
+	private static final String TRAIN = Recorrido.TRAIN;
 	private static final String ESTADO_RESERVADO = "reservado";
 	private static final String ESTADO_COMPRADO = "comprado";
 
@@ -103,6 +103,7 @@ class SistemaPersistenciaTest {
 		
 		SistemaPersistencia sistema = new SistemaPersistencia(database);
 		assertNotNull(sistema);
+		assertEquals(database, sistema.getDataBase());
 		assertEquals(Collections.emptyList(), sistema.getRecorridos());
 		
 		EasyMock.verify(database);

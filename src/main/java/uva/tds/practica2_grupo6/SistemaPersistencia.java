@@ -54,7 +54,7 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 19/11/23
+ * @version 22/11/23
  */
 public class SistemaPersistencia {
 
@@ -69,6 +69,15 @@ public class SistemaPersistencia {
 	 */
 	public SistemaPersistencia(IDatabaseManager database) {
 		this.database = database;
+	}
+
+	/**
+	 * Consult the database manager assigned to this system
+	 * 
+	 * @return the database
+	 */
+	public IDatabaseManager getDataBase() {
+		return database;
 	}
 
 	/**
