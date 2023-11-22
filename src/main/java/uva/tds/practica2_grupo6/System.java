@@ -351,10 +351,11 @@ public class System {
 			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
 		int counter = 0;
 		for (Billete billetes: this.tickets) {
-			if (billetes.getLocalizador().equals(localizador))
+			if (billetes.getLocalizador().equals(localizador)) {
 				counter += 1;
 				if(!billetes.getEstado().equals("reservado"))
 					throw new IllegalStateException("El localizador no corresponde con tickets reservados");
+		}
 		}
 		if(counter == 0)
 			throw new IllegalStateException("El localizador no corresponde con tickets reservados");
@@ -370,10 +371,11 @@ public class System {
 		int contador = 0;
 		while (contador < numBilletesAnular) {
 			for (Billete billetes: this.tickets) {
-				if (billetes.getLocalizador().equals(localizador))
+				if (billetes.getLocalizador().equals(localizador)) {					
 					tickets.remove(billetes);
 					contador += 1;
 					break;
+				}
 			}
 		}
 	}
