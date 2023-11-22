@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
+import java.util.ArrayList;
 /**
  * Class dedicated for the management of the different instances of
  * {@link Recorrido}, {@link Billete} and {@link Usuario}.
@@ -57,10 +57,23 @@ import java.util.List;
 public class System {
 
 	/**
+	 * List of routes registered in the system
+	 */
+	private List<Recorrido> routes;
+	
+	/**
+	 * List of tickets registered in the system
+	 */
+	private List<Billete> tickets;
+
+	/**
 	 * Instance the System
 	 */
 	public System() {
+		routes = new ArrayList<>();
+		tickets = new ArrayList<>();
 	}
+
 
 	/**
 	 * Add a route in to the system
@@ -320,6 +333,41 @@ public class System {
 	 *                                  number of tickets with that locator
 	 */
 	public void devolverBilletes(String localizador, int numBilletesDevolver) {
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (numBilletesDevolver < 1)
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
+		int counter = 0;
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(localizador)) {
+				counter += 1;
+				if(!billetes.getEstado().equals("comprado"))
+					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
+		}
+		}
+		if(counter == 0)
+			throw new IllegalStateException("El localizador no corresponde con tickets comprados");
+		
+		int count = 0;
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(localizador))
+				count += 1;
+		}
+		if (count < numBilletesDevolver)
+				throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
+		
+		int contador = 0;
+		while (contador < numBilletesDevolver) {
+			for (Billete billetes: this.tickets) {
+				if (billetes.getLocalizador().equals(localizador)) {					
+					tickets.remove(billetes);
+					contador += 1;
+					break;
+				}
+			}
+		}
 
 	}
 
