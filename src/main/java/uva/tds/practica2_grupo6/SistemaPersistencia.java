@@ -3,7 +3,9 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Class dedicated for the management of the different instances of
@@ -57,10 +59,28 @@ import java.util.List;
 public class SistemaPersistencia {
 
 	/**
+	 * External database which will manage the management of the routes, tickets and
+	 * user
+	 */
+	private IDatabaseManager database;
+
+	/**
 	 * Instance the System
 	 */
-	public SistemaPersistencia() {
+	public SistemaPersistencia(IDatabaseManager database) {
+		this.database = database;
 	}
+
+	/**
+	 * Consult the database manager assigned to this system
+	 * 
+	 * @return the database
+	 */
+	public IDatabaseManager getDataBase() {
+		return database;
+	}
+
+
 
 	/**
 	 * Add a route in to the system
@@ -77,7 +97,7 @@ public class SistemaPersistencia {
 	 * Remove a route of system
 	 * 
 	 * @param id of the route
-	 * 
+	 *
 	 * @throws IllegalArgumentException if the id is null
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalStateException    if route has associated tickets
@@ -276,9 +296,31 @@ public class SistemaPersistencia {
 	 * @throws IllegalArgumentException if recorrido is null.
 	 * @throws IllegalArgumentException if recorrido is null.
 	 */
-	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
-			int numBilletesReservar) {
-		return null;
+	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido, int numBilletesReservar) {
+		if(user == null)
+			throw new IllegalArgumentException("El usuario no puede ser null");
+		if(recorrido == null)
+			throw new IllegalArgumentException("El recorrido no puede ser null");
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (numBilletesReservar > recorrido.getNumAvailableSeats())
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es mayor a los asientos disponibles");
+		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats())
+			throw new IllegalArgumentException("No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (database.getBilletes(localizador).size() > 0) {
+			throw new IllegalArgumentException("El localizador ya ha sido utilizado");
+		}
+
+		List<Billete> billetes = new ArrayList<>();
+		for (int i = 0; i < numBilletesReservar; i++) {
+			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
+			billetes.add(ticket);
+			database.addBillete(ticket);
+		}
+		return billetes;
+
 	}
 
 	/**
@@ -299,6 +341,24 @@ public class SistemaPersistencia {
 	 *                                  number of reserved tickets with that locator
 	 */
 	public void anularReserva(String localizador, int numBilletesAnular) {
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (numBilletesAnular < 1)
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
+		
+		ArrayList<Billete> billetes = database.getBilletes(localizador);
+		if(billetes.size() < 1 || !billetes.get(0).getEstado().equals("reservado")) {
+			throw new IllegalStateException("No hay tickets reservados con ese localizador");
+		}
+		
+		if(billetes.size() < numBilletesAnular) {
+			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
+		}
+	
+				
+
 
 	}
 
