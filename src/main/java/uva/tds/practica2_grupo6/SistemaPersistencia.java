@@ -370,7 +370,7 @@ public class SistemaPersistencia {
 		if (numBilletes<1)
 			throw new IllegalArgumentException("El numero de billetes es inferior al minimo\n");
 		if (numBilletes > recorrido.getNumAvailableSeats())
-			throw new IllegalArgumentException("El numero de billetes es superior a las plazas disponibles\n");
+			throw new IllegalStateException("El numero de billetes es superior a las plazas disponibles\n");
 		List<Billete> returned=new ArrayList<>();
 		for(int i=0;i<numBilletes;i++) {
 			Billete tiket=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
