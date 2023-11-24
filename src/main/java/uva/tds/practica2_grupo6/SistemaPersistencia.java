@@ -3,6 +3,7 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -338,6 +339,25 @@ public class SistemaPersistencia {
 	 *                                  number of tickets with that locator
 	 */
 	public void devolverBilletes(String localizador, int numBilletesDevolver) {
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (numBilletesDevolver < 1)
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
+		int counter = 0;
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(localizador)) {
+				counter += 1;
+				if(!billetes.getEstado().equals("comprado"))
+					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
+		}
+		}
+
+		ArrayList<Billete> billetes = database.getBilletes(localizador);
+		if(billetes.size() < 1 || !billetes.get(0).getEstado().equals("comprado")) {
+			throw new IllegalStateException("No hay tickets reservados con ese localizador");
+		}
 
 	}
 
