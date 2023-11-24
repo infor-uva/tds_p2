@@ -998,10 +998,10 @@ class SistemaPersistenciaTest {
 		// Realiza la anulación de la reserva
 		sistema.devolverBilletes(localizador, numBilletesDevolver);
 
-//		int plazasDisponiblesDespues = recorrido.getNumAvailableSeats();
+		int plazasDisponiblesDespues = recorrido.getNumAvailableSeats();
 
 		// Verifica que las plazas disponibles aumenten en la cantidad correcta
-//		assertEquals(plazasDisponiblesAntes + numBilletesDevolver, plazasDisponiblesDespues);
+		assertEquals(plazasDisponiblesAntes + numBilletesDevolver, plazasDisponiblesDespues);
 
 		
 		
