@@ -180,7 +180,7 @@ class SistemaPersistenciaTest {
 	/**
 	 * FINDME Tests for {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}
 	 */
-	@Tag("Coberaje")
+	@Tag("Cobertura")
 	@Test
 	void testGetPrecioTotalBilletesUsuarioBus() {
 		sistema.comprarBilletes("32698478E", user, recorrido, 5);
@@ -188,19 +188,28 @@ class SistemaPersistenciaTest {
 		
 	}
 
-	@Tag("Coberaje")
+	@Tag("Cobertura")
 	@Test
 	void testGetPrecioTotalBilletesUsuarioPrecioRecorridoTren() {
 		//sistema.comprarBilletes("32698478E", user, differentRecorrido, 5);
 		//assertEquals(4.5, sistema.getPrecioTotalBilletesUsuario("32698478E"), ERROR_MARGIN);
 		ArrayList<Billete> returned = new ArrayList<>();
 		String localizador="T12345";
-		for (int i =0;i<5;i++) {
+		int numBilletes=5;
+		
+		database.addBillete(new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(numBilletes);
+		database.addUsuario(user);
+		EasyMock.expectLastCall();
+		
+		for (int i =0;i<numBilletes;i++) {
 			Billete tiket =new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO);
 			returned.add(tiket);
-			database.addBillete(tiket);
+			
 		}
+		//si no devuelve este
 		EasyMock.expectLastCall();
+		//si el metodo devuelve algo
 		EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
 		EasyMock.replay(database);
 		

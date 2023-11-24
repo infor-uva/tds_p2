@@ -373,8 +373,8 @@ public class SistemaPersistencia {
 			Billete aux=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
 			salida.add(aux);
 			database.addBillete(aux);
-			database.addUsuario(usr);
 		}
+		database.addUsuario(usr);
 		return salida;
 	}
 
