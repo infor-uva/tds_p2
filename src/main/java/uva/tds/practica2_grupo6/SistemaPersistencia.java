@@ -356,9 +356,15 @@ public class SistemaPersistencia {
 		if(billetes.size() < numBilletesAnular) {
 			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
 		}
-	
-				
-
+		
+		int billetesRestantes = billetes.size() - numBilletesAnular;
+		database.eliminarBilletes(localizador);
+		if(billetesRestantes > 0) {
+			for (int i = 0; i < billetesRestantes; i++) {
+				database.addBillete(billetes.get(0));
+			}
+		}
+			
 
 	}
 
