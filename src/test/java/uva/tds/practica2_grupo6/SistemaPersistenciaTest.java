@@ -960,11 +960,38 @@ class SistemaPersistenciaTest {
 	@Test
 	void testDevolverBilletesAumentaPlazasDisponiblesLimiteInferior() {
 		int numBilletesComprar = 6;
+		int numBilletesDevolver = 1;
+		String localizador = "ABC12345";
+		
+		
+        EasyMock.expect(database.getBilletes("ABC12345")).andReturn(null);
+        database.addBillete(new Billete(localizador, recorrido, user, ESTADO_COMPRADO));
+        EasyMock.expectLastCall().times(numBilletesComprar);
+
+		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		recorridoCopia.decreaseAvailableSeats(numBilletesComprar);
+        database.actualizarRecorrido(recorridoCopia);
+        EasyMock.expectLastCall();
+        
+        database.eliminarBilletes(localizador);
+        EasyMock.expectLastCall();
+        database.addBillete(new Billete(localizador, recorridoCopia, user, ESTADO_COMPRADO));
+        EasyMock.expectLastCall().times(numBilletesComprar - numBilletesDevolver);
+        Recorrido recorridoCopiaCopia = recorridoCopia;
+        recorridoCopiaCopia.increaseAvailableSeats(numBilletesComprar - numBilletesDevolver);
+        database.actualizarRecorrido(recorridoCopiaCopia);
+        EasyMock.expectLastCall();
+ 
+        EasyMock.replay(database);
+        List<Billete> returned = sistema.comprarBilletes("ABC12345", user, recorrido, numBilletesComprar);
+
+        
+        EasyMock.verify(database);
 
 		// Realiza la reserva de los billetes
 		sistema.comprarBilletes("ABC12345", user, recorrido, numBilletesComprar);
 		int plazasDisponiblesAntes = recorrido.getNumAvailableSeats();
-		int numBilletesDevolver = 1;
+
 
 		// Realiza la anulación de la reserva
 		sistema.devolverBilletes("ABC12345", numBilletesDevolver);

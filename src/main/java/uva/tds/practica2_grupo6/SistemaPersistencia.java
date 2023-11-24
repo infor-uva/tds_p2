@@ -358,9 +358,13 @@ public class SistemaPersistencia {
 		int billetesRestantes = billetes.size() - numBilletesDevolver;
 		database.eliminarBilletes(localizador);
 		if(billetesRestantes > 0) {
+			Billete b = billetes.get(0);
+			Recorrido r = b.getRecorrido();
+			r.decreaseAvailableSeats(billetesRestantes);
 			for (int i = 0; i < billetesRestantes; i++) {
-				database.addBillete(billetes.get(0));
+				database.addBillete(b);
 			}
+			database.actualizarRecorrido(r);
 		}
 
 
