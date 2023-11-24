@@ -1,8 +1,10 @@
 package uva.tds.practica2_grupo6;
 
+import java.sql.DatabaseMetaData;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,11 +57,19 @@ import java.util.List;
  * @version 17/11/23
  */
 public class SistemaPersistencia {
+	
+	private static final String BUS = "bus";
+	private static final String TRAIN = "train";
+	private static final String ESTADO_RESERVADO = "reservado";
+	private static final String ESTADO_COMPRADO = "comprado";
+	
+	private IDatabaseManager database;
 
 	/**
 	 * Instance the System
 	 */
-	public SistemaPersistencia() {
+	public SistemaPersistencia(IDatabaseManager database) {
+		this.database=database;
 	}
 
 	/**
@@ -345,10 +355,34 @@ public class SistemaPersistencia {
 	 *                                  vehicle
 	 * @throws IllegalStateException    if the number of tickets is greater or less
 	 *                                  than the limit of free seats
-	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		return null;
+		if(localizador==null)
+			throw new IllegalArgumentException("EL localizador es nulo\n");
+		if (localizador.isEmpty())
+			throw new IllegalArgumentException("EL localizador esta vacio\n");
+		if (database.getBilletes(localizador)!= null)
+			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
+		if (usr == null)
+			throw new IllegalArgumentException("El usuario es null\n");
+		if (recorrido == null)
+			throw new IllegalArgumentException("El recorrido es null\n");
+		if (numBilletes<1)
+			throw new IllegalArgumentException("El numero de billetes es inferior al minimo\n");
+		if (numBilletes > recorrido.getNumAvailableSeats())
+			throw new IllegalArgumentException("El numero de billetes es superior a las plazas disponibles\n");
+		List<Billete> returned=new ArrayList<>();
+		for(int i=0;i<numBilletes;i++) {
+			Billete tiket=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
+			returned.add(tiket);
+			database.addBillete(tiket);
+		}
+		recorrido.decreaseAvailableSeats(numBilletes);
+		database.actualizarRecorrido(recorrido);
+		if(database.getUsuario(usr.getNif())==null) {
+			database.addUsuario(usr);
+		}
+		return returned;
 	}
 
 	/**

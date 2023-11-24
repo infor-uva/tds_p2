@@ -12,6 +12,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.easymock.EasyMock;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,11 +49,17 @@ class SistemaPersistenciaTest {
 	private int duration;
 	private Recorrido recorrido;
 	private Recorrido differentRecorrido;
-	private SistemaPersistencia sistema;
 	private int numSeats;
 	private LocalDateTime newDateTime;
 	private LocalDate newDate;
 	private LocalTime newTime;
+	
+	
+	@Mock
+	private IDatabaseManager database;
+	
+	@TestSubject
+	private SistemaPersistencia sistema;
 
 	@BeforeEach
 	void setUp() {
@@ -65,8 +74,8 @@ class SistemaPersistenciaTest {
 		date = LocalDate.of(2023, 10, 27);
 		time = LocalTime.of(19, 06, 50);
 		price = 1.0;
-		numSeats = 20;
-		duration = 30;
+		numSeats = 50;
+		duration = 250;
 		recorrido = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
 		transport = TRAIN;
 		differentRecorrido = new Recorrido("dif", origin, destination, transport, price, date, time, numSeats,
@@ -75,7 +84,9 @@ class SistemaPersistenciaTest {
 		newDate = LocalDate.of(2024, 2, 4);
 		newTime = LocalTime.of(12, 2, 4);
 
-		sistema = new SistemaPersistencia();
+		database = EasyMock.mock(IDatabaseManager.class);
+		
+		sistema = new SistemaPersistencia(database);
 	}
 
 	/**
@@ -85,7 +96,7 @@ class SistemaPersistenciaTest {
 	void testConstructor() {
 		// TODO Completar tras fusión en develop
 		// Asegurar que todo lo que se encarga de inicializar el constructor lo hace
-		SistemaPersistencia sistema = new SistemaPersistencia();
+		SistemaPersistencia sistema = new SistemaPersistencia(database);
 		assertNotNull(sistema);
 		assertNotNull(sistema.getRecorridos());
 		assertEquals(0, sistema.getRecorridos().size());
@@ -589,39 +600,110 @@ class SistemaPersistenciaTest {
 	 */
 	@Test
 	void testComprarBilletesValidoBusLimiteInferior() {
-		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, recorrido, 1);
+		String localizador="ABC12345";
+		
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		
+		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall();
+		
+		Recorrido clonRecorrido=new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		clonRecorrido.decreaseAvailableSeats(1);
+		
+		database.actualizarRecorrido(clonRecorrido);
+		EasyMock.expectLastCall();
+		
+		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(null);
+		database.addUsuario(user);
+		EasyMock.expectLastCall();
+		EasyMock.replay(database);
+		
+		List<Billete> listaBilletes = sistema.comprarBilletes(localizador, user, recorrido, 1);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
-		for (int i = 0; i < 1; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
-			listaBilletesComprobacion.add(billeteComprobacion);
-		}
+		Billete billeteComprobacion = new Billete(localizador, recorrido, user, ESTADO_COMPRADO);
+		listaBilletesComprobacion.add(billeteComprobacion);
 		assertEquals(listaBilletes, listaBilletesComprobacion);
+		
+		EasyMock.verify(database);
 	}
 
 	@Test
 	void testComprarBilletesValidosBusLimiteSuperior() {
-		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, recorrido, 150);
+		String localizador="ABC12345";
+		
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		
+		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(50);
+		
+		Recorrido clonRecorrido=new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		clonRecorrido.decreaseAvailableSeats(50);
+		
+		database.actualizarRecorrido(clonRecorrido);
+		EasyMock.expectLastCall();
+		
+		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(null);
+		database.addUsuario(user);
+		EasyMock.expectLastCall();
+		EasyMock.replay(database);
+		
+		List<Billete> listaBilletes = sistema.comprarBilletes(localizador, user, recorrido, 50);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
-		for (int i = 0; i < 150; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
+		for (int i = 0; i < 50; i++) {
+			Billete billeteComprobacion = new Billete(localizador, recorrido, user, ESTADO_COMPRADO);
 			listaBilletesComprobacion.add(billeteComprobacion);
 		}
 		assertEquals(listaBilletes, listaBilletesComprobacion);
+		
 	}
 
 	@Test
 	void testComprarBilletesValidoTrenLimiteInferior() {
-		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, differentRecorrido, 1);
+		String localizador="ABC12345";
+		
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		
+		database.addBillete(new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall();
+		
+		Recorrido clonRecorrido=new Recorrido("dif", origin, destination, TRAIN, price, date, time, numSeats,duration);
+		clonRecorrido.decreaseAvailableSeats(1);
+		
+		database.actualizarRecorrido(clonRecorrido);
+		EasyMock.expectLastCall();
+		
+		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(null);
+		database.addUsuario(user);
+		EasyMock.expectLastCall();
+		EasyMock.replay(database);
+		
+		List<Billete> listaBilletes = sistema.comprarBilletes(localizador, user, differentRecorrido, 1);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
-		for (int i = 0; i < 1; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO);
-			listaBilletesComprobacion.add(billeteComprobacion);
-		}
+		Billete billeteComprobacion = new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO);
+		listaBilletesComprobacion.add(billeteComprobacion);
+		
 		assertEquals(listaBilletes, listaBilletesComprobacion);
 	}
 
 	@Test
 	void testComprarBilletesValidosTrenLimiteSuperior() {
+		String localizador="ABC12345";
+		
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		
+		database.addBillete(new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(50);
+		
+		Recorrido clonRecorrido=new Recorrido("dif", origin, destination, TRAIN, price, date, time, numSeats,duration);
+		clonRecorrido.decreaseAvailableSeats(1);
+		
+		database.actualizarRecorrido(clonRecorrido);
+		EasyMock.expectLastCall();
+		
+		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(null);
+		database.addUsuario(user);
+		EasyMock.expectLastCall();
+		EasyMock.replay(database);
 		List<Billete> listaBilletes = sistema.comprarBilletes("ABC12345", user, differentRecorrido, 250);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
 		for (int i = 0; i < 250; i++) {
