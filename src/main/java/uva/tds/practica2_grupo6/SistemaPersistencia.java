@@ -345,19 +345,24 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("El localizador no puede ser vacio");
 		if (numBilletesDevolver < 1)
 			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
-		int counter = 0;
-		for (Billete billetes: this.tickets) {
-			if (billetes.getLocalizador().equals(localizador)) {
-				counter += 1;
-				if(!billetes.getEstado().equals("comprado"))
-					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
-		}
-		}
-
+		
 		ArrayList<Billete> billetes = database.getBilletes(localizador);
 		if(billetes.size() < 1 || !billetes.get(0).getEstado().equals("comprado")) {
 			throw new IllegalStateException("No hay tickets reservados con ese localizador");
 		}
+		
+		if(billetes.size() < numBilletesDevolver) {
+			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
+		}
+		
+		int billetesRestantes = billetes.size() - numBilletesDevolver;
+		database.eliminarBilletes(localizador);
+		if(billetesRestantes > 0) {
+			for (int i = 0; i < billetesRestantes; i++) {
+				database.addBillete(billetes.get(0));
+			}
+		}
+
 
 	}
 

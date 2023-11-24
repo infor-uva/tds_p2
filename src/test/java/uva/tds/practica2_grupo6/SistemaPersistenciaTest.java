@@ -12,6 +12,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.easymock.EasyMock;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,11 +49,16 @@ class SistemaPersistenciaTest {
 	private int duration;
 	private Recorrido recorrido;
 	private Recorrido differentRecorrido;
-	private SistemaPersistencia sistema;
 	private int numSeats;
 	private LocalDateTime newDateTime;
 	private LocalDate newDate;
 	private LocalTime newTime;
+	
+	@Mock
+	private IDatabaseManager database;
+	
+	@TestSubject
+	private SistemaPersistencia sistema;
 
 	@BeforeEach
 	void setUp() {
@@ -74,8 +82,10 @@ class SistemaPersistenciaTest {
 		newDateTime = LocalDateTime.of(2023, 5, 14, 22, 56, 20);
 		newDate = LocalDate.of(2024, 2, 4);
 		newTime = LocalTime.of(12, 2, 4);
+		
+		database = EasyMock.mock(IDatabaseManager.class);
 
-		sistema = new SistemaPersistencia();
+		sistema = new SistemaPersistencia(database);
 	}
 
 	/**
@@ -85,7 +95,7 @@ class SistemaPersistenciaTest {
 	void testConstructor() {
 		// TODO Completar tras fusión en develop
 		// Asegurar que todo lo que se encarga de inicializar el constructor lo hace
-		SistemaPersistencia sistema = new SistemaPersistencia();
+		SistemaPersistencia sistema = new SistemaPersistencia(database);
 		assertNotNull(sistema);
 		assertNotNull(sistema.getRecorridos());
 		assertEquals(0, sistema.getRecorridos().size());
