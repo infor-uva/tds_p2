@@ -57,10 +57,28 @@ import java.util.List;
 public class SistemaPersistencia {
 
 	/**
+	 * External database which will manage the management of the routes, tickets and
+	 * user
+	 */
+	private IDatabaseManager database;
+
+	/**
 	 * Instance the System
 	 */
-	public SistemaPersistencia() {
+	public SistemaPersistencia(IDatabaseManager database) {
+		this.database = database;
 	}
+
+	/**
+	 * Consult the database manager assigned to this system
+	 * 
+	 * @return the database
+	 */
+	public IDatabaseManager getDataBase() {
+		return database;
+	}
+
+
 
 	/**
 	 * Add a route in to the system
