@@ -85,6 +85,14 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
+		try {
+			database.addRecorrido(route);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
+
 	}
 
 	/**
@@ -174,7 +182,12 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if the date does not have associated route.
 	 */
 	public List<Recorrido> getRecorridosDisponiblesFecha(LocalDate fecha) {
-		return null;
+		if(fecha == null)
+			throw new IllegalArgumentException("La fecha es nula\n");
+		if (database.getRecorridos(fecha) == null)
+			throw new IllegalStateException("Para la fecha no hay recorridos disponibles\n");
+		ArrayList<Recorrido> listaRecorridos = database.getRecorridos(fecha);
+		return listaRecorridos;
 	}
 
 	/**
