@@ -387,8 +387,9 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("locator is null");
 		if (locator.isBlank() || locator.length() > 8)
 			throw new IllegalArgumentException("locator must be between 1 and 8 characters longs");
+		
 		List<Billete> tickets;
-		if ((tickets = database.getBilletes(locator)) == null)
+		if ((tickets = database.getBilletes(locator)).isEmpty())
 			throw new IllegalStateException("the is no tickets for this locator: " + locator);
 		for (Billete ticket : tickets) {			
 			try {

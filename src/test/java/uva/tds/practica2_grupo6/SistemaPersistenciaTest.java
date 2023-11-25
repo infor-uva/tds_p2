@@ -818,7 +818,7 @@ class SistemaPersistenciaTest {
 		String locator = "12345678";
 		database.addRecorrido(recorrido);
 		EasyMock.expectLastCall();
-		EasyMock.expect(database.getBilletes(locator)).andReturn(null);
+		EasyMock.expect(database.getBilletes(locator)).andReturn(new ArrayList<>());
 		EasyMock.replay(database);
 		
 		sistema.addRecorrido(recorrido);
