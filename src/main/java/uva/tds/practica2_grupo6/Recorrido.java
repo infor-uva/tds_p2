@@ -398,8 +398,7 @@ public class Recorrido implements Cloneable {
 		try {
 			return (Recorrido) super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 }
