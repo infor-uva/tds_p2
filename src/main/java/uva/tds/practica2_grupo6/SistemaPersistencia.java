@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,6 +57,8 @@ import java.util.List;
  * @version 17/11/23
  */
 public class SistemaPersistencia {
+	
+	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
 	
 	private static final String BUS = "bus";
 	private static final String TRAIN = "train";
@@ -129,11 +132,30 @@ public class SistemaPersistencia {
 	 *                                  tickets.
 	 */
 	public double getPrecioTotalBilletesUsuario(String nif) {
+		if (nif == null)
+			throw new IllegalArgumentException("El nif es nulo\n");
+		if (nif.isEmpty())
+			throw new IllegalArgumentException("El nif esta vacio\n");
+		if (nif.length()<9)
+			throw new IllegalArgumentException("El nif es demasiado corto\n");
+		if (nif.length()>9)
+			throw new IllegalArgumentException("El nif es demasiado largo\n");
+		if (nif.charAt(8) == 'I' || nif.charAt(8) == 'Ñ' || nif.charAt(8) == 'O' || nif.charAt(8) == 'U')
+			throw new IllegalArgumentException("El nif contiene una letra incorrecta\n");
+		String cifras=nif.substring(0, nif.length()-1);
+		char letra=nif.charAt(8);
+		int numero=Integer.parseInt(cifras);
+		int resto=numero%23;
+		if(resto != letrasNif.indexOf(letra))
+			throw new IllegalArgumentException("La letra del nif no corresponde con las cifras del nif\n");
+		
+		if(database.getUsuario(nif)==null)
+			throw new IllegalArgumentException("El usuario no esta en el sistema\n");
 		ArrayList<Billete> tikets = database.getBilletesDeUsuario(nif);
 		double salida=0;
 		for (Billete tiket : tikets) {
 			double price=tiket.getRecorrido().getPrice();
-			if (tiket.getRecorrido().equals(TRAIN))
+			if (tiket.getRecorrido().getTransport().equals(TRAIN))
 				salida+=(price*0.9);
 			else
 				salida+=price;
@@ -340,7 +362,6 @@ public class SistemaPersistencia {
 	 *                                  number of tickets with that locator
 	 */
 	public void devolverBilletes(String localizador, int numBilletesDevolver) {
-
 	}
 
 	/**
@@ -368,14 +389,33 @@ public class SistemaPersistencia {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		List<Billete> salida=new ArrayList<>();
-		for (int i=0;i<numBilletes;i++) {
-			Billete aux=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
-			salida.add(aux);
-			database.addBillete(aux);
+		if(localizador==null)
+			throw new IllegalArgumentException("EL localizador es nulo\n");
+		if (localizador.isEmpty())
+			throw new IllegalArgumentException("EL localizador esta vacio\n");
+		if (database.getBilletes(localizador)!= null)
+			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
+		if (usr == null)
+			throw new IllegalArgumentException("El usuario es null\n");
+		if (recorrido == null)
+			throw new IllegalArgumentException("El recorrido es null\n");
+		if (numBilletes<1)
+			throw new IllegalArgumentException("El numero de billetes es inferior al minimo\n");
+		if (numBilletes > recorrido.getNumAvailableSeats())
+			throw new IllegalStateException("El numero de billetes es superior a las plazas disponibles\n");
+		List<Billete> returned=new ArrayList<>();
+		for(int i=0;i<numBilletes;i++) {
+			Billete tiket=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
+			returned.add(tiket);
+			database.addBillete(tiket);
 		}
-		database.addUsuario(usr);
-		return salida;
+		recorrido.decreaseAvailableSeats(numBilletes);
+		database.actualizarRecorrido(recorrido);
+		if(database.getUsuario(usr.getNif())==null) {
+			database.addUsuario(usr);
+		}
+		return returned;
+
 	}
 
 	/**
