@@ -53,7 +53,7 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 19/11/23
+ * @version 25/11/23
  */
 public class System {
 
@@ -121,7 +121,7 @@ public class System {
 	 * @throws IllegalArgumentException if the id is null
 	 * @throws IllegalArgumentException if the id is empty
 	 */
-	public Recorrido getRecorrido(String id) {
+	private Recorrido getRecorrido(String id) {
 		if (id == null)
 			throw new IllegalArgumentException("id is null");
 		if (id.isEmpty())
@@ -386,14 +386,7 @@ public class System {
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		// TODO eliminar
-		List<Billete> billetes = new ArrayList<>();
-		for (int i = 0; i < numBilletesReservar; i++) {
-			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
-			billetes.add(ticket);
-			this.tickets.add(ticket);
-		}
-		return billetes;
+		return null;
 	}
 
 	/**
@@ -463,14 +456,7 @@ public class System {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		// TODO eliminar
-		List<Billete> billetes = new ArrayList<>();
-		for (int i = 0; i < numBilletes; i++) {
-			Billete ticket = new Billete(localizador, recorrido, usr, "comprado");
-			billetes.add(ticket);
-			this.tickets.add(ticket);
-		}
-		return billetes;
+		return null;
 	}
 
 	/**

@@ -3,7 +3,6 @@ package uva.tds.practica2_grupo6;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
@@ -22,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * @author diebomb
  * @author migudel
  * 
- * @version 19/11/23
+ * @version 25/11/23
  */
 class SystemTest {
 
@@ -171,30 +170,6 @@ class SystemTest {
 
 		assertThrows(IllegalStateException.class, () -> {
 			system.removeRecorrido(id);
-		});
-	}
-	
-	/**
-	 * FINDME Tests for {@link System#getRecorrido(String)}
-	 */
-	@Test
-	void testGetRecorridoValidoConIDLimiteInferior() {
-		assertNull(system.getRecorrido(idLI));
-		system.addRecorrido(recorridoLI);
-		assertEquals(recorridoLI, system.getRecorrido(idLI));
-	}
-	
-	@Test
-	void testGetRecorridoConIDNull() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			system.getRecorrido(null);
-		});
-	}
-	
-	@Test
-	void testGetRecorridoConIDVacio() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			system.getRecorrido("");
 		});
 	}
 
