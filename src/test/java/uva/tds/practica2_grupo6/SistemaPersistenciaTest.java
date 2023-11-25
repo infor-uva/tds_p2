@@ -887,11 +887,11 @@ class SistemaPersistenciaTest {
 	void testComprarBilleteUsuarioYaGuardado() {
 		String localizador="ABC12345";
 		
-		EasyMock.expect(database.getBilletes(localizador)).andReturn(null).times(2);
+		EasyMock.expect(database.getBilletes("ABC12346")).andReturn(null);
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
 		
 		
 		database.addBillete(new Billete("ABC12346", recorrido, user, ESTADO_COMPRADO));
-		EasyMock.expectLastCall();
 		database.addBillete(new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall();
 		
@@ -901,14 +901,13 @@ class SistemaPersistenciaTest {
 		clonRecorrido.decreaseAvailableSeats(1);
 		
 		database.actualizarRecorrido(clonRecorridoPrimero);
-		EasyMock.expectLastCall();
 		database.actualizarRecorrido(clonRecorrido);
 		EasyMock.expectLastCall();
 		
 		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(null);
+		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(user);
 		database.addUsuario(user);
 		EasyMock.expectLastCall();
-		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(user);
 		EasyMock.replay(database);
 		
 		List<Billete> listaBilletesAntes = sistema.comprarBilletes("ABC12346", user, recorrido, 1);
