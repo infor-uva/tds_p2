@@ -3,6 +3,8 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,11 +57,27 @@ import java.util.List;
  * @version 17/11/23
  */
 public class System {
+	
+	private static final String BUS = "bus";
+	private static final String TRAIN = "train";
+	private static final String ESTADO_RESERVADO = "reservado";
+	private static final String ESTADO_COMPRADO = "comprado";
+	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
+
+	private List<Billete> tikets;
+	
+	private List<String> users; 
+	
+	private List<Recorrido> routes;
+
 
 	/**
 	 * Instance the System
 	 */
 	public System() {
+		tikets=new ArrayList<>();
+		users=new ArrayList<>();
+		routes=new ArrayList<>();
 	}
 
 	/**
@@ -348,7 +366,37 @@ public class System {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		return null;
+		if (localizador == null)
+			throw new IllegalArgumentException("El localizador es nulo\n");
+		if (localizador.isEmpty())
+			throw new IllegalArgumentException("El localizador esta vacio\n");
+		for(Billete tiket : tikets) {
+			if (tiket.getLocalizador().equals(localizador)) {
+				throw new IllegalArgumentException("El localizador ya a sido usado\n");
+			}
+		}
+		if (usr == null)
+			throw new IllegalArgumentException("El usuario es nulo\n");
+		if (recorrido == null)
+			throw new IllegalArgumentException("El recorrido es nulo\n");
+		if (numBilletes <1)
+			throw new IllegalArgumentException("El numero de billetes ha de ser superior a 0\n");
+		if (numBilletes > recorrido.getTotalSeats())
+			throw new IllegalArgumentException("El numero es superior a los asientos del vehiculo\n");
+		if (numBilletes > recorrido.getNumAvailableSeats())
+			throw new IllegalStateException("El numero es superior a los asientos disponibles\n");
+		List<Billete> salida=new ArrayList<>();
+		for (int i=0;i<numBilletes;i++) {
+			Billete aux=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
+			salida.add(aux);
+			tikets.add(aux);
+			
+		}
+		recorrido.decreaseAvailableSeats(numBilletes);
+		if (!users.contains(usr.getNif()))
+			users.add(usr.getNif());
+		return salida;
+
 	}
 
 	/**
