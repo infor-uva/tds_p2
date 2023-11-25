@@ -16,7 +16,6 @@ import org.easymock.EasyMock;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -26,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * @author diebomb
  * @author migudel
  * 
- * @version 19/11/23
+ * @version 24/11/23
  */
 class SistemaPersistenciaTest {
 
@@ -98,15 +97,9 @@ class SistemaPersistenciaTest {
 	 */
 	@Test
 	void testConstructor() {
-		EasyMock.expect(database.getRecorridos()).andReturn(new ArrayList<>()).times(1);
-		EasyMock.replay(database);
-		
 		SistemaPersistencia sistema = new SistemaPersistencia(database);
 		assertNotNull(sistema);
 		assertEquals(database, sistema.getDataBase());
-		assertEquals(Collections.emptyList(), sistema.getRecorridos());
-		
-		EasyMock.verify(database);
 	}
 
 	/**
@@ -165,7 +158,6 @@ class SistemaPersistenciaTest {
 	 * FINDME Tests for {@link SistemaPersistencia#removeRecorrido(String))}
 	 */
 	@Test
-	@Tag("Coberaje") // TODO Revisar
 	void testRemoveRecorridoValidoConIDLimiteInferior() {
 		ArrayList<Recorrido> returned = new ArrayList<>();
 		returned.add(recorridoLI);

@@ -394,14 +394,7 @@ public class SistemaPersistencia {
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		// TODO eliminar
-		List<Billete> billetes = new ArrayList<>();
-		for (int i = 0; i < numBilletesReservar; i++) {
-			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
-			billetes.add(ticket);
-			database.addBillete(ticket);
-		}
-		return billetes;
+		return null;
 	}
 
 	/**
@@ -471,14 +464,7 @@ public class SistemaPersistencia {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		// TODO eliminar
-		List<Billete> billetes = new ArrayList<>();
-		for (int i = 0; i < numBilletes; i++) {
-			Billete ticket = new Billete(localizador, recorrido, usr, "comprado");
-			billetes.add(ticket);
-			database.addBillete(ticket);
-		}
-		return billetes;
+		return null;
 	}
 
 	/**
