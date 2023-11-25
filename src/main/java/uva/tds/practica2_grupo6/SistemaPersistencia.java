@@ -16,8 +16,8 @@ import java.util.List;
  * <li>Remove a Recorrido of system<br>
  * {@link SistemaPersistencia#removeRecorrido(String))}</li>
  * <li>Consult the list of recorridos in system<br>
- * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price accumulated by a
- * user<br>
+ * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
+ * accumulated by a user<br>
  * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}</li>
  * <li>Consult the list of Recorridos that have a specific date<br>
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
@@ -52,14 +52,30 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 25/11/23
  */
 public class SistemaPersistencia {
 
 	/**
+	 * External database which will manage the routes, tickets and user of this
+	 * system
+	 */
+	private IDatabaseManager database;
+
+	/**
 	 * Instance the System
 	 */
-	public SistemaPersistencia() {
+	public SistemaPersistencia(IDatabaseManager database) {
+		this.database = database;
+	}
+	
+	/**
+	 * Consult the database manager assigned to the system
+	 * 
+	 * @return databasemanager
+	 */
+	public IDatabaseManager getDataBaseManager() {
+		return database;
 	}
 
 	/**
@@ -71,6 +87,8 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
+		// TODO ELIMINAR
+		database.addRecorrido(route);
 	}
 
 	/**
@@ -200,7 +218,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -214,7 +232,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the time of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -228,7 +246,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id          of the route
 	 * @param newDateTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -242,7 +260,7 @@ public class SistemaPersistencia {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * @param newTime
 	 * 
@@ -365,6 +383,22 @@ public class SistemaPersistencia {
 	 *                                  with that locator
 	 */
 	public List<Billete> comprarBilletesReservados(String locator) {
-		return null;
+		if (locator == null)
+			throw new IllegalArgumentException("locator is null");
+		if (locator.isBlank() || locator.length() > 8)
+			throw new IllegalArgumentException("locator must be between 1 and 8 characters longs");
+		List<Billete> tickets;
+		if ((tickets = database.getBilletes(locator)) == null)
+			throw new IllegalStateException("the is no tickets for this locator: " + locator);
+		for (Billete ticket : tickets) {			
+			try {
+				ticket.setComprado();
+			} catch (IllegalStateException e) {
+				// Reescritura de mensaje de error
+				throw new IllegalStateException("the are no tickets booked with that locator");
+			}
+		}
+		database.actualizarBilletes(tickets.get(0));
+		return tickets;
 	}
 }
