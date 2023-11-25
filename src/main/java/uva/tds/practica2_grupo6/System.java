@@ -285,14 +285,7 @@ public class System {
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		// TODO ELIMINAR
-		List<Billete> tickets = new ArrayList<>();
-		for (int i = 0; i < numBilletesReservar; i++) {
-			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
-			tickets.add(ticket);
-			this.tickets.add(ticket);
-		}
-		return tickets;
+		return null;
 	}
 
 	/**
@@ -362,14 +355,7 @@ public class System {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		// TODO ELIMINAR
-		List<Billete> tickets = new ArrayList<>();
-		for (int i = 0; i < numBilletes; i++) {
-			Billete ticket = new Billete(localizador, recorrido, usr, "comprado");
-			tickets.add(ticket);
-			this.tickets.add(ticket);
-		}
-		return tickets;
+		return null;
 	}
 
 	/**
