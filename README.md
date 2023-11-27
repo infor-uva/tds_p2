@@ -33,9 +33,7 @@ Trabajo asignado:
 - Feature 5.1 - Comprar billetes
 - Feature 7 - Obtención precio total billetes de un usuario y obtención recorridos disponibles en una fecha
 
-Tiempo empleado: 
-- Fase Red: `4h 30min`
-- Fase Green: `2h 25min` (Implementación Recorrido)
+Tiempo empleado: `4h 30min`
     
 ### Hugo Cubino Cubino
 Trabajo asignado:
@@ -50,4 +48,6 @@ Trabajo asignado:
 - Feature 5.3 - Comprar billetes reservados
 - Feature 4 - Gestión de recorridos (añadir, eliminar y actualizar fecha y/o hora)
 
-Tiempo empleado: `4h 25min`
+Tiempo empleado:
+- Fase Red: `4h 25min` 
+- Fase Green: `2h 25min`(Implementación Recorrido) + `2h 5 min` (Implementación F4 en System) + `2h 8min` (Implemenración gestión recorrido en SistemaPersistencia)
