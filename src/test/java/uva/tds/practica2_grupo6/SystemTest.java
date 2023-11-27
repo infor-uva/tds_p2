@@ -892,6 +892,7 @@ class SystemTest {
 	void testReservarBilletesExitosamente() {
 		int plazasDisponibles = recorrido.getNumAvailableSeats();
 		int numBilletesReservar = 6;
+		system.addRecorrido(recorrido);
 		// Realiza la reserva de los billetes
 		List<Billete> reservado = system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
 
@@ -938,10 +939,7 @@ class SystemTest {
 		int plazasDisponibles = recorrido.getNumAvailableSeats();
 		int numBilletesReservar = plazasDisponibles + 1;
 
-		// Intenta reservar más billetes de los disponibles
-		system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
-
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(IllegalStateException.class, () -> {
 			system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
 		});
 
@@ -949,12 +947,13 @@ class SystemTest {
 
 	@Test
 	void testNoSePuedeReservarSiPlazasMenoresQueLaMitad() {
-		int numBilletesReservar = recorrido.getTotalSeats() / 2;
+		int numBilletesComprar = (recorrido.getTotalSeats() / 2) + 1;
+		system.addRecorrido(recorrido);
 
-		// Intenta reservar más billetes de los disponibles
-		system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
+//		 Intenta reservar más billetes de los disponibles
+		system.comprarBilletes("ABC12345", user, recorrido, numBilletesComprar);
 
-		assertThrows(IllegalArgumentException.class, () -> {
+		assertThrows(IllegalStateException.class, () -> {
 			system.reservarBilletes("ABC12345", user, recorrido, 2);
 		});
 
@@ -966,6 +965,8 @@ class SystemTest {
 	@Test
 	void testAnularReservaAumentaPlazasDisponiblesLimiteInferior() {
 		int numBilletesReservar = 6;
+		
+		system.addRecorrido(recorrido);
 
 		// Realiza la reserva de los billetes
 		system.reservarBilletes("ABC12345", user, recorrido, numBilletesReservar);
@@ -1025,6 +1026,7 @@ class SystemTest {
 	void testNoSePuedeAnularReservaSiMayorNumeroDeAnulacionesQueBilletesReservados() {
 		String locator = "ABC12345";
 		int numBilletesAnular = 3;
+		system.addRecorrido(recorrido);
 		system.reservarBilletes(locator, user, recorrido, 1);
 		assertThrows(IllegalStateException.class, () -> {
 			system.anularReserva(locator, numBilletesAnular);
