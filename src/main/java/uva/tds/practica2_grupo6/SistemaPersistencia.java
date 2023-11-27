@@ -7,7 +7,8 @@ import java.util.List;
 
 /**
  * Class dedicated for the management of the different instances of
- * {@link Recorrido}, {@link Billete} and {@link Usuario}.
+ * {@link Recorrido}, {@link Billete} and {@link Usuario} based in external
+ * database.
  * 
  * The management will be based on:
  * <ul>
@@ -16,8 +17,8 @@ import java.util.List;
  * <li>Remove a Recorrido of system<br>
  * {@link SistemaPersistencia#removeRecorrido(String))}</li>
  * <li>Consult the list of recorridos in system<br>
- * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price accumulated by a
- * user<br>
+ * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
+ * accumulated by a user<br>
  * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}</li>
  * <li>Consult the list of Recorridos that have a specific date<br>
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
@@ -52,14 +53,30 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 22/11/23
  */
 public class SistemaPersistencia {
 
 	/**
+	 * External database which will manage the management of the routes, tickets and
+	 * user
+	 */
+	private IDatabaseManager database;
+
+	/**
 	 * Instance the System
 	 */
-	public SistemaPersistencia() {
+	public SistemaPersistencia(IDatabaseManager database) {
+		this.database = database;
+	}
+
+	/**
+	 * Consult the database manager assigned to this system
+	 * 
+	 * @return the database
+	 */
+	public IDatabaseManager getDataBase() {
+		return database;
 	}
 
 	/**
@@ -71,6 +88,29 @@ public class SistemaPersistencia {
 	 * @throws IllegalStateException    if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
+		try {
+			database.addRecorrido(route);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
+	}
+
+	/**
+	 * Check of the id is not null and have at less one character different of
+	 * spaces \n
+	 * 
+	 * @param id
+	 * 
+	 * @throws IllegalArgumentException if id is null
+	 * @throws IllegalArgumentException if id is empty
+	 */
+	private void checkID(String id) {
+		if (id == null)
+			throw new IllegalArgumentException("is is null");
+		if (id.isBlank())
+			throw new IllegalArgumentException("is is empty");
 	}
 
 	/**
@@ -79,10 +119,21 @@ public class SistemaPersistencia {
 	 * @param id of the route
 	 * 
 	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalStateException    if route has associated tickets
 	 */
 	public void removeRecorrido(String id) {
+		checkID(id);
+		List<Billete> tmp;
+		try {
+			tmp = getAssociatedBilletesToRoute(id);
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
+		if (tmp.size() > 0)
+			throw new IllegalStateException("the route has associated tickets");
+		database.eliminarRecorrido(id);
 	}
 
 	/**
@@ -91,7 +142,7 @@ public class SistemaPersistencia {
 	 * @return list of routes in system
 	 */
 	public List<Recorrido> getRecorridos() {
-		return null;
+		return database.getRecorridos();
 	}
 
 	/**
@@ -143,10 +194,14 @@ public class SistemaPersistencia {
 	 * @return list of tickets
 	 * 
 	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 */
 	public List<Billete> getAssociatedBilletesToRoute(String id) {
-		return null;
+		checkID(id);
+		if (database.getRecorrido(id) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		return database.getBilletesDeRecorrido(id);
 	}
 
 	/**
@@ -162,7 +217,11 @@ public class SistemaPersistencia {
 	 *                                  id
 	 */
 	public LocalDate getDateOfRecorrido(String id) {
-		return null;
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		return route.getDate();
 	}
 
 	/**
@@ -178,7 +237,11 @@ public class SistemaPersistencia {
 	 *                                  id
 	 */
 	public LocalTime getTimeOfRecorrido(String id) {
-		return null;
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		return route.getTime();
 	}
 
 	/**
@@ -194,65 +257,117 @@ public class SistemaPersistencia {
 	 *                                  id
 	 */
 	public LocalDateTime getDateTimeOfRecorrido(String id) {
-		return null;
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		return route.getDateTime();
 	}
 
 	/**
 	 * Update the date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * 
 	 * @throws IllegalArgumentException if id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalArgumentException if newDate is null
 	 * @throws IllegalStateException    if the new date is the already the set
 	 */
 	public void updateRecorridoDate(String id, LocalDate newDate) {
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		try {
+			route.updateDate(newDate);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
 	}
 
 	/**
 	 * Update the time of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalArgumentException if newTime is null
 	 * @throws IllegalStateException    if the new time is the already the set
 	 */
 	public void updateRecorridoTime(String id, LocalTime newTime) {
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		try {
+			route.updateTime(newTime);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
 	}
 
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id          of the route
 	 * @param newDateTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalArgumentException if newDateTime is null
 	 * @throws IllegalStateException    if the new Date time is the already the set
 	 */
 	public void updateRecorridoDateTime(String id, LocalDateTime newDateTime) {
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		try {
+			route.updateDateTime(newDateTime);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
 	}
 
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * @param newTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
+	 * @throws IllegalArgumentException if id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalArgumentException if newDate is null
 	 * @throws IllegalArgumentException if newTime is null
 	 * @throws IllegalStateException    if the new Date time is the already the set
 	 */
 	public void updateRecorrido(String id, LocalDate newDate, LocalTime newTime) {
+		checkID(id);
+		Recorrido route;
+		if ((route = database.getRecorrido(id)) == null)
+			throw new IllegalStateException("the id's route isn't in the system");
+		try {
+			route.updateDateTime(newDate, newTime);
+		} catch (IllegalArgumentException e1) {
+			throw e1;
+		} catch (IllegalStateException e2) {
+			throw e2;
+		}
 	}
 
 	/**
