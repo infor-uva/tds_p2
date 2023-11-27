@@ -359,10 +359,6 @@ public class SistemaPersistencia {
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
 		if(localizador==null)
 			throw new IllegalArgumentException("EL localizador es nulo\n");
-		if (localizador.isEmpty())
-			throw new IllegalArgumentException("EL localizador esta vacio\n");
-		if (database.getBilletes(localizador)!= null)
-			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
 		if (usr == null)
 			throw new IllegalArgumentException("El usuario es null\n");
 		if (recorrido == null)
@@ -371,6 +367,10 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("El numero de billetes es inferior al minimo\n");
 		if (numBilletes > recorrido.getNumAvailableSeats())
 			throw new IllegalStateException("El numero de billetes es superior a las plazas disponibles\n");
+		if (localizador.isEmpty())
+			throw new IllegalArgumentException("EL localizador esta vacio\n");
+		if (!database.getBilletes(localizador).isEmpty())
+			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
 		List<Billete> returned=new ArrayList<>();
 		for(int i=0;i<numBilletes;i++) {
 			Billete tiket=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);

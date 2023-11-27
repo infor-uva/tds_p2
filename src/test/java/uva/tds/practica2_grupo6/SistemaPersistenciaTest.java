@@ -664,7 +664,7 @@ class SistemaPersistenciaTest {
 	void testComprarBilletesValidoTrenLimiteInferior() {
 		String localizador="ABC12345";
 		
-		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
 		
 		
 		database.addBillete(new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO));
@@ -695,7 +695,7 @@ class SistemaPersistenciaTest {
 	void testComprarBilletesValidosTrenLimiteSuperior() {
 		String localizador="ABC12345";
 		
-		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
 		
 		Recorrido rec=new Recorrido("dif", origin, destination, TRAIN, price, date, time, 250,duration);
 		database.addBillete(new Billete(localizador, rec, user, ESTADO_COMPRADO));
@@ -752,7 +752,7 @@ class SistemaPersistenciaTest {
 
 	@Test
 	void testComprarBilleteBusInvalidoLimiteSuperiorDemasiadaCompras() {
-		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(null).times(2);
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(2);
 		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall().times(49);
 		
@@ -776,7 +776,7 @@ class SistemaPersistenciaTest {
 
 	@Test
 	void testComprarBilleteTrainInvalidoLimiteSuperiorDemasiadaCompras() {
-		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(null).times(2);
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(2);
 		Recorrido rec=new Recorrido("dif", origin, destination, TRAIN, price, date, time, 250,duration);
 		database.addBillete(new Billete("ABC12345", rec, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall().times(249);
@@ -818,7 +818,7 @@ class SistemaPersistenciaTest {
 		Billete tiket=new Billete("ABC12345", rec, user, ESTADO_COMPRADO);
 		ArrayList<Billete> returned = new ArrayList<>();
 		returned.add(tiket);
-		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(null);
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>());
 		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(returned);
 		database.addBillete(tiket);
 		EasyMock.expectLastCall().times(2);
@@ -846,7 +846,7 @@ class SistemaPersistenciaTest {
 		Billete tiket=new Billete("ABC12345", rec, user, ESTADO_COMPRADO);
 		ArrayList<Billete> returned = new ArrayList<>();
 		returned.add(tiket);
-		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(null);
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>());
 		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(returned);
 		database.addBillete(tiket);
 		EasyMock.expectLastCall().times(2);
@@ -887,8 +887,8 @@ class SistemaPersistenciaTest {
 	void testComprarBilleteUsuarioYaGuardado() {
 		String localizador="ABC12345";
 		
-		EasyMock.expect(database.getBilletes("ABC12346")).andReturn(null);
-		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		EasyMock.expect(database.getBilletes("ABC12346")).andReturn(new ArrayList<>());
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
 		
 		
 		database.addBillete(new Billete("ABC12346", recorrido, user, ESTADO_COMPRADO));
