@@ -483,6 +483,43 @@ public class System {
 	 *                                  number of tickets with that locator
 	 */
 	public void devolverBilletes(String localizador, int numBilletesDevolver) {
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (numBilletesDevolver < 1)
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
+		int counter = 0;
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(localizador)) {
+				counter += 1;
+				if(!billetes.getEstado().equals(ESTADO_COMPRADO))
+					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
+		}
+		}
+		if(counter == 0)
+			throw new IllegalStateException("El localizador no corresponde con tickets comprados");
+		
+		int count = 0;
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(localizador))
+				count += 1;
+		}
+		if (count < numBilletesDevolver)
+				throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
+		
+		Recorrido recorrido = this.tickets.get(0).getRecorrido();
+		int contador = 0;
+		while (contador < numBilletesDevolver) {
+			for (Billete billetes: this.tickets) {
+				if (billetes.getLocalizador().equals(localizador)) {					
+					tickets.remove(billetes);
+					contador += 1;
+					break;
+				}
+			}
+		}
+		recorrido.increaseAvailableSeats(numBilletesDevolver);
 
 	}
 
@@ -598,4 +635,3 @@ public class System {
 
 	}
 }
-

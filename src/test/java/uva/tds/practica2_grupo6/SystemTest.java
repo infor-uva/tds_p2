@@ -1097,7 +1097,7 @@ class SystemTest {
 	void testNoSePuedeDevolverBilletesConNumLimiteInferior() {
 		String locator = "ABC12345";
 		system.comprarBilletes(locator, user, recorrido, 1);
-		assertThrows(IllegalStateException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			system.devolverBilletes(locator, 0);
 		});
 	}
