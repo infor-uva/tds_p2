@@ -942,7 +942,7 @@ class SistemaPersistenciaTest {
 	void testComprarBilletesValidoBusLimiteInferior() {
 		String localizador="ABC12345";
 		
-		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
 		
 		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall();
@@ -971,7 +971,7 @@ class SistemaPersistenciaTest {
 	void testComprarBilletesValidosBusLimiteSuperior() {
 		String localizador="ABC12345";
 		
-		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
 		
 		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall().times(50);

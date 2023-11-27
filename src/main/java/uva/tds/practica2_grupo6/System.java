@@ -64,7 +64,7 @@ public class System {
 	private static final String ESTADO_COMPRADO = "comprado";
 	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
 
-	private List<Billete> tikets;
+	private List<Billete> tickets;
 	
 	private List<String> users; 
 	
@@ -73,7 +73,7 @@ public class System {
 	 * Instance the System
 	 */
 	public System() {
-		tikets=new ArrayList<>();
+		tickets=new ArrayList<>();
 		users=new ArrayList<>();
 		routes=new ArrayList<>();
 	}
@@ -199,14 +199,14 @@ public class System {
 		if (!users.contains(nif))
 			throw new IllegalArgumentException("El nif no concuerda con ninguno del sistema\n");
 		boolean encuentraTiket=false;
-		for(Billete tiket : tikets) {
+		for(Billete tiket : tickets) {
 			if (tiket.getUsuario().getNif().equals(nif))
 				encuentraTiket=true;
 		}
 		if (!encuentraTiket)
 			throw new IllegalArgumentException("El nif no tiene ningun billete asociado\n");
 		double precioTotal=0;
-		for(Billete tiket : tikets) {
+		for(Billete tiket : tickets) {
 			if (tiket.getUsuario().getNif().equals(nif)) {
 				if (tiket.getRecorrido().getTransport().equals(TRAIN)) {
 					double precioDescuento=tiket.getRecorrido().getPrice()*0.9;
@@ -515,7 +515,7 @@ public class System {
 			throw new IllegalArgumentException("El localizador es nulo\n");
 		if (localizador.isEmpty())
 			throw new IllegalArgumentException("El localizador esta vacio\n");
-		for(Billete tiket : tikets) {
+		for(Billete tiket : tickets) {
 			if (tiket.getLocalizador().equals(localizador)) {
 				throw new IllegalArgumentException("El localizador ya a sido usado\n");
 			}
@@ -534,7 +534,7 @@ public class System {
 		for (int i=0;i<numBilletes;i++) {
 			Billete aux=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
 			salida.add(aux);
-			tikets.add(aux);
+			tickets.add(aux);
 			
 		}
 		recorrido.decreaseAvailableSeats(numBilletes);
