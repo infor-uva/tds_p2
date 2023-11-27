@@ -3,6 +3,8 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,8 +18,8 @@ import java.util.List;
  * <li>Remove a Recorrido of system<br>
  * {@link SistemaPersistencia#removeRecorrido(String))}</li>
  * <li>Consult the list of recorridos in system<br>
- * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price accumulated by a
- * user<br>
+ * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
+ * accumulated by a user<br>
  * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}</li>
  * <li>Consult the list of Recorridos that have a specific date<br>
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
@@ -52,14 +54,28 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 25/11/23
  */
 public class System {
 
+	private static final String BUS = "bus";
+	private static final String TRAIN = "train";
+	private static final String ESTADO_RESERVADO = "reservado";
+	private static final String ESTADO_COMPRADO = "comprado";
+	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
+
+	private List<Billete> tickets;
+	
+	private List<String> users; 
+	
+	private List<Recorrido> routes;
 	/**
 	 * Instance the System
 	 */
 	public System() {
+		tickets=new ArrayList<>();
+		users=new ArrayList<>();
+		routes=new ArrayList<>();
 	}
 
 	/**
@@ -71,6 +87,11 @@ public class System {
 	 * @throws IllegalStateException    if route is already in the system
 	 */
 	public void addRecorrido(Recorrido route) {
+		if (route == null)
+			throw new IllegalArgumentException("route is null");
+		if (getRecorrido(route.getID()) != null)
+			throw new IllegalStateException("route is already in the system");
+		routes.add(route);
 	}
 
 	/**
@@ -79,10 +100,40 @@ public class System {
 	 * @param id of the route
 	 * 
 	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if the id is empty
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 * @throws IllegalStateException    if route has associated tickets
 	 */
 	public void removeRecorrido(String id) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (getAssociatedBilletesToRoute(id).size() != 0)
+			throw new IllegalStateException("the route has associated tickets");
+		routes.remove(route);
+
+	}
+
+	/**
+	 * Consult the id's route
+	 * 
+	 * @param id of the route
+	 * 
+	 * @return id's route or null if the route isn't in the system
+	 * 
+	 * @throws IllegalArgumentException if the id is null
+	 * @throws IllegalArgumentException if the id is empty
+	 */
+	private Recorrido getRecorrido(String id) {
+		if (id == null)
+			throw new IllegalArgumentException("id is null");
+		if (id.isEmpty())
+			throw new IllegalArgumentException("id is empty");
+		for (Recorrido route : routes) {
+			if (route.getID().equals(id))
+				return route;
+		}
+		return null;
 	}
 
 	/**
@@ -91,7 +142,16 @@ public class System {
 	 * @return list of routes in system
 	 */
 	public List<Recorrido> getRecorridos() {
-		return null;
+		return routes;
+	}
+
+	/**
+	 * Consult the list of tickets in system
+	 * 
+	 * @return list of tickets in system
+	 */
+	public List<Billete> getBilletes() {
+		return tickets;
 	}
 
 	/**
@@ -118,7 +178,46 @@ public class System {
 	 *                                  tickets.
 	 */
 	public double getPrecioTotalBilletesUsuario(String nif) {
-		return -1.0;
+		if(nif == null)
+			throw new IllegalArgumentException("El nif es nulo\n");
+		if (nif.isEmpty())
+			throw new IllegalArgumentException("El nif esta vacio\n");
+		if(nif.length()>9)
+			throw new IllegalArgumentException("Nif demasiado largo\n");
+		if(nif.length()<=8)
+			throw new IllegalArgumentException("Nif demasiado corto\n");
+		if(!Character.isLetter(nif.charAt(8)))
+			throw new IllegalArgumentException("Nif no contiene la letra\n");
+		if(nif.charAt(8) == 'U' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ')
+			throw new IllegalArgumentException("Nif contiene la letra erronea\n");
+		String cifras=nif.substring(0, nif.length()-1);
+		char letra=nif.charAt(8);
+		int numero=Integer.parseInt(cifras);
+		int resto=numero%23;
+		if(resto != letrasNif.indexOf(letra))
+			throw new IllegalArgumentException("La letra del nif no corresponde con las cifras del nif\n");
+		if (!users.contains(nif))
+			throw new IllegalArgumentException("El nif no concuerda con ninguno del sistema\n");
+		boolean encuentraTiket=false;
+		for(Billete tiket : tickets) {
+			if (tiket.getUsuario().getNif().equals(nif))
+				encuentraTiket=true;
+		}
+		if (!encuentraTiket)
+			throw new IllegalArgumentException("El nif no tiene ningun billete asociado\n");
+		double precioTotal=0;
+		for(Billete tiket : tickets) {
+			if (tiket.getUsuario().getNif().equals(nif)) {
+				if (tiket.getRecorrido().getTransport().equals(TRAIN)) {
+					double precioDescuento=tiket.getRecorrido().getPrice()*0.9;
+					precioTotal+=precioDescuento;
+				}
+				else
+					precioTotal+=tiket.getRecorrido().getPrice();
+			}
+		}
+		
+		return precioTotal;
 	}
 
 	/**
@@ -132,7 +231,20 @@ public class System {
 	 * @throws IllegalStateException    if the date does not have associated route.
 	 */
 	public List<Recorrido> getRecorridosDisponiblesFecha(LocalDate fecha) {
-		return null;
+		if (fecha == null)
+			throw new IllegalArgumentException("La fecha es nula\n");
+		boolean asociado=false;
+		List<Recorrido>salida=new ArrayList<>();
+		for (Recorrido route : routes) {
+			if(route.getDate().equals(fecha)) {
+				asociado=true;
+				salida.add(route);
+			}
+		}
+		if(!asociado)
+			throw new IllegalArgumentException("La fecha no corresponde con ningun recorrido\n");
+		
+		return salida;
 	}
 
 	/**
@@ -146,7 +258,15 @@ public class System {
 	 * @throws IllegalStateException    if id's route isn't in the system
 	 */
 	public List<Billete> getAssociatedBilletesToRoute(String id) {
-		return null;
+		Recorrido route;
+		List<Billete> list = new ArrayList<>();
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		for (Billete ticket : tickets) {
+			if (ticket.getRecorrido().equals(route))
+				list.add(ticket);
+		}
+		return list;
 	}
 
 	/**
@@ -162,7 +282,10 @@ public class System {
 	 *                                  id
 	 */
 	public LocalDate getDateOfRecorrido(String id) {
-		return null;
+		Recorrido r;
+		if ((r = getRecorrido(id)) == null)
+			throw new IllegalStateException("no route in the system with this id");
+		return r.getDate();
 	}
 
 	/**
@@ -178,7 +301,10 @@ public class System {
 	 *                                  id
 	 */
 	public LocalTime getTimeOfRecorrido(String id) {
-		return null;
+		Recorrido r;
+		if ((r = getRecorrido(id)) == null)
+			throw new IllegalStateException("no route in the system with this id");
+		return r.getTime();
 	}
 
 	/**
@@ -194,13 +320,16 @@ public class System {
 	 *                                  id
 	 */
 	public LocalDateTime getDateTimeOfRecorrido(String id) {
-		return null;
+		Recorrido r;
+		if ((r = getRecorrido(id)) == null)
+			throw new IllegalStateException("no route in the system with this id");
+		return r.getDateTime();
 	}
 
 	/**
 	 * Update the date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -209,12 +338,20 @@ public class System {
 	 * @throws IllegalStateException    if the new date is the already the set
 	 */
 	public void updateRecorridoDate(String id, LocalDate newDate) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newDate == null)
+			throw new IllegalArgumentException("newDate is null");
+		if (route.getDate().equals(newDate))
+			throw new IllegalStateException("newDate is already set");
+		route.updateDate(newDate);
 	}
 
 	/**
 	 * Update the time of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -223,12 +360,20 @@ public class System {
 	 * @throws IllegalStateException    if the new time is the already the set
 	 */
 	public void updateRecorridoTime(String id, LocalTime newTime) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newTime == null)
+			throw new IllegalArgumentException("newTime is null");
+		if (route.getTime().equals(newTime))
+			throw new IllegalStateException("newTime is already set");
+		route.updateTime(newTime);
 	}
 
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id          of the route
 	 * @param newDateTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -237,12 +382,20 @@ public class System {
 	 * @throws IllegalStateException    if the new Date time is the already the set
 	 */
 	public void updateRecorridoDateTime(String id, LocalDateTime newDateTime) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newDateTime == null)
+			throw new IllegalArgumentException("newDateTime is null");
+		if (route.getDateTime().equals(newDateTime))
+			throw new IllegalStateException("newDateTime is already set");
+		route.updateDateTime(newDateTime);
 	}
 
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * @param newTime
 	 * 
@@ -253,6 +406,16 @@ public class System {
 	 * @throws IllegalStateException    if the new Date time is the already the set
 	 */
 	public void updateRecorrido(String id, LocalDate newDate, LocalTime newTime) {
+		Recorrido route;
+		if ((route = getRecorrido(id)) == null)
+			throw new IllegalStateException("the route isn't in the system");
+		if (newDate == null)
+			throw new IllegalArgumentException("newDateTime is null");
+		if (newTime == null)
+			throw new IllegalArgumentException("newTime is null");
+		if (route.getDateTime().equals(LocalDateTime.of(newDate, newTime)))
+			throw new IllegalStateException("newDateTime is already set");
+		route.updateDateTime(newDate, newTime);
 	}
 
 	/**
@@ -272,13 +435,43 @@ public class System {
 	 * @throws IllegalArgumentException if the identifier is empty.
 	 * @throws IllegalArgumentException if a locator that has been used previously
 	 *                                  is passed.
+	 * @throws IllegalStateException    if the route doesn't exist
 	 * @throws IllegalArgumentException if user is null.
 	 * @throws IllegalArgumentException if recorrido is null.
 	 * @throws IllegalArgumentException if recorrido is null.
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		return null;
+		if (user == null)
+			throw new IllegalArgumentException("El usuario no puede ser null");
+		if (recorrido == null)
+			throw new IllegalArgumentException("El recorrido no puede ser null");
+		if (localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (numBilletesReservar > recorrido.getNumAvailableSeats())
+			throw new IllegalStateException(
+					"No se puede reservar si el número de billetes es mayor a los asientos disponibles");
+		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats())
+			throw new IllegalStateException(
+					"No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		for (Billete billetes : this.tickets) {
+			if (billetes.getLocalizador().equals(localizador))
+				throw new IllegalStateException("Ese localizador ya ha sido utilizado");
+		}
+		if (!routes.contains(recorrido))
+			throw new IllegalStateException("El recorrido no existe en el sistema");
+
+		List<Billete> billetesReservados = new ArrayList<Billete>();
+		for (int i = 0; i < numBilletesReservar; i++) {
+			Billete billete = new Billete(localizador, recorrido, user, ESTADO_RESERVADO);
+			billetesReservados.add(billete);
+		}
+		recorrido.decreaseAvailableSeats(numBilletesReservar);
+		tickets.addAll(billetesReservados);
+		return billetesReservados;
+
 	}
 
 	/**
@@ -293,12 +486,49 @@ public class System {
 	 * @throws IllegalStateException    if the locator isn't in the system
 	 * @throws IllegalStateException    if the locator belongs to tickets that are
 	 *                                  not reserved.
-	 * @throws IllegalArgumentException if the number of tickets ir less or equal to
+	 * @throws IllegalArgumentException if the number of tickets is less or equal to
 	 *                                  0
 	 * @throws IllegalStateException    if the number of tickets is more than the
 	 *                                  number of reserved tickets with that locator
 	 */
 	public void anularReserva(String localizador, int numBilletesAnular) {
+		if (localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (numBilletesAnular < 1)
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");
+		int counter = 0;
+		for (Billete billetes : this.tickets) {
+			if (billetes.getLocalizador().equals(localizador)) {
+				counter += 1;
+				if (!billetes.getEstado().equals(ESTADO_RESERVADO))
+					throw new IllegalStateException("El localizador no corresponde con tickets reservados");
+			}
+		}
+		if (counter == 0)
+			throw new IllegalStateException("El localizador no corresponde con tickets reservados");
+
+		int count = 0;
+		for (Billete billetes : this.tickets) {
+			if (billetes.getLocalizador().equals(localizador))
+				count += 1;
+		}
+		if (count < numBilletesAnular)
+			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
+
+		Recorrido recorrido = this.tickets.get(0).getRecorrido();
+		int contador = 0;
+		while (contador < numBilletesAnular) {
+			for (Billete billetes : this.tickets) {
+				if (billetes.getLocalizador().equals(localizador)) {
+					tickets.remove(billetes);
+					contador += 1;
+					break;
+				}
+			}
+		}
+		recorrido.increaseAvailableSeats(numBilletesAnular);
 
 	}
 
@@ -320,6 +550,43 @@ public class System {
 	 *                                  number of tickets with that locator
 	 */
 	public void devolverBilletes(String localizador, int numBilletesDevolver) {
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (numBilletesDevolver < 1)
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
+		int counter = 0;
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(localizador)) {
+				counter += 1;
+				if(!billetes.getEstado().equals(ESTADO_COMPRADO))
+					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
+		}
+		}
+		if(counter == 0)
+			throw new IllegalStateException("El localizador no corresponde con tickets comprados");
+		
+		int count = 0;
+		for (Billete billetes: this.tickets) {
+			if (billetes.getLocalizador().equals(localizador))
+				count += 1;
+		}
+		if (count < numBilletesDevolver)
+				throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
+		
+		Recorrido recorrido = this.tickets.get(0).getRecorrido();
+		int contador = 0;
+		while (contador < numBilletesDevolver) {
+			for (Billete billetes: this.tickets) {
+				if (billetes.getLocalizador().equals(localizador)) {					
+					tickets.remove(billetes);
+					contador += 1;
+					break;
+				}
+			}
+		}
+		recorrido.increaseAvailableSeats(numBilletesDevolver);
 
 	}
 
@@ -348,7 +615,62 @@ public class System {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		return null;
+		if (localizador == null)
+			throw new IllegalArgumentException("El localizador es nulo\n");
+		if (localizador.isEmpty())
+			throw new IllegalArgumentException("El localizador esta vacio\n");
+		for(Billete tiket : tickets) {
+			if (tiket.getLocalizador().equals(localizador)) {
+				throw new IllegalArgumentException("El localizador ya a sido usado\n");
+			}
+		}
+		if (usr == null)
+			throw new IllegalArgumentException("El usuario es nulo\n");
+		if (recorrido == null)
+			throw new IllegalArgumentException("El recorrido es nulo\n");
+		if (numBilletes <1)
+			throw new IllegalArgumentException("El numero de billetes ha de ser superior a 0\n");
+		if (numBilletes > recorrido.getTotalSeats())
+			throw new IllegalArgumentException("El numero es superior a los asientos del vehiculo\n");
+		if (numBilletes > recorrido.getNumAvailableSeats())
+			throw new IllegalStateException("El numero es superior a los asientos disponibles\n");
+		List<Billete> salida=new ArrayList<>();
+		for (int i=0;i<numBilletes;i++) {
+			Billete aux=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
+			salida.add(aux);
+			tickets.add(aux);
+			
+		}
+		recorrido.decreaseAvailableSeats(numBilletes);
+		if (!users.contains(usr.getNif()))
+			users.add(usr.getNif());
+		return salida;
+
+	}
+
+	/**
+	 * Consult and return the list with the ticket which has the same locator. If
+	 * there is no tickets with that locator will be returned a empty list
+	 * 
+	 * @param locator of the ticket(s)
+	 * 
+	 * @return list of tickets (it could be empty)
+	 * 
+	 * @throws IllegalArgumentException if locator is null
+	 * @throws IllegalArgumentException if locator have less than 1 or more than 8
+	 *                                  characters
+	 */
+	private List<Billete> getBilletes(String locator) {
+		if (locator == null)
+			throw new IllegalArgumentException("locator is null");
+		if (locator.isBlank() || locator.length() > 8)
+			throw new IllegalArgumentException("locator must be between 1 and 8 characters longs");
+		List<Billete> tickets = new ArrayList<>();
+		for (Billete ticket : this.tickets) {
+			if (ticket.getLocalizador().equals(locator))
+				tickets.add(ticket);
+		}
+		return tickets;
 	}
 
 	/**
@@ -365,6 +687,18 @@ public class System {
 	 *                                  with that locator
 	 */
 	public List<Billete> comprarBilletesReservados(String locator) {
-		return null;
+		List<Billete> tickets;
+		if ((tickets = getBilletes(locator)).isEmpty())
+			throw new IllegalStateException("the is no tickets for this locator: " + locator);
+		for (Billete ticket : tickets) {
+			try {
+				ticket.setComprado();
+			} catch (IllegalStateException e) {
+				// Reescritura de mensaje de error
+				throw new IllegalStateException("the are no tickets booked with that locator");
+			}
+		}
+		return tickets;
+
 	}
 }
