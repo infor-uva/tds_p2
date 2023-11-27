@@ -55,6 +55,12 @@ import java.util.ArrayList;
  * @version 17/11/23
  */
 public class System {
+	
+	private static final String BUS = "bus";
+	private static final String TRAIN = "train";
+	private static final String ESTADO_RESERVADO = "reservado";
+	private static final String ESTADO_COMPRADO = "comprado";
+
 
 	/**
 	 * List of routes registered in the system
@@ -343,7 +349,7 @@ public class System {
 		for (Billete billetes: this.tickets) {
 			if (billetes.getLocalizador().equals(localizador)) {
 				counter += 1;
-				if(!billetes.getEstado().equals("comprado"))
+				if(!billetes.getEstado().equals(ESTADO_COMPRADO))
 					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
 		}
 		}
