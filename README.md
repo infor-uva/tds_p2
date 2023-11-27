@@ -4,26 +4,34 @@
 Este proyecto tiene como fin la creación de un sistema de gestión de usuarios, billetes y recorridos asociados a él.<br>
 Este proyecto esta formado por las siguientes clases:
 
-### [`Billete.java`](./src/uva/tds/practica1/Billete.java)
-Esta clase representa los billetes del supuesto, conformada por varios atributos como el usuario al que pertenece, el recorrido asociado y su localizador único. Además, cuenta con un estado para diferenciar si está reservado o comprado. <br>[`+ información →`](./src/uva/tds/practica1/Billete.java)
+### [`Billete.java`](./src/main/java/uva/tds/practica2_grupo6/Billete.java)
+Esta clase representa los billetes del supuesto, conformada por varios atributos como el usuario al que pertenece, el recorrido asociado y su localizador único. Además, cuenta con un estado para diferenciar si está reservado o comprado. <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/Billete.java)
 
-### [`Recorrido.java`](./src/uva/tds/practica1/Recorrido.java)
-Clase encargada de representar y manejar la información de los recorridos (o rutas), esta cuenta con un origen y un destino, una duración, un precio, un identificador, un  medio de transporte y la hora y fecha de inicio del viaje. Con esta clase se puede conocer el número de asientos disponibles, ya sean los totales o los que actualmente están disponibles, y número de asientos que no hayan sido comprados o reservados. <br>[`+ información →`](./src/uva/tds/practica1/Recorrido.java)
+### [`Recorrido.java`](./src/main/java/uva/tds/practica2_grupo6/Recorrido.java)
+Clase encargada de representar y manejar la información de los recorridos (o rutas), esta cuenta con un origen y un destino, una duración, un precio, un identificador, un  medio de transporte y la hora y fecha de inicio del viaje. Con esta clase se puede conocer el número de asientos disponibles, ya sean los totales o los que actualmente están disponibles, y número de asientos que no hayan sido comprados o reservados. <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/Recorrido.java)
 
-### [`Usuario.java`](./src/uva/tds/practica1/Usuario.java)
-Esta clase representa los usuarios del supuesto. La información acerca del usuario son su nombre y su identificador único. Será este usuario el que esté asociado a un billete.<br>[`+ información →`](./src/uva/tds/practica1/Usuario.java)
+### [`Usuario.java`](./src/main/java/uva/tds/practica2_grupo6/Usuario.java)
+Esta clase representa los usuarios del supuesto. La información acerca del usuario son su nombre y su identificador único. Será este usuario el que esté asociado a un billete.<br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/Usuario.java)
 
-### [`System.java`](./src/uva/tds/practica1/System.java)
+### [`System.java`](./src/uva/tds/practica2_grupo6/System.java)
 Clase encargada de la gestión del conjunto de clases: recorrido, usuario y billetes.
 
 El sistema ofrece servicios de compra y reserva de billetes para un viaje (recorrido), con sus respectivas gestiones (devolución de billete y anulación de reserva respectivamente). 
 
 Además, el sistema ofrece consultar información generada a través de las operaciones anteriores, como el precio total que le corresponde a un usuario en concreto (en base a sus billetes reservados y comprados) y el listado de recorridos en una fecha determinada.
-<br>[`+ información →`](./src/uva/tds/practica1/System.java)
+<br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/System.java)
 
-### [Tests](./src/uva/tds/practica1/test/)
+### [`IDataBaseManager.java`](./src/uva/tds/practica2_grupo6/IDataBaseManager.java)
+Por definir
+<br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/IDataBaseManager.java)
+
+### [`SistemaPersistencia.java`](./src/uva/tds/practica2_grupo6/SistemaPersistencia.java)
+Por definir
+<br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/SistemaPersistencia.java)
+
+### [Tests](./src/test/java/uva/tds/practica2_grupo6/)
 Las clases anteriormente mencionadas estarán testeadas mediante le método Test-First o TDD (Test Driven Development), en base a las restricciones planteadas en el supuesto.
-<br>[`+ información →`](./src/uva/tds/practica1/test/)
+<br>[`+ información →`](./src/test/java/uva/tds/practica2_grupo6/)
 
 ## Tiempo utilizado
 ----------------------------------
