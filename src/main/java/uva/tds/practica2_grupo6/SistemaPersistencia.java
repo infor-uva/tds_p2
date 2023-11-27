@@ -523,6 +523,35 @@ public class SistemaPersistencia {
 	 *                                  number of tickets with that locator
 	 */
 	public void devolverBilletes(String localizador, int numBilletesDevolver) {
+		if(localizador == null)
+			throw new IllegalArgumentException("El localizador no puede ser null");
+		if (localizador.equals(""))
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
+		if (numBilletesDevolver < 1)
+			throw new IllegalArgumentException("No se puede devolver si el número de billetes es menor que 1");	
+		
+		ArrayList<Billete> billetes = database.getBilletes(localizador);
+		if(billetes.isEmpty() || !billetes.get(0).getEstado().equals(ESTADO_COMPRADO)) {
+			throw new IllegalStateException("No hay tickets comprados con ese localizador");
+		}
+		
+		if(billetes.size() < numBilletesDevolver) {
+			throw new IllegalStateException("Hay menos tickets de los que se quieren devolver con ese localizador");
+		}
+		
+		int billetesRestantes = billetes.size() - numBilletesDevolver;
+		database.eliminarBilletes(localizador);
+		if(billetesRestantes > 0) {
+			Billete b = billetes.get(0);
+			Recorrido r = b.getRecorrido();
+			r.increaseAvailableSeats(numBilletesDevolver);
+			for (int i = 0; i < billetesRestantes; i++) {
+				database.addBillete(b);
+			}
+			
+			database.actualizarRecorrido(r);
+		}
+
 
 	}
 
