@@ -302,31 +302,7 @@ public class SistemaPersistencia {
 	 */
 	public List<Billete> reservarBilletes(String localizador, Usuario user, Recorrido recorrido,
 			int numBilletesReservar) {
-		if(user == null)
-			throw new IllegalArgumentException("El usuario no puede ser null");
-		if(recorrido == null)
-			throw new IllegalArgumentException("El recorrido no puede ser null");
-		if(localizador == null)
-			throw new IllegalArgumentException("El localizador no puede ser null");
-		if (numBilletesReservar > recorrido.getNumAvailableSeats())
-			throw new IllegalArgumentException("No se puede reservar si el número de billetes es mayor a los asientos disponibles");
-		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats())
-			throw new IllegalArgumentException("No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
-		if (localizador.equals(""))
-			throw new IllegalArgumentException("El localizador no puede ser vacio");
-		if (database.getBilletes(localizador).size() > 0) {
-			throw new IllegalArgumentException("El localizador ya ha sido utilizado");
-		}
-
-		List<Billete> billetes = new ArrayList<>();
-		for (int i = 0; i < numBilletesReservar; i++) {
-			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
-			billetes.add(ticket);
-			database.addBillete(ticket);
-		}
-		recorrido.decreaseAvailableSeats(numBilletesReservar);
-		database.actualizarRecorrido(recorrido);
-		return billetes;
+		return null;
 
 	}
 
@@ -426,30 +402,7 @@ public class SistemaPersistencia {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		if(localizador==null)
-			throw new IllegalArgumentException("EL localizador es nulo\n");
-		if (localizador.isEmpty())
-			throw new IllegalArgumentException("EL localizador esta vacio\n");
-		if (!database.getBilletes(localizador).isEmpty())
-			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
-		if (usr == null)
-			throw new IllegalArgumentException("El usuario es null\n");
-		if (recorrido == null)
-			throw new IllegalArgumentException("El recorrido es null\n");
-		if (numBilletes<1)
-			throw new IllegalArgumentException("El numero de billetes es inferior al minimo\n");
-		if (numBilletes > recorrido.getNumAvailableSeats())
-			throw new IllegalStateException("El numero de billetes es superior a las plazas disponibles\n");
-		List<Billete> returned=new ArrayList<>();
-		for(int i=0;i<numBilletes;i++) {
-			Billete tiket=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
-			returned.add(tiket);
-			database.addBillete(tiket);
-		}
-		recorrido.decreaseAvailableSeats(numBilletes);
-		database.actualizarRecorrido(recorrido);
-		
-		return returned;
+			return null;
 
 	}
 
