@@ -69,12 +69,6 @@ public class System {
 	private List<String> users; 
 	
 	private List<Recorrido> routes;
-
-	/**
-	 * List of tickets registered in the system
-	 */
-	private List<Billete> tickets;
-
 	/**
 	 * Instance the System
 	 */
@@ -184,7 +178,46 @@ public class System {
 	 *                                  tickets.
 	 */
 	public double getPrecioTotalBilletesUsuario(String nif) {
-		return -1.0;
+		if(nif == null)
+			throw new IllegalArgumentException("El nif es nulo\n");
+		if (nif.isEmpty())
+			throw new IllegalArgumentException("El nif esta vacio\n");
+		if(nif.length()>9)
+			throw new IllegalArgumentException("Nif demasiado largo\n");
+		if(nif.length()<=8)
+			throw new IllegalArgumentException("Nif demasiado corto\n");
+		if(!Character.isLetter(nif.charAt(8)))
+			throw new IllegalArgumentException("Nif no contiene la letra\n");
+		if(nif.charAt(8) == 'U' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ')
+			throw new IllegalArgumentException("Nif contiene la letra erronea\n");
+		String cifras=nif.substring(0, nif.length()-1);
+		char letra=nif.charAt(8);
+		int numero=Integer.parseInt(cifras);
+		int resto=numero%23;
+		if(resto != letrasNif.indexOf(letra))
+			throw new IllegalArgumentException("La letra del nif no corresponde con las cifras del nif\n");
+		if (!users.contains(nif))
+			throw new IllegalArgumentException("El nif no concuerda con ninguno del sistema\n");
+		boolean encuentraTiket=false;
+		for(Billete tiket : tikets) {
+			if (tiket.getUsuario().getNif().equals(nif))
+				encuentraTiket=true;
+		}
+		if (!encuentraTiket)
+			throw new IllegalArgumentException("El nif no tiene ningun billete asociado\n");
+		double precioTotal=0;
+		for(Billete tiket : tikets) {
+			if (tiket.getUsuario().getNif().equals(nif)) {
+				if (tiket.getRecorrido().getTransport().equals(TRAIN)) {
+					double precioDescuento=tiket.getRecorrido().getPrice()*0.9;
+					precioTotal+=precioDescuento;
+				}
+				else
+					precioTotal+=tiket.getRecorrido().getPrice();
+			}
+		}
+		
+		return precioTotal;
 	}
 
 	/**
@@ -198,7 +231,20 @@ public class System {
 	 * @throws IllegalStateException    if the date does not have associated route.
 	 */
 	public List<Recorrido> getRecorridosDisponiblesFecha(LocalDate fecha) {
-		return null;
+		if (fecha == null)
+			throw new IllegalArgumentException("La fecha es nula\n");
+		boolean asociado=false;
+		List<Recorrido>salida=new ArrayList<>();
+		for (Recorrido route : routes) {
+			if(route.getDate().equals(fecha)) {
+				asociado=true;
+				salida.add(route);
+			}
+		}
+		if(!asociado)
+			throw new IllegalArgumentException("La fecha no corresponde con ningun recorrido\n");
+		
+		return salida;
 	}
 
 	/**
@@ -552,3 +598,4 @@ public class System {
 
 	}
 }
+
