@@ -429,7 +429,7 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("EL localizador es nulo\n");
 		if (localizador.isEmpty())
 			throw new IllegalArgumentException("EL localizador esta vacio\n");
-		if (database.getBilletes(localizador)!= null)
+		if (!database.getBilletes(localizador).isEmpty())
 			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
 		if (usr == null)
 			throw new IllegalArgumentException("El usuario es null\n");

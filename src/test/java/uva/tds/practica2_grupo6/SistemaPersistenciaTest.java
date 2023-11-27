@@ -891,7 +891,7 @@ class SistemaPersistenciaTest {
 		int numBilletesComprar = (recorrido.getTotalSeats() / 2 )+ 1;
 		
 		
-		EasyMock.expect(database.getBilletes(localizador)).andReturn(null);
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
 		
 		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall().times(numBilletesComprar);
@@ -926,7 +926,7 @@ class SistemaPersistenciaTest {
 		int numBilletesAnular = 1;
 		String localizador = "ABC12345";
 
-		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(1);
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>()).times(1);
 		database.addBillete(new Billete(localizador, recorrido, user, ESTADO_RESERVADO));
 		EasyMock.expectLastCall().times(numBilletesReservar);
 
@@ -957,7 +957,7 @@ class SistemaPersistenciaTest {
 		int plazasDisponiblesAntes = recorrido.getNumAvailableSeats();
 
 		// Realiza la anulación de la reserva
-		sistema.devolverBilletes(localizador, numBilletesAnular);
+		sistema.anularReserva(localizador, numBilletesAnular);
 
 		int plazasDisponiblesDespues = recorrido.getNumAvailableSeats();
 
@@ -983,11 +983,19 @@ class SistemaPersistenciaTest {
 
 	@Test
 	void testNoSePuedeAnularReservaSiFueraSistema() {
+		String localizador = "ABC12345";
+		int numBilletesComprar = 5;
 		int numBilletesAnular = 2;
+		
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
+		EasyMock.expectLastCall();
+		
+		EasyMock.replay(database);
 		// Intenta anular la reserva sin reservar previamente
 		assertThrows(IllegalStateException.class, () -> {
 			sistema.anularReserva("ABC12345", numBilletesAnular);
 		});
+		EasyMock.verify(database);
 	}
 
 	@Test
@@ -999,21 +1007,61 @@ class SistemaPersistenciaTest {
 
 	@Test
 	void testNoSePuedeAnularReservaSiLocalizadorPerteneceABilletesComprados() {
-		String locator = "ABC12345";
-		sistema.comprarBilletes(locator, user, recorrido, 3);
+		String localizador = "ABC12345";
+		int numBilletesComprar = 5;
+		int numBilletesAnular = 2;
+		
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
+		database.addBillete(new Billete(localizador, recorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(numBilletesComprar);
+		
+		Recorrido clonRecorrido=new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		clonRecorrido.decreaseAvailableSeats(numBilletesComprar);
+		
+		database.actualizarRecorrido(clonRecorrido);
+		EasyMock.expectLastCall();
+		
+		EasyMock.expect(database.getUsuario(user.getNif())).andReturn(null);
+		database.addUsuario(user);
+		EasyMock.expectLastCall();
+		
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
+		EasyMock.expectLastCall();
+		
+		EasyMock.replay(database);
+		
+		sistema.comprarBilletes(localizador, user, recorrido, numBilletesComprar);
 		assertThrows(IllegalStateException.class, () -> {
-			sistema.anularReserva(locator, 2);
+			sistema.anularReserva(localizador, numBilletesAnular);
 		});
+		
+		EasyMock.verify(database);
 	}
 
 	@Test
 	void testNoSePuedeAnularReservaSiMayorNumeroDeAnulacionesQueBilletesReservados() {
-		String locator = "ABC12345";
+		String localizador = "ABC12345";
+		int numBilletesReservar = 2;
 		int numBilletesAnular = 3;
-		sistema.reservarBilletes(locator, user, recorrido, 1);
+		
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(1);
+		database.addBillete(new Billete(localizador, recorrido, user, ESTADO_RESERVADO));
+		EasyMock.expectLastCall().times(numBilletesReservar);
+		
+		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		recorridoCopia.decreaseAvailableSeats(numBilletesReservar);
+		database.actualizarRecorrido(recorridoCopia);
+		EasyMock.expectLastCall();
+		
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(1);
+		EasyMock.expectLastCall();
+		
+		EasyMock.replay(database);
+		sistema.reservarBilletes(localizador, user, recorrido, numBilletesReservar);
 		assertThrows(IllegalStateException.class, () -> {
-			sistema.anularReserva(locator, numBilletesAnular);
+			sistema.anularReserva(localizador, numBilletesAnular);
 		});
+		EasyMock.verify(database);
 	}
 
 	/**
