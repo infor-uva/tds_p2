@@ -33,12 +33,12 @@
 	</target>
 	<target name="ejecutarTestEnAislamiento" depends="compilar">
 		<exec dir="." executable="${executable}">
-			<arg line="${arglineIni} mvn -Dtests=SistemaPersistente test${arglineEnd}" />
+			<arg line="${arglineIni} mvn -Dtest='SistemaPersistenciaTest' test${arglineEnd}" />
 		</exec>
 	</target>
 	<target name="ejecutarTestSinAislamiento" depends="compilar">
 		<exec dir="." executable="${executable}">
-			<arg line="${arglineIni} mvn -Dtest=RecorridoTest,BilleteTest,UsuarioTest test${arglineEnd}" />
+               <arg line="${arglineIni} mvn -Dtest='RecorridoTest,BilleteTest,UsuarioTest,SystemTest' test${arglineEnd}" />
 		</exec>
 	</target>
 	<target name="ejecutarTests" depends="ejecutarTestCobertura,ejecutarTestEnAislamiento,ejecutarTestSinAislamiento">
