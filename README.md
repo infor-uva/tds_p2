@@ -50,4 +50,4 @@ Trabajo asignado:
 
 Tiempo empleado:
 - Fase Red: `4h 25min` 
-- Fase Green: `2h 25min`(Implementación Recorrido) + `2h 8min` (Implemenración gestión recorrido en SistemaPersistencia)
+- Fase Green: `2h 25min`(Implementación Recorrido) + `2h 5 min` (Implementación F4 en System) + `2h 8min` (Implemenración gestión recorrido en SistemaPersistencia)
