@@ -58,6 +58,11 @@ import java.util.List;
  */
 public class SistemaPersistencia {
 
+	private static final String BUS = "bus";
+	private static final String TRAIN = "train";
+	private static final String ESTADO_RESERVADO = "reservado";
+	private static final String ESTADO_COMPRADO = "comprado";
+
 	/**
 	 * External database which will manage the management of the routes, tickets and
 	 * user
@@ -79,6 +84,8 @@ public class SistemaPersistencia {
 	public IDatabaseManager getDataBase() {
 		return database;
 	}
+
+
 
 
 
@@ -285,12 +292,12 @@ public class SistemaPersistencia {
 	 * 
 	 * @return lot of reserved tickets
 	 * 
-	 * @throws IllegalArgumentException if the number of tickets exceeds the
+	 * @throws IllegalStateException if the number of tickets exceeds the
 	 *                                  available seat limit.
-	 * @throws IllegalArgumentException if the number of available tickets is less
+	 * @throws IllegalStateException if the number of available tickets is less
 	 *                                  than half of the total.
 	 * @throws IllegalArgumentException if the identifier is empty.
-	 * @throws IllegalArgumentException if a locator that has been used previously
+	 * @throws IllegalStateException if a locator that has been used previously
 	 *                                  is passed.
 	 * @throws IllegalArgumentException if user is null.
 	 * @throws IllegalArgumentException if recorrido is null.
@@ -304,13 +311,13 @@ public class SistemaPersistencia {
 		if(localizador == null)
 			throw new IllegalArgumentException("El localizador no puede ser null");
 		if (numBilletesReservar > recorrido.getNumAvailableSeats())
-			throw new IllegalArgumentException("No se puede reservar si el número de billetes es mayor a los asientos disponibles");
-		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats())
-			throw new IllegalArgumentException("No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
+			throw new IllegalStateException("No se puede reservar si el número de billetes es mayor a los asientos disponibles");
+		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats()/2)
+			throw new IllegalStateException("No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
 		if (localizador.equals(""))
-			throw new IllegalArgumentException("El localizador no puede ser vacio");
-		if (database.getBilletes(localizador).size() > 0) {
-			throw new IllegalArgumentException("El localizador ya ha sido utilizado");
+			throw new IllegalStateException("El localizador no puede ser vacio");
+		if (!database.getBilletes(localizador).isEmpty()) {
+			throw new IllegalStateException("El localizador ya ha sido utilizado");
 		}
 
 		List<Billete> billetes = new ArrayList<>();
@@ -319,6 +326,8 @@ public class SistemaPersistencia {
 			billetes.add(ticket);
 			database.addBillete(ticket);
 		}
+		recorrido.decreaseAvailableSeats(numBilletesReservar);
+		database.actualizarRecorrido(recorrido);
 		return billetes;
 
 	}
@@ -349,7 +358,7 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
 		
 		ArrayList<Billete> billetes = database.getBilletes(localizador);
-		if(billetes.size() < 1 || !billetes.get(0).getEstado().equals("reservado")) {
+		if(billetes.size() < 1 || !billetes.get(0).getEstado().equals(ESTADO_RESERVADO)) {
 			throw new IllegalStateException("No hay tickets reservados con ese localizador");
 		}
 		
@@ -357,6 +366,7 @@ public class SistemaPersistencia {
 			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
 		}
 		
+		Recorrido recorrido = billetes.get(0).getRecorrido();
 		int billetesRestantes = billetes.size() - numBilletesAnular;
 		database.eliminarBilletes(localizador);
 		if(billetesRestantes > 0) {
@@ -364,7 +374,8 @@ public class SistemaPersistencia {
 				database.addBillete(billetes.get(0));
 			}
 		}
-			
+		recorrido.increaseAvailableSeats(numBilletesAnular);
+		database.actualizarRecorrido(recorrido);
 
 	}
 
@@ -414,7 +425,33 @@ public class SistemaPersistencia {
 	 * @throws IllegalArgumentException if a previously used locator is passed
 	 */
 	public List<Billete> comprarBilletes(String localizador, Usuario usr, Recorrido recorrido, int numBilletes) {
-		return null;
+		if(localizador==null)
+			throw new IllegalArgumentException("EL localizador es nulo\n");
+		if (localizador.isEmpty())
+			throw new IllegalArgumentException("EL localizador esta vacio\n");
+		if (database.getBilletes(localizador)!= null)
+			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
+		if (usr == null)
+			throw new IllegalArgumentException("El usuario es null\n");
+		if (recorrido == null)
+			throw new IllegalArgumentException("El recorrido es null\n");
+		if (numBilletes<1)
+			throw new IllegalArgumentException("El numero de billetes es inferior al minimo\n");
+		if (numBilletes > recorrido.getNumAvailableSeats())
+			throw new IllegalStateException("El numero de billetes es superior a las plazas disponibles\n");
+		List<Billete> returned=new ArrayList<>();
+		for(int i=0;i<numBilletes;i++) {
+			Billete tiket=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
+			returned.add(tiket);
+			database.addBillete(tiket);
+		}
+		recorrido.decreaseAvailableSeats(numBilletes);
+		database.actualizarRecorrido(recorrido);
+		if(database.getUsuario(usr.getNif())==null) {
+			database.addUsuario(usr);
+		}
+		return returned;
+
 	}
 
 	/**
