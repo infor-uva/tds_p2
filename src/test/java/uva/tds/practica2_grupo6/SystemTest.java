@@ -67,7 +67,7 @@ class SystemTest {
 		date = LocalDate.of(2023, 10, 27);
 		time = LocalTime.of(19, 06, 50);
 		price = 1.0;
-		numSeats = 20;
+		numSeats = 50;
 		duration = 30;
 		recorrido = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
 		transport = TRAIN;
@@ -644,9 +644,9 @@ class SystemTest {
 
 	@Test
 	void testComprarBilletesValidosBusLimiteSuperior() {
-		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, recorrido, 150);
+		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, recorrido, 50);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
-		for (int i = 0; i < 150; i++) {
+		for (int i = 0; i < 50; i++) {
 			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
 			listaBilletesComprobacion.add(billeteComprobacion);
 		}
@@ -666,6 +666,7 @@ class SystemTest {
 
 	@Test
 	void testComprarBilletesValidosTrenLimiteSuperior() {
+		differentRecorrido = new Recorrido("dif", origin, destination, transport, price, date, time, 250,duration);
 		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, differentRecorrido, 250);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
 		for (int i = 0; i < 250; i++) {
@@ -705,17 +706,19 @@ class SystemTest {
 
 	@Test
 	void testComprarBilleteBusInvalidoLimiteSuperiorDemasiadaCompras() {
-		system.comprarBilletes("ABC12345", user, recorrido, 149);
+		recorrido = new Recorrido(id, origin, destination, transport, price, date, time, 50, duration);
+		system.comprarBilletes("ABC12345", user, recorrido, 49);
 		assertThrows(IllegalStateException.class, () -> {
-			system.comprarBilletes("ABC12345", differentUser, recorrido, 2);
+			system.comprarBilletes("ABC12346", differentUser, recorrido, 2);
 		});
 	}
 
 	@Test
 	void testComprarBilleteTrainInvalidoLimiteSuperiorDemasiadaCompras() {
+		differentRecorrido = new Recorrido("dif", origin, destination, transport, price, date, time, 250,duration);
 		system.comprarBilletes("ABC12345", user, differentRecorrido, 249);
 		assertThrows(IllegalStateException.class, () -> {
-			system.comprarBilletes("ABC12345", differentUser, differentRecorrido, 2);
+			system.comprarBilletes("ABC12346", differentUser, differentRecorrido, 2);
 		});
 	}
 
@@ -761,6 +764,21 @@ class SystemTest {
 		assertThrows(IllegalArgumentException.class, () -> {
 			system.comprarBilletes("ABC12345", user, null, 1);
 		});
+	}
+	
+	@Tag("Cobertura")
+	@Test
+	void testComprarBilleteUsuarioYaEnSistema() {
+		List<Billete> salidaEsperadaTren = new ArrayList<>();
+		List<Billete> salidaEsperadaBus = new ArrayList<>();
+		salidaEsperadaTren.add(new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO));
+		salidaEsperadaTren.add(new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO));
+		salidaEsperadaBus.add(new Billete("ABC12346", recorrido, user, ESTADO_COMPRADO));
+		List<Billete> salidaTren=system.comprarBilletes("ABC12345", user, differentRecorrido, 2);
+		List<Billete> salidaBus=system.comprarBilletes("ABC12346", user, recorrido, 1);
+		
+		assertEquals(salidaEsperadaTren, salidaTren);
+		assertEquals(salidaEsperadaBus, salidaBus);
 	}
 
 	/**
