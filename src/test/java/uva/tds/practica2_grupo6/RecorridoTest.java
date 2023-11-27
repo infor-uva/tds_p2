@@ -519,4 +519,26 @@ class RecorridoTest {
 			recorrido.equals(null);
 		});
 	}
+	
+	@Test
+	void testCloneBus() {
+		// Comprobar con numSeas y numAvailableSeats no iguales
+		busRecorrido.decreaseAvailableSeats(5);
+		
+		Recorrido clone = busRecorrido.clone();
+		
+		assertEquals(busRecorrido, clone);
+		assertNotSame(busRecorrido, clone);
+	}
+	
+	@Test
+	void testCloneTrain() {
+		// Comprobar con numSeas y numAvailableSeats no iguales
+		trainRecorrido.decreaseAvailableSeats(5);
+		
+		Recorrido clone = trainRecorrido.clone();
+		
+		assertEquals(trainRecorrido, clone);
+		assertNotSame(trainRecorrido, clone);
+	}
 }

@@ -117,6 +117,8 @@ public class Billete {
 		if (o == null)
 			throw new IllegalArgumentException("El objeto no puede ser null");
 		// Compruebas que es un objeto billete
+		if (!(o instanceof Billete))
+			return false;
 		Billete tmp = (Billete) o;
 		// Comparamos los objetos
 		if(this.localizador.equals(tmp.getLocalizador()) && this.recorrido.equals(tmp.getRecorrido()) &&

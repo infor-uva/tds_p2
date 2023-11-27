@@ -48,6 +48,6 @@ Trabajo asignado:
 - Feature 5.3 - Comprar billetes reservados
 - Feature 4 - Gestión de recorridos (añadir, eliminar y actualizar fecha y/o hora)
 
-Tiempo empleado: 
-- Fase Red: `4h 25min`
-- Fase Green: `2h 25min` (Implementación Recorrido) + `2h 5 min` (Implementación F4 en System)
+Tiempo empleado:
+- Fase Red: `4h 25min` 
+- Fase Green: `2h 25min`(Implementación Recorrido) + `2h 5 min` (Implementación F4 en System) + `2h 8min` (Implemenración gestión recorrido en SistemaPersistencia)
