@@ -358,6 +358,7 @@ public class System {
 		if (count < numBilletesDevolver)
 				throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
 		
+		Recorrido recorrido = this.tickets.get(0).getRecorrido();
 		int contador = 0;
 		while (contador < numBilletesDevolver) {
 			for (Billete billetes: this.tickets) {
@@ -368,6 +369,7 @@ public class System {
 				}
 			}
 		}
+		recorrido.increaseAvailableSeats(numBilletesDevolver);
 
 	}
 
