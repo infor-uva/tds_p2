@@ -55,13 +55,12 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 22/11/23
+ * @version 27/11/23
  */
 public class SistemaPersistencia {
 
 	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
 
-	private static final String BUS = "bus";
 	private static final String TRAIN = "train";
 	private static final String ESTADO_RESERVADO = "reservado";
 	private static final String ESTADO_COMPRADO = "comprado";
@@ -441,7 +440,7 @@ public class SistemaPersistencia {
 		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats()/2)
 			throw new IllegalStateException("No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
 		if (localizador.equals(""))
-			throw new IllegalStateException("El localizador no puede ser vacio");
+			throw new IllegalArgumentException("El localizador no puede ser vacio");
 		if (!database.getBilletes(localizador).isEmpty()) {
 			throw new IllegalStateException("El localizador ya ha sido utilizado");
 		}

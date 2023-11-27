@@ -54,14 +54,13 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 25/11/23
+ * @version 27/11/23
  */
 public class System {
 
-	private static final String BUS = "bus";
-	private static final String TRAIN = "train";
-	private static final String ESTADO_RESERVADO = "reservado";
-	private static final String ESTADO_COMPRADO = "comprado";
+	private static final String TRAIN = Recorrido.TRAIN;
+	private static final String ESTADO_RESERVADO = Billete.RESERVADO;
+	private static final String ESTADO_COMPRADO = Billete.COMPRADO;
 	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
 
 	private List<Billete> tickets;
@@ -242,7 +241,7 @@ public class System {
 			}
 		}
 		if(!asociado)
-			throw new IllegalArgumentException("La fecha no corresponde con ningun recorrido\n");
+			throw new IllegalStateException("La fecha no corresponde con ningun recorrido\n");
 		
 		return salida;
 	}

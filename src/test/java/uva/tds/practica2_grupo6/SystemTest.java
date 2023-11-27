@@ -22,15 +22,15 @@ import org.junit.jupiter.api.Test;
  * @author diebomb
  * @author migudel
  * 
- * @version 25/11/23
+ * @version 27/11/23
  */
 class SystemTest {
 
 	private static final double ERROR_MARGIN = 0.00001;
 	private static final String BUS = Recorrido.BUS;
 	private static final String TRAIN = Recorrido.TRAIN;
-	private static final String ESTADO_RESERVADO = "reservado";
-	private static final String ESTADO_COMPRADO = "comprado";
+	private static final String ESTADO_RESERVADO = Billete.RESERVADO;
+	private static final String ESTADO_COMPRADO = Billete.COMPRADO;
 
 	private String nif;
 	private String nombre;
@@ -301,15 +301,16 @@ class SystemTest {
 	 */
 	@Test
 	void testGetAssociatedBilletesToRouteValidoConIDLimiteInferior() {
-		String localizator = "123";
+		String locator = "123";
+		String locator2 = "321";
 		system.addRecorrido(recorridoLI);
-		system.reservarBilletes(localizator, user, recorridoLI, 1);
-		system.comprarBilletes(localizator, differentUser, recorridoLI, 2);
+		system.reservarBilletes(locator, user, recorridoLI, 1);
+		system.comprarBilletes(locator2, differentUser, recorridoLI, 2);
 
 		List<Billete> expected = new ArrayList<>();
-		expected.add(new Billete(localizator, recorridoLI, user, ESTADO_RESERVADO));
-		expected.add(new Billete(localizator, recorridoLI, differentUser, ESTADO_COMPRADO));
-		expected.add(new Billete(localizator, recorridoLI, differentUser, ESTADO_COMPRADO));
+		expected.add(new Billete(locator, recorridoLI, user, ESTADO_RESERVADO));
+		expected.add(new Billete(locator2, recorridoLI, differentUser, ESTADO_COMPRADO));
+		expected.add(new Billete(locator2, recorridoLI, differentUser, ESTADO_COMPRADO));
 
 		assertEquals(expected, system.getAssociatedBilletesToRoute(idLI));
 	}
@@ -1088,6 +1089,7 @@ class SystemTest {
 	void testNoSePuedeDevolverBilleteSiReservados() {
 		String locator = "ABC12345";
 		int numBilletesDevolver = 2;
+		system.addRecorrido(recorrido);
 		system.reservarBilletes(locator, user, recorrido, 5);
 
 		assertThrows(IllegalStateException.class, () -> {

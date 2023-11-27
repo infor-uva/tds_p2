@@ -16,6 +16,9 @@ package uva.tds.practica2_grupo6;
  * @version 09/11/23
  */
 public class Billete {
+	
+	public static final String COMPRADO = "comprado";
+	public static final String RESERVADO = "reservado";
 
 	private String localizador;
 	private Recorrido recorrido;
@@ -42,7 +45,7 @@ public class Billete {
 			throw new IllegalArgumentException("Estado no puede ser null");
 		if (localizador.length() < 1 || localizador.length() > 8)
 			throw new IllegalArgumentException("Localizador tiene que tener entre 1 y 8 caracteres");
-		if (!estado.equals("comprado") && !estado.equals("reservado"))
+		if (!estado.equals(COMPRADO) && !estado.equals(RESERVADO))
 			throw new IllegalArgumentException("Estado tiene que ser 'comprado' o 'reservado' ");
 		this.localizador = localizador;
 		this.recorrido = recorrido;
@@ -97,9 +100,9 @@ public class Billete {
 	 * @throws IllegalStateException if the state of the ticket is not booked
 	 */
 	public void setComprado() {
-		if (!estado.equals("reservado"))
+		if (!estado.equals(RESERVADO))
 			throw new IllegalStateException("Ticket tiene que estar reservado");
-		this.estado = "comprado";
+		this.estado = COMPRADO;
 				
 	}
 
