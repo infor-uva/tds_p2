@@ -3,6 +3,7 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,8 +17,8 @@ import java.util.List;
  * <li>Remove a Recorrido of system<br>
  * {@link SistemaPersistencia#removeRecorrido(String))}</li>
  * <li>Consult the list of recorridos in system<br>
- * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price accumulated by a
- * user<br>
+ * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
+ * accumulated by a user<br>
  * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}</li>
  * <li>Consult the list of Recorridos that have a specific date<br>
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
@@ -52,14 +53,20 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 25/11/23
  */
 public class System {
+
+	/**
+	 * List of tickets registered in the system
+	 */
+	private List<Billete> tickets;
 
 	/**
 	 * Instance the System
 	 */
 	public System() {
+		tickets = new ArrayList<>();
 	}
 
 	/**
@@ -200,7 +207,7 @@ public class System {
 	/**
 	 * Update the date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -214,7 +221,7 @@ public class System {
 	/**
 	 * Update the time of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -228,7 +235,7 @@ public class System {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id          of the route
 	 * @param newDateTime
 	 * 
 	 * @throws IllegalArgumentException if id is null
@@ -242,7 +249,7 @@ public class System {
 	/**
 	 * Update the time and date of a route
 	 * 
-	 * @param id of the route
+	 * @param id      of the route
 	 * @param newDate
 	 * @param newTime
 	 * 
@@ -352,6 +359,31 @@ public class System {
 	}
 
 	/**
+	 * Consult and return the list with the ticket which has the same locator. If
+	 * there is no tickets with that locator will be returned a empty list
+	 * 
+	 * @param locator of the ticket(s)
+	 * 
+	 * @return list of tickets (it could be empty)
+	 * 
+	 * @throws IllegalArgumentException if locator is null
+	 * @throws IllegalArgumentException if locator have less than 1 or more than 8
+	 *                                  characters
+	 */
+	private List<Billete> getBilletes(String locator) {
+		if (locator == null)
+			throw new IllegalArgumentException("locator is null");
+		if (locator.isBlank() || locator.length() > 8)
+			throw new IllegalArgumentException("locator must be between 1 and 8 characters longs");
+		List<Billete> tickets = new ArrayList<>();
+		for (Billete ticket : this.tickets) {
+			if (ticket.getLocalizador().equals(locator))
+				tickets.add(ticket);
+		}
+		return tickets;
+	}
+
+	/**
 	 * Buy reserved tickets (the previously reserved lot)
 	 * 
 	 * @param locator of the reserved lot of tickets
@@ -365,6 +397,18 @@ public class System {
 	 *                                  with that locator
 	 */
 	public List<Billete> comprarBilletesReservados(String locator) {
-		return null;
+		List<Billete> tickets;
+		if ((tickets = getBilletes(locator)).isEmpty())
+			throw new IllegalStateException("the is no tickets for this locator: " + locator);
+		for (Billete ticket : tickets) {
+			try {
+				ticket.setComprado();
+			} catch (IllegalStateException e) {
+				// Reescritura de mensaje de error
+				throw new IllegalStateException("the are no tickets booked with that locator");
+			}
+		}
+		return tickets;
+
 	}
 }

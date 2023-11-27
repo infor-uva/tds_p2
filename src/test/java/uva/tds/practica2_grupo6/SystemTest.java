@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,13 +23,13 @@ import org.junit.jupiter.api.Test;
  * @author diebomb
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 25/11/23
  */
 class SystemTest {
 
 	private static final double ERROR_MARGIN = 0.00001;
-	private static final String BUS = "bus";
-	private static final String TRAIN = "train";
+	private static final String BUS = Recorrido.BUS;
+	private static final String TRAIN = Recorrido.TRAIN;
 	private static final String ESTADO_RESERVADO = "reservado";
 	private static final String ESTADO_COMPRADO = "comprado";
 
@@ -283,15 +284,15 @@ class SystemTest {
 	 */
 	@Test
 	void testGetAssociatedBilletesToRouteValido() {
-		String localizator = "123";
+		String locator = "123";
 		system.addRecorrido(recorrido);
-		system.reservarBilletes(localizator, user, recorrido, 1);
-		system.comprarBilletes(localizator, differentUser, recorrido, 2);
+		system.reservarBilletes(locator, user, recorrido, 1);
+		system.comprarBilletes(locator, differentUser, recorrido, 2);
 
 		List<Billete> expected = new ArrayList<>();
-		expected.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		expected.add(new Billete(localizator, recorrido, differentUser, ESTADO_COMPRADO));
-		expected.add(new Billete(localizator, recorrido, differentUser, ESTADO_COMPRADO));
+		expected.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
+		expected.add(new Billete(locator, recorrido, differentUser, ESTADO_COMPRADO));
+		expected.add(new Billete(locator, recorrido, differentUser, ESTADO_COMPRADO));
 
 		assertEquals(expected, system.getAssociatedBilletesToRoute(id));
 	}
@@ -724,45 +725,40 @@ class SystemTest {
 	 */
 	@Test
 	void testComprarBilletesReservadosValidoLimiteInferior() {
-		String localizator = "1";
+		String locator = "1";
 		system.addRecorrido(recorrido);
 		List<Billete> bookedTicketsCheck = new ArrayList<>();
-		// TODO Implementar en billete (Actualizar constructor billete)
-		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		List<Billete> bookedTickets = system.reservarBilletes(localizator, user, recorrido, 3);
+		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
+		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
+		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
+		List<Billete> bookedTickets = system.reservarBilletes(locator, user, recorrido, 3);
 		assertEquals(bookedTicketsCheck, bookedTickets);
 
 		List<Billete> buyedTicketsCheck = new ArrayList<>();
-		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		List<Billete> buyedTickets = system.comprarBilletesReservados(localizator);
+		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		List<Billete> buyedTickets = system.comprarBilletesReservados(locator);
 		assertEquals(buyedTicketsCheck, buyedTickets);
-
-		assertNotEquals(bookedTickets, buyedTickets);
 	}
 
 	@Test
 	void testComprarBilletesReservadosValidoLimiteSuperior() {
-		String localizator = "12345678";
+		String locator = "12345678";
 		system.addRecorrido(recorrido);
 		List<Billete> bookedTicketsCheck = new ArrayList<>();
-		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_RESERVADO));
-		List<Billete> bookedTickets = system.reservarBilletes(localizator, user, recorrido, 3);
+		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
+		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
+		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
+		List<Billete> bookedTickets = system.reservarBilletes(locator, user, recorrido, 3);
 		assertEquals(bookedTicketsCheck, bookedTickets);
 
 		List<Billete> buyedTicketsCheck = new ArrayList<>();
-		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		buyedTicketsCheck.add(new Billete(localizator, recorrido, user, ESTADO_COMPRADO));
-		List<Billete> buyedTickets = system.comprarBilletesReservados(localizator);
+		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		List<Billete> buyedTickets = system.comprarBilletesReservados(locator);
 		assertEquals(buyedTicketsCheck, buyedTickets);
-
-		assertNotEquals(bookedTickets, buyedTickets);
 	}
 
 	@Test
@@ -785,18 +781,41 @@ class SystemTest {
 			system.comprarBilletesReservados("123456789");
 		});
 	}
-
+	
 	@Test
-	void testComprarBilletesReservadosSinBilletesReservadosEnSystemOConLocalizatorIncorrecto() {
-		String localizator = "12345678";
-		String localizator2 = "87654321";
+	void testComprarBilletesReservadosConLocalizatorIncorrecto() {
+		String locator = "12345678";
 		system.addRecorrido(recorrido);
-		assertNotEquals(localizator, localizator2);
 		assertThrows(IllegalStateException.class, () -> {
-			system.comprarBilletesReservados(localizator2);
+			system.comprarBilletesReservados(locator);
 		});
 	}
 
+	@Test
+	void testComprarBilletesReservadosConLocatorDeBilletesComprados() {
+		String locator = "12345678";
+		system.addRecorrido(recorrido);
+		system.comprarBilletes(locator, user, recorrido, 3);
+		assertThrows(IllegalStateException.class, () -> {
+			system.comprarBilletesReservados(locator);
+		});
+	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testComprarBilletesReservadosConAlMenosUnBilleteReservadoYOtroComprado() {
+		String locator  = "12345678";
+		String locator2 = "87654321";
+		system.addRecorrido(recorrido);
+		system.reservarBilletes(locator, user, recorrido, 1);
+		system.comprarBilletes(locator2, user, recorrido, 3);
+		List<Billete> purchasedTickets = system.comprarBilletesReservados(locator);
+		List<Billete> purchasedTicketsCheck = new ArrayList<>();
+		purchasedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		assertEquals(purchasedTicketsCheck, purchasedTickets);
+	}
+	
+	
 	/**
 	 * FINDME Tests for
 	 * {@link System#reservarBilletes(String, Usuario, Recorrido, int)}
