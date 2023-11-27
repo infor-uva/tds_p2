@@ -377,7 +377,7 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("No se puede devolver si el número de billetes es menor que 1");	
 		
 		ArrayList<Billete> billetes = database.getBilletes(localizador);
-		if(billetes.size() < 1 || !billetes.get(0).getEstado().equals(ESTADO_COMPRADO)) {
+		if(billetes.isEmpty() || !billetes.get(0).getEstado().equals(ESTADO_COMPRADO)) {
 			throw new IllegalStateException("No hay tickets comprados con ese localizador");
 		}
 		
@@ -430,7 +430,7 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("EL localizador es nulo\n");
 		if (localizador.isEmpty())
 			throw new IllegalArgumentException("EL localizador esta vacio\n");
-		if (database.getBilletes(localizador)!= null)
+		if (!database.getBilletes(localizador).isEmpty())
 			throw new IllegalArgumentException("El localizador ya ha sido usado\n");
 		if (usr == null)
 			throw new IllegalArgumentException("El usuario es null\n");

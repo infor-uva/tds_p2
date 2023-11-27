@@ -10,9 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
 
 import org.easymock.EasyMock;
 import org.easymock.Mock;
@@ -55,11 +53,10 @@ class SistemaPersistenciaTest {
 	private LocalDateTime newDateTime;
 	private LocalDate newDate;
 	private LocalTime newTime;
-	
-	
+
 	@Mock
 	private IDatabaseManager database;
-	
+
 	@TestSubject
 	private SistemaPersistencia sistema;
 
@@ -85,7 +82,7 @@ class SistemaPersistenciaTest {
 		newDateTime = LocalDateTime.of(2023, 5, 14, 22, 56, 20);
 		newDate = LocalDate.of(2024, 2, 4);
 		newTime = LocalTime.of(12, 2, 4);
-		
+
 		database = EasyMock.mock(IDatabaseManager.class);
 
 		sistema = new SistemaPersistencia(database);
@@ -177,7 +174,8 @@ class SistemaPersistenciaTest {
 	}
 
 	/**
-	 * FINDME Tests for {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}
+	 * FINDME Tests for
+	 * {@link SistemaPersistencia#getPrecioTotalBilletesUsuario(String)}
 	 */
 	@Test
 	void testGetPrecioTotalBilletesUsuarioBus() {
@@ -262,7 +260,8 @@ class SistemaPersistenciaTest {
 	}
 
 	/**
-	 * FINDME Tests for {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}
+	 * FINDME Tests for
+	 * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}
 	 */
 	@Test
 	void testGetRecorridosDisponiblesFecha() {
@@ -423,7 +422,8 @@ class SistemaPersistenciaTest {
 	}
 
 	/**
-	 * FINDME Tests for {@link SistemaPersistencia#updateRecorridoDate(String, LocalDate)}
+	 * FINDME Tests for
+	 * {@link SistemaPersistencia#updateRecorridoDate(String, LocalDate)}
 	 */
 	@Test
 	void testUpdateRecorridoDateValido() {
@@ -464,7 +464,8 @@ class SistemaPersistenciaTest {
 	}
 
 	/**
-	 * FINDME Tests for {@link SistemaPersistencia#updateRecorridoTime(String, LocalTime)}
+	 * FINDME Tests for
+	 * {@link SistemaPersistencia#updateRecorridoTime(String, LocalTime)}
 	 */
 	@Test
 	void testUpdateRecorridoTimeValido() {
@@ -733,7 +734,8 @@ class SistemaPersistenciaTest {
 	}
 
 	/**
-	 * FINDME Tests for {@link SistemaPersistencia#comprarBilletesReservados(String)}
+	 * FINDME Tests for
+	 * {@link SistemaPersistencia#comprarBilletesReservados(String)}
 	 */
 	@Test
 	void testComprarBilletesReservadosValidoLimiteInferior() {
@@ -965,38 +967,36 @@ class SistemaPersistenciaTest {
 		int numBilletesComprar = 6;
 		int numBilletesDevolver = 1;
 		String localizador = "ABC12345";
-		
 
-        EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(1);
-        database.addBillete(new Billete(localizador, recorrido, user, ESTADO_COMPRADO));
-        EasyMock.expectLastCall().times(numBilletesComprar);
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(1);
+		database.addBillete(new Billete(localizador, recorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(numBilletesComprar);
 
-		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats,
+				duration);
 		recorridoCopia.decreaseAvailableSeats(numBilletesComprar);
-        database.actualizarRecorrido(recorridoCopia);
-        EasyMock.expectLastCall();
-        
-        ArrayList<Billete> returned = new ArrayList<Billete>();
-        for (int i = 0; i < numBilletesComprar; i++) {
-        	returned.add(new Billete(localizador, recorrido, user, ESTADO_COMPRADO));
-        }
-        EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
-        database.eliminarBilletes(localizador);
-        EasyMock.expectLastCall();
-        database.addBillete(new Billete(localizador, recorridoCopia, user, ESTADO_COMPRADO));
-        EasyMock.expectLastCall().times(numBilletesComprar - numBilletesDevolver);
-        Recorrido recorridoCopiaCopia = recorridoCopia;
-        recorridoCopiaCopia.increaseAvailableSeats(numBilletesComprar - numBilletesDevolver);
-        database.actualizarRecorrido(recorridoCopiaCopia);
-        EasyMock.expectLastCall();
- 
-        EasyMock.replay(database);
-        
+		database.actualizarRecorrido(recorridoCopia);
+		EasyMock.expectLastCall();
+
+		ArrayList<Billete> returned = new ArrayList<Billete>();
+		for (int i = 0; i < numBilletesComprar; i++) {
+			returned.add(new Billete(localizador, recorrido, user, ESTADO_COMPRADO));
+		}
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
+		database.eliminarBilletes(localizador);
+		EasyMock.expectLastCall();
+		database.addBillete(new Billete(localizador, recorridoCopia, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(numBilletesComprar - numBilletesDevolver);
+		Recorrido recorridoCopiaCopia = recorridoCopia;
+		recorridoCopiaCopia.increaseAvailableSeats(numBilletesComprar - numBilletesDevolver);
+		database.actualizarRecorrido(recorridoCopiaCopia);
+		EasyMock.expectLastCall();
+
+		EasyMock.replay(database);
 
 		// Realiza la reserva de los billetes
 		sistema.comprarBilletes(localizador, user, recorrido, numBilletesComprar);
 		int plazasDisponiblesAntes = recorrido.getNumAvailableSeats();
-
 
 		// Realiza la anulación de la reserva
 		sistema.devolverBilletes(localizador, numBilletesDevolver);
@@ -1006,8 +1006,6 @@ class SistemaPersistenciaTest {
 		// Verifica que las plazas disponibles aumenten en la cantidad correcta
 		assertEquals(plazasDisponiblesAntes + numBilletesDevolver, plazasDisponiblesDespues);
 
-		
-		
 		EasyMock.verify(database);
 	}
 
@@ -1037,23 +1035,19 @@ class SistemaPersistenciaTest {
 		int numBilletesDevolver = 2;
 		String localizador = "ABC12345";
 
-        
-        ArrayList<Billete> returned = new ArrayList<Billete>();
-        EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
-        EasyMock.expectLastCall();
+		ArrayList<Billete> returned = new ArrayList<Billete>();
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
+		EasyMock.expectLastCall();
 
- 
-        EasyMock.replay(database);
-        
-    	// Intenta anular la compra sin comprar previamente
+		EasyMock.replay(database);
+
+		// Intenta anular la compra sin comprar previamente
 		assertThrows(IllegalStateException.class, () -> {
 			sistema.devolverBilletes("ABC12345", numBilletesDevolver);
 		});
-		
-		
+
 		EasyMock.verify(database);
-		
-	
+
 	}
 
 	@Test
@@ -1061,57 +1055,95 @@ class SistemaPersistenciaTest {
 		int numBilletesReservar = 6;
 		int numBilletesDevolver = 1;
 		String localizador = "ABC12345";
-		
 
-        EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>());
-        database.addBillete(new Billete(localizador, recorrido, user, ESTADO_RESERVADO));
-        EasyMock.expectLastCall().times(numBilletesReservar);
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>());
+		database.addBillete(new Billete(localizador, recorrido, user, ESTADO_RESERVADO));
+		EasyMock.expectLastCall().times(numBilletesReservar);
 
-		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats,
+				duration);
 		recorridoCopia.decreaseAvailableSeats(numBilletesReservar);
-        database.actualizarRecorrido(recorridoCopia);
-        EasyMock.expectLastCall();
-        
-        
-        
-        ArrayList<Billete> returned = new ArrayList<Billete>();
-        for (int i = 0; i < numBilletesReservar; i++) {
-        	returned.add(new Billete(localizador, recorrido, user, ESTADO_RESERVADO));
-        }
-        EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
+		database.actualizarRecorrido(recorridoCopia);
+		EasyMock.expectLastCall();
 
-        EasyMock.expectLastCall();
+		ArrayList<Billete> returned = new ArrayList<Billete>();
+		for (int i = 0; i < numBilletesReservar; i++) {
+			returned.add(new Billete(localizador, recorrido, user, ESTADO_RESERVADO));
+		}
+		EasyMock.expect(database.getBilletes(localizador)).andReturn(returned).times(1);
 
- 
-        EasyMock.replay(database);
-        
-        sistema.reservarBilletes(localizador, user, recorrido, numBilletesReservar);
+		EasyMock.expectLastCall();
+
+		EasyMock.replay(database);
+
+		sistema.reservarBilletes(localizador, user, recorrido, numBilletesReservar);
 
 		assertThrows(IllegalStateException.class, () -> {
 			sistema.devolverBilletes(localizador, numBilletesDevolver);
 		});
-		
+
 		EasyMock.verify(database);
 
-	
 	}
 
 	@Test
 	void testNoSePuedeDevolverBilletesConNumLimiteInferior() {
 		String locator = "ABC12345";
-		sistema.comprarBilletes(locator, user, recorrido, 1);
-		assertThrows(IllegalStateException.class, () -> {
-			sistema.devolverBilletes(locator, 0);
-		});
-	}
+		int numBilletesComprar = 1;
+		int numBilletesDevolver = 0;
+		
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(1);
+		database.addBillete(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(numBilletesComprar);
 
+		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		recorridoCopia.decreaseAvailableSeats(numBilletesComprar);
+		database.actualizarRecorrido(recorridoCopia);
+		EasyMock.expectLastCall();
+
+
+		EasyMock.replay(database);
+
+				
+		sistema.comprarBilletes(locator, user, recorrido, 1);
+		assertThrows(IllegalArgumentException.class, () -> {
+			sistema.devolverBilletes(locator, numBilletesDevolver);
+		});
+		
+		EasyMock.verify(database);
+	}
 	@Test
 	void testNoSePuedeDevolverBilletesSiMayorNumeroDeDevolucionesQueBilletesComprados() {
 		String locator = "ABC12345";
 		int numBilletesDevolver = 3;
+		int numBilletesComprar = 1;
+		
+		EasyMock.expect(database.getBilletes("ABC12345")).andReturn(new ArrayList<>()).times(1);
+		database.addBillete(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		EasyMock.expectLastCall().times(numBilletesComprar);
+
+		Recorrido recorridoCopia = new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		recorridoCopia.decreaseAvailableSeats(numBilletesComprar);
+		database.actualizarRecorrido(recorridoCopia);
+		EasyMock.expectLastCall();
+		
+		
+		ArrayList<Billete> returned = new ArrayList<Billete>();
+		for (int i = 0; i < numBilletesComprar; i++) {
+			returned.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+		}
+		EasyMock.expect(database.getBilletes(locator)).andReturn(returned).times(1);
+
+		EasyMock.expectLastCall();
+		
+		
+		
+		
+		EasyMock.replay(database);
 		sistema.comprarBilletes(locator, user, recorrido, 1);
 		assertThrows(IllegalStateException.class, () -> {
 			sistema.devolverBilletes(locator, numBilletesDevolver);
 		});
+		EasyMock.verify(database);
 	}
 }
