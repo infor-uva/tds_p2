@@ -13,7 +13,7 @@ Clase encargada de representar y manejar la información de los recorridos (o ru
 ### [`Usuario.java`](./src/main/java/uva/tds/practica2_grupo6/Usuario.java)
 Esta clase representa los usuarios del supuesto. La información acerca del usuario son su nombre y su identificador único. Será este usuario el que esté asociado a un billete.<br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/Usuario.java)
 
-### [`System.java`](./src/uva/tds/practica2_grupo6/System.java)
+### [`System.java`](./src/main/java/uva/tds/practica2_grupo6/System.java)
 Clase encargada de la gestión del conjunto de clases: recorrido, usuario y billetes.
 
 El sistema ofrece servicios de compra y reserva de billetes para un viaje (recorrido), con sus respectivas gestiones (devolución de billete y anulación de reserva respectivamente). 
@@ -21,11 +21,11 @@ El sistema ofrece servicios de compra y reserva de billetes para un viaje (recor
 Además, el sistema ofrece consultar información generada a través de las operaciones anteriores, como el precio total que le corresponde a un usuario en concreto (en base a sus billetes reservados y comprados) y el listado de recorridos en una fecha determinada.
 <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/System.java)
 
-### [`IDataBaseManager.java`](./src/uva/tds/practica2_grupo6/IDataBaseManager.java)
+### [`IDatabaseManager.java`](./src/main/java/uva/tds/practica2_grupo6/IDatabaseManager.java)
 Por definir
-<br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/IDataBaseManager.java)
+<br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/IDatabaseManager.java)
 
-### [`SistemaPersistencia.java`](./src/uva/tds/practica2_grupo6/SistemaPersistencia.java)
+### [`SistemaPersistencia.java`](./src/main/java/uva/tds/practica2_grupo6/SistemaPersistencia.java)
 Por definir
 <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/SistemaPersistencia.java)
 
