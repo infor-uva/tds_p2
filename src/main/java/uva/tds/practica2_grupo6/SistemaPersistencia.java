@@ -1,3 +1,4 @@
+
 package uva.tds.practica2_grupo6;
 
 import java.time.LocalDate;
@@ -58,8 +59,8 @@ import java.util.List;
 public class SistemaPersistencia {
 
 	/**
-	 * External database which will manage the management of the routes, tickets and
-	 * user
+	 * External database which will manage the routes, tickets and user of this
+	 * system
 	 */
 	private IDatabaseManager database;
 
@@ -71,11 +72,11 @@ public class SistemaPersistencia {
 	}
 
 	/**
-	 * Consult the database manager assigned to this system
+	 * Consult the database manager assigned to the system
 	 * 
-	 * @return the database
+	 * @return databasemanager
 	 */
-	public IDatabaseManager getDataBase() {
+	public IDatabaseManager getDataBaseManager() {
 		return database;
 	}
 
@@ -480,6 +481,23 @@ public class SistemaPersistencia {
 	 *                                  with that locator
 	 */
 	public List<Billete> comprarBilletesReservados(String locator) {
-		return null;
+		if (locator == null)
+			throw new IllegalArgumentException("locator is null");
+		if (locator.isBlank() || locator.length() > 8)
+			throw new IllegalArgumentException("locator must be between 1 and 8 characters longs");
+
+		List<Billete> tickets;
+		if ((tickets = database.getBilletes(locator)).isEmpty())
+			throw new IllegalStateException("the is no tickets for this locator: " + locator);
+		for (Billete ticket : tickets) {
+			try {
+				ticket.setComprado();
+			} catch (IllegalStateException e) {
+				// Reescritura de mensaje de error
+				throw new IllegalStateException("the are no tickets booked with that locator");
+			}
+		}
+		database.actualizarBilletes(tickets.get(0));
+		return tickets;
 	}
 }
