@@ -450,7 +450,7 @@ public class System {
 		if (numBilletesReservar > recorrido.getNumAvailableSeats())
 			throw new IllegalStateException(
 					"No se puede reservar si el número de billetes es mayor a los asientos disponibles");
-		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats())
+		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats()/2)
 			throw new IllegalStateException(
 					"No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
 		if (localizador.equals(""))

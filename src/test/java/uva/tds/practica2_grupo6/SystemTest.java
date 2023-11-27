@@ -1115,4 +1115,25 @@ class SystemTest {
 			system.devolverBilletes(locator, numBilletesDevolver);
 		});
 	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testLocalizadorYaUtilizadoReserva() {
+		String localizador = "ABC12345";
+		system.addRecorrido(recorrido);
+		system.reservarBilletes(localizador, user, recorrido, 1);
+		assertThrows(IllegalStateException.class, () -> {
+			system.reservarBilletes(localizador, user, recorrido, 1);
+		});
+	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testRecorridoNoExisteReserva() {
+		String localizador = "ABC12345";
+		assertThrows(IllegalStateException.class, () -> {
+			system.reservarBilletes(localizador, user, recorrido, 1);
+		});
+	}
+	
 }
