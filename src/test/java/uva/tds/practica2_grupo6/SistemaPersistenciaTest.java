@@ -290,7 +290,7 @@ class SistemaPersistenciaTest {
 		EasyMock.expect(database.getBilletesDeUsuario(user.getNif())).andReturn(returned);
 		EasyMock.replay(database);
 		
-		List<Billete> billetesCheck =sistema.comprarBilletes(localizador, user, recorrido, numBilletes);
+		sistema.comprarBilletes(localizador, user, recorrido, numBilletes);
 		assertEquals(5.0, sistema.getPrecioTotalBilletesUsuario(user.getNif()), ERROR_MARGIN);
 		
 		EasyMock.verify(database);
@@ -326,7 +326,7 @@ class SistemaPersistenciaTest {
 		EasyMock.expect(database.getBilletesDeUsuario(user.getNif())).andReturn(returned);
 		EasyMock.replay(database);
 		
-		List<Billete> billetesCheck = sistema.comprarBilletes(localizador, user, differentRecorrido, numBilletes);
+		sistema.comprarBilletes(localizador, user, differentRecorrido, numBilletes);
 		assertEquals(4.5, sistema.getPrecioTotalBilletesUsuario(user.getNif()), ERROR_MARGIN);
 		
 		EasyMock.verify(database);
@@ -1276,7 +1276,7 @@ class SistemaPersistenciaTest {
 		EasyMock.expectLastCall();
 		EasyMock.replay(database);
 		
-		List<Billete> listaBilletesAntes = sistema.comprarBilletes("ABC12346", user, recorrido, 1);
+		sistema.comprarBilletes("ABC12346", user, recorrido, 1);
 		List<Billete> listaBilletes = sistema.comprarBilletes(localizador, user, differentRecorrido, 1);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
 		Billete billeteComprobacion = new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO);
@@ -1527,7 +1527,7 @@ class SistemaPersistenciaTest {
 		EasyMock.replay(database);
 		
 		
-		List<Billete> comprados = sistema.comprarBilletes("ABC12345", user, recorrido, numBilletesComprar);
+		sistema.comprarBilletes("ABC12345", user, recorrido, numBilletesComprar);
 		assertThrows(IllegalStateException.class, () -> {
 			sistema.reservarBilletes(localizador2, user, recorrido, 5);
 		});
@@ -1602,7 +1602,6 @@ class SistemaPersistenciaTest {
 	@Test
 	void testNoSePuedeAnularReservaSiFueraSistema() {
 		String localizador = "ABC12345";
-		int numBilletesComprar = 5;
 		int numBilletesAnular = 2;
 		
 		EasyMock.expect(database.getBilletes(localizador)).andReturn(new ArrayList<>());
