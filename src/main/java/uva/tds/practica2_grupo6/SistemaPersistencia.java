@@ -17,7 +17,7 @@ import java.util.List;
  * <li>Add a Recorrido in to the system<br>
  * {@link SistemaPersistencia#addRecorrido(Recorrido)}</li>
  * <li>Remove a Recorrido of system<br>
- * {@link SistemaPersistencia#removeRecorrido(String))}</li>
+ * {@link SistemaPersistencia#removeRecorrido(String)}</li>
  * <li>Consult the list of recorridos in system<br>
  * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
  * accumulated by a user<br>
@@ -26,7 +26,7 @@ import java.util.List;
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
  * <li>Consult the list of Billetes which are associated to the recorrido
  * route<br>
- * {@link SistemaPersistencia#getAssociatedBilletesToRoute(String))}</li>
+ * {@link SistemaPersistencia#getAssociatedBilletesToRoute(String)}</li>
  * <li>Consult the date of the route which have the id specified<br>
  * {@link SistemaPersistencia#getDateOfRecorrido(String)}</li>
  * <li>Consult the time of the route which have the id specified<br>
@@ -55,16 +55,30 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 27/11/23
+ * @version 28/11/23
  */
 public class SistemaPersistencia {
 
+	/**
+	 * List of the character indexed by the rest resulted of the division of nif and 23
+	 */
 	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
-
-	private static final String TRAIN = "train";
-	private static final String ESTADO_RESERVADO = "reservado";
-	private static final String ESTADO_COMPRADO = "comprado";
+	/**
+	 * {@link Recorrido#TRAIN}
+	 */
+	private static final String TRAIN = Recorrido.TRAIN;
+	/**
+	 * {@link Billete#ESTADO_RESERVADO}
+	 */
+	private static final String ESTADO_RESERVADO = Billete.ESTADO_RESERVADO;
+	/**
+	 * {@link Billete#ESTADO_COMPRADO}
+	 */
+	private static final String ESTADO_COMPRADO = Billete.ESTADO_COMPRADO;
 	
+	/**
+	 * External dabatabe manager
+	 */
 	private IDatabaseManager database;
 
 	/**
@@ -103,7 +117,7 @@ public class SistemaPersistencia {
 
 	/**
 	 * Check of the id is not null and have at less one character different of
-	 * spaces \n
+	 * spaces
 	 * 
 	 * @param id
 	 * 

@@ -16,7 +16,7 @@ import java.util.List;
  * <li>Add a Recorrido in to the system<br>
  * {@link SistemaPersistencia#addRecorrido(Recorrido)}</li>
  * <li>Remove a Recorrido of system<br>
- * {@link SistemaPersistencia#removeRecorrido(String))}</li>
+ * {@link SistemaPersistencia#removeRecorrido(String)}</li>
  * <li>Consult the list of recorridos in system<br>
  * {@link SistemaPersistencia#getRecorridos()}</li> Consult the total price
  * accumulated by a user<br>
@@ -25,7 +25,7 @@ import java.util.List;
  * {@link SistemaPersistencia#getRecorridosDisponiblesFecha(LocalDate)}</li>
  * <li>Consult the list of Billetes which are associated to the recorrido
  * route<br>
- * {@link SistemaPersistencia#getAssociatedBilletesToRoute(String))}</li>
+ * {@link SistemaPersistencia#getAssociatedBilletesToRoute(String)}</li>
  * <li>Consult the date of the route which have the id specified<br>
  * {@link SistemaPersistencia#getDateOfRecorrido(String)}</li>
  * <li>Consult the time of the route which have the id specified<br>
@@ -54,20 +54,41 @@ import java.util.List;
  * @author diebomb
  * @author migudel
  * 
- * @version 27/11/23
+ * @version 28/11/23
  */
 public class System {
 
-	private static final String TRAIN = Recorrido.TRAIN;
-	private static final String ESTADO_RESERVADO = Billete.RESERVADO;
-	private static final String ESTADO_COMPRADO = Billete.COMPRADO;
+	/**
+	 * List of the character indexed by the rest resulted of the division of nif and 23
+	 */
 	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
+	/**
+	 * {@link Recorrido#TRAIN}
+	 */
+	private static final String TRAIN = Recorrido.TRAIN;
+	/**
+	 * {@link Billete#ESTADO_RESERVADO}
+	 */
+	private static final String ESTADO_RESERVADO = Billete.ESTADO_RESERVADO;
+	/**
+	 * {@link Billete#ESTADO_COMPRADO}
+	 */
+	private static final String ESTADO_COMPRADO = Billete.ESTADO_COMPRADO;
 
+	/**
+	 * List of tickets registred in the system
+	 */
 	private List<Billete> tickets;
-	
+	/**
+	 * List of nifs of users registered in the system
+	 */
 	private List<String> users; 
 	
+	/**
+	 * List of routes registered in the system
+	 */
 	private List<Recorrido> routes;
+	
 	/**
 	 * Instance the System
 	 */

@@ -26,15 +26,15 @@ import org.junit.jupiter.api.Test;
  * @author diebomb
  * @author migudel
  * 
- * @version 27/11/23
+ * @version 28/11/23
  */
 class SistemaPersistenciaTest {
 
 	private static final double ERROR_MARGIN = 0.00001;
 	private static final String BUS = Recorrido.BUS;
 	private static final String TRAIN = Recorrido.TRAIN;
-	private static final String ESTADO_RESERVADO = Billete.RESERVADO;
-	private static final String ESTADO_COMPRADO = Billete.COMPRADO;
+	private static final String ESTADO_RESERVADO = Billete.ESTADO_RESERVADO;
+	private static final String ESTADO_COMPRADO = Billete.ESTADO_COMPRADO;
 
 	private String nif;
 	private String nombre;
@@ -163,26 +163,21 @@ class SistemaPersistenciaTest {
 		ArrayList<Recorrido> returned = new ArrayList<>();
 		returned.add(recorridoLI);
 		
+		// addRecorrido
 		database.addRecorrido(recorridoLI);
 		EasyMock.expectLastCall();
-		EasyMock.expect(database.getRecorridos()).andReturn(returned).times(1);
-		EasyMock.expect(database.getRecorrido(idLI)).andReturn(recorridoLI).times(1);
+		// removeRecorrido
 		EasyMock.expect(database.getBilletesDeRecorrido(idLI)).andReturn(new ArrayList<>()).times(1);
 		EasyMock.expect(database.getRecorrido(idLI)).andReturn(recorridoLI).times(1);
-		EasyMock.expect(database.getBilletesDeRecorrido(idLI)).andReturn(new ArrayList<>()).times(1);
 		database.eliminarRecorrido(idLI);
 		EasyMock.expectLastCall().times(1);
+		// getRecorridos
 		EasyMock.expect(database.getRecorridos()).andReturn(new ArrayList<>()).times(1);
 		EasyMock.replay(database);
 		
-		List<Recorrido> recorridos = new ArrayList<>();
-		recorridos.add(recorridoLI);
 		sistema.addRecorrido(recorridoLI);
-		assertEquals(recorridos, sistema.getRecorridos());
-		assertEquals(Collections.emptyList(), sistema.getAssociatedBilletesToRoute(idLI));
 		sistema.removeRecorrido(idLI);
-		recorridos.remove(0);
-		assertEquals(recorridos, sistema.getRecorridos());
+		assertEquals(new ArrayList<>(), sistema.getRecorridos());
 		
 		EasyMock.verify(database);
 	}
@@ -244,7 +239,6 @@ class SistemaPersistenciaTest {
 		EasyMock.replay(database);
 		
 		sistema.addRecorrido(recorrido);
-
 		sistema.comprarBilletes("T12345", usuario, recorrido, 1);
 		billetes.add(ticket);
 		assertEquals(billetes, sistema.getAssociatedBilletesToRoute(id));
