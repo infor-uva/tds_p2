@@ -1116,7 +1116,7 @@ class SistemaPersistenciaTest {
 		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall().times(49);
 		
-		Recorrido clonRecorrido=new Recorrido(id, origin, destination, transport, price, date, time, numSeats, duration);
+		Recorrido clonRecorrido=recorrido.clone();
 		clonRecorrido.decreaseAvailableSeats(49);
 		
 		database.actualizarRecorrido(clonRecorrido);

@@ -408,7 +408,7 @@ public class Recorrido implements Cloneable {
 		// En caso de querer tener el 100% de cobertura en este método usar esta otra
 		// posible implementación que no requiere la interfaz clonable
 //		Recorrido clone = new Recorrido(id, origin, destination, transport, price, date, time, totalSeats, duration);
-//		clone.decreaseAvailableSeats(totalSeats - numAvailableSeats);
+//		clone.numAvailableSeats = numAvailableSeats;
 //		return clone;
 		try {
 			return (Recorrido) super.clone();
