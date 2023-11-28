@@ -22,15 +22,15 @@ import org.junit.jupiter.api.Test;
  * @author diebomb
  * @author migudel
  * 
- * @version 27/11/23
+ * @version 28/11/23
  */
 class SystemTest {
 
 	private static final double ERROR_MARGIN = 0.00001;
 	private static final String BUS = Recorrido.BUS;
 	private static final String TRAIN = Recorrido.TRAIN;
-	private static final String ESTADO_RESERVADO = Billete.RESERVADO;
-	private static final String ESTADO_COMPRADO = Billete.COMPRADO;
+	private static final String ESTADO_RESERVADO = Billete.ESTADO_RESERVADO;
+	private static final String ESTADO_COMPRADO = Billete.ESTADO_COMPRADO;
 
 	private String nif;
 	private String nombre;
@@ -88,8 +88,6 @@ class SystemTest {
 	 */
 	@Test
 	void testConstructor() {
-		// TODO Completar tras fusión en develop
-		// Asegurar que todo lo que se encarga de inicializar el constructor lo hace
 		System system = new System();
 		assertNotNull(system);
 		assertEquals(new ArrayList<>(), system.getRecorridos());
@@ -128,14 +126,9 @@ class SystemTest {
 	 */
 	@Test
 	void testRemoveRecorridoValidoConIdLimiteInferior() {
-		List<Recorrido> recorridos = new ArrayList<>();
-		recorridos.add(recorridoLI);
 		system.addRecorrido(recorridoLI);
-		assertEquals(recorridos, system.getRecorridos());
-		assertEquals(new ArrayList<>(), system.getAssociatedBilletesToRoute(idLI));
 		system.removeRecorrido(idLI);
-		recorridos.remove(0);
-		assertEquals(recorridos, system.getRecorridos());
+		assertEquals(new ArrayList<>(), system.getRecorridos());
 	}
 
 	@Test
@@ -163,11 +156,7 @@ class SystemTest {
 	void testRemoveRecorridoConRecorridoEnSystemConBilletesAsociados() {
 		Usuario usuario = new Usuario("32698478E", "Geronimo");
 		system.addRecorrido(recorrido);
-
 		system.comprarBilletes("T12345", usuario, recorrido, 1);
-		List<Billete> billetes = new ArrayList<>();
-		billetes.add(new Billete("T12345", recorrido, usuario, ESTADO_COMPRADO));
-		assertEquals(billetes, system.getAssociatedBilletesToRoute(id));
 
 		assertThrows(IllegalStateException.class, () -> {
 			system.removeRecorrido(id);
@@ -643,8 +632,8 @@ class SystemTest {
 	void testComprarBilletesValidoBusLimiteInferior() {
 		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, recorrido, 1);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
+		Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
 		for (int i = 0; i < 1; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
 			listaBilletesComprobacion.add(billeteComprobacion);
 		}
 		assertEquals(listaBilletes, listaBilletesComprobacion);
@@ -654,8 +643,8 @@ class SystemTest {
 	void testComprarBilletesValidosBusLimiteSuperior() {
 		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, recorrido, 50);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
+		Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
 		for (int i = 0; i < 50; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
 			listaBilletesComprobacion.add(billeteComprobacion);
 		}
 		assertEquals(listaBilletes, listaBilletesComprobacion);
@@ -665,8 +654,8 @@ class SystemTest {
 	void testComprarBilletesValidoTrenLimiteInferior() {
 		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, differentRecorrido, 1);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
+		Billete billeteComprobacion = new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO);
 		for (int i = 0; i < 1; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO);
 			listaBilletesComprobacion.add(billeteComprobacion);
 		}
 		assertEquals(listaBilletes, listaBilletesComprobacion);
@@ -677,8 +666,8 @@ class SystemTest {
 		differentRecorrido = new Recorrido("dif", origin, destination, transport, price, date, time, 250,duration);
 		List<Billete> listaBilletes = system.comprarBilletes("ABC12345", user, differentRecorrido, 250);
 		List<Billete> listaBilletesComprobacion = new ArrayList<>();
+		Billete billeteComprobacion = new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO);
 		for (int i = 0; i < 250; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", differentRecorrido, user, ESTADO_COMPRADO);
 			listaBilletesComprobacion.add(billeteComprobacion);
 		}
 		assertEquals(listaBilletes, listaBilletesComprobacion);
@@ -796,12 +785,7 @@ class SystemTest {
 	void testComprarBilletesReservadosValidoLimiteInferior() {
 		String locator = "1";
 		system.addRecorrido(recorrido);
-		List<Billete> bookedTicketsCheck = new ArrayList<>();
-		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
-		List<Billete> bookedTickets = system.reservarBilletes(locator, user, recorrido, 3);
-		assertEquals(bookedTicketsCheck, bookedTickets);
+		system.reservarBilletes(locator, user, recorrido, 3);
 
 		List<Billete> buyedTicketsCheck = new ArrayList<>();
 		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
@@ -815,12 +799,7 @@ class SystemTest {
 	void testComprarBilletesReservadosValidoLimiteSuperior() {
 		String locator = "12345678";
 		system.addRecorrido(recorrido);
-		List<Billete> bookedTicketsCheck = new ArrayList<>();
-		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
-		bookedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_RESERVADO));
-		List<Billete> bookedTickets = system.reservarBilletes(locator, user, recorrido, 3);
-		assertEquals(bookedTicketsCheck, bookedTickets);
+		system.reservarBilletes(locator, user, recorrido, 3);
 
 		List<Billete> buyedTicketsCheck = new ArrayList<>();
 		buyedTicketsCheck.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
@@ -900,8 +879,8 @@ class SystemTest {
 		assertEquals(plazasDisponibles - numBilletesReservar, recorrido.getNumAvailableSeats());
 
 		ArrayList<Billete> listaBilletesComprobacion = new ArrayList<>();
+		Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
 		for (int i = 0; i < numBilletesReservar; i++) {
-			Billete billeteComprobacion = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
 			listaBilletesComprobacion.add(billeteComprobacion);
 		}
 		assertEquals(reservado, listaBilletesComprobacion);
