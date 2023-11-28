@@ -3,6 +3,7 @@ package uva.tds.practica2_grupo6;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 /**
  * Class dedicated for the representation of the route.
@@ -18,7 +19,7 @@ import java.time.LocalTime;
  * @author hugcubi
  * @author migudel
  * 
- * @version 17/11/23
+ * @version 28/11/23
  */
 public class Recorrido implements Cloneable {
 
@@ -342,8 +343,6 @@ public class Recorrido implements Cloneable {
 	/**
 	 * Increase the number of available seats
 	 * 
-	 * TODO Marcarlo como coverage
-	 * 
 	 * @param numSeats to increase
 	 * 
 	 * @throws IllegalArgumentException if the number of seats is less than 1 or
@@ -368,28 +367,33 @@ public class Recorrido implements Cloneable {
 	/**
 	 * Compare if two Recorridos are the same
 	 * 
-	 * @param o Recorrido to compare
+	 * @param obj Recorrido to compare
 	 * 
 	 * @return if are the same
 	 * 
-	 * @throws IllegalArgumentException if o is null
+	 * @throws IllegalArgumentException if obj is null
 	 */
 	@Override
-	public boolean equals(Object o) {
-		if (o == null)
-			throw new IllegalArgumentException("o is null");
-		if (this == o)
+	public boolean equals(Object obj) {
+		if (obj == null)
+			throw new IllegalArgumentException("obj is null");
+		if (this == obj)
 			return true;
-		if (!(o instanceof Recorrido))
+		if (!(obj instanceof Recorrido))
 			return false;
-		Recorrido r = (Recorrido) o;
-		return id.equals(r.id);
+		Recorrido other = (Recorrido) obj;
+		return Objects.equals(id, other.id) && Objects.equals(origin, other.origin)
+				&& Objects.equals(destination, other.destination) && Objects.equals(transport, other.transport)
+				&& Double.doubleToLongBits(price) == Double.doubleToLongBits(other.price)
+				&& Objects.equals(date, other.date) && Objects.equals(time, other.time)
+				&& totalSeats == other.totalSeats && numAvailableSeats == other.numAvailableSeats
+				&& duration == other.duration;
 	}
 
 	/**
 	 * Create a copy of this instance of Recorrido with the same values of the
-	 * attributes but not are the same object.
-	 * In case if the clone is not supported a null will be returned
+	 * attributes but not are the same object. In case if the clone is not supported
+	 * a null will be returned
 	 * 
 	 * @return null or clone of the instance
 	 */
