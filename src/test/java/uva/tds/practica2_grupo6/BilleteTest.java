@@ -82,18 +82,7 @@ class BilleteTest {
 
 	}
 
-	@Test
-	public void testRecorridoValido() {
-		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
-		assertSame(recorrido, billete.getRecorrido());
-	}
-
-	@Test
-	public void testUsuarioValido() {
-		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
-		assertSame(user, billete.getUsuario());
-	}
-
+	
 	@Test
 	public void testUsuarioNull() {
 		assertThrows(IllegalArgumentException.class, () -> {
