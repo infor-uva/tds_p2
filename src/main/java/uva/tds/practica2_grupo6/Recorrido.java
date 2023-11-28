@@ -23,7 +23,13 @@ import java.util.Objects;
  */
 public class Recorrido implements Cloneable {
 
+	/**
+	 * Type of transport train
+	 */
 	public static final String TRAIN = "train";
+	/**
+	 * Type of transport bus
+	 */
 	public static final String BUS = "bus";
 
 	/**
@@ -399,6 +405,11 @@ public class Recorrido implements Cloneable {
 	 */
 	@Override
 	public Recorrido clone() {
+		// En caso de querer tener el 100% de cobertura en este método usar esta otra
+		// posible implementación que no requiere la interfaz clonable
+//		Recorrido clone = new Recorrido(id, origin, destination, transport, price, date, time, totalSeats, duration);
+//		clone.decreaseAvailableSeats(totalSeats - numAvailableSeats);
+//		return clone;
 		try {
 			return (Recorrido) super.clone();
 		} catch (CloneNotSupportedException e) {
