@@ -16,7 +16,7 @@ package uva.tds.practica2_grupo6;
  * @version 09/11/23
  */
 public class Billete {
-	
+
 	public static final String ESTADO_COMPRADO = "comprado";
 	public static final String ESTADO_RESERVADO = "reservado";
 
@@ -32,7 +32,7 @@ public class Billete {
 	 * @param estado
 	 * @throws IllegalArgumentException si localizador tiene menos de 1 y mas de 8
 	 *                                  caracteres
-	 * @throws IllegalArgumentException     si recorrido, usuario o estado son null
+	 * @throws IllegalArgumentException si recorrido, usuario o estado son null
 	 * @throws IllegalArgumentException si estado es diferente de "comprado" y
 	 *                                  "reservado"
 	 */
@@ -103,7 +103,7 @@ public class Billete {
 		if (!estado.equals(ESTADO_RESERVADO))
 			throw new IllegalStateException("Ticket tiene que estar reservado");
 		this.estado = ESTADO_COMPRADO;
-				
+
 	}
 
 	/**
@@ -124,8 +124,8 @@ public class Billete {
 			return false;
 		Billete tmp = (Billete) o;
 		// Comparamos los objetos
-		if(this.localizador.equals(tmp.getLocalizador()) && this.recorrido.equals(tmp.getRecorrido()) &&
-		this.usuario.equals(tmp.getUsuario()) && this.estado.equals(tmp.getEstado()) )
+		if (this.localizador.equals(tmp.getLocalizador()) && this.recorrido.equals(tmp.getRecorrido())
+				&& this.usuario.equals(tmp.getUsuario()) && this.estado.equals(tmp.getEstado()))
 			return true;
 		else {
 			return false;

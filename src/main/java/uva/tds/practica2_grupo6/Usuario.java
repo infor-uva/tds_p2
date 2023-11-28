@@ -17,9 +17,10 @@ import java.util.*;
  * @version 09/10/23
  */
 public class Usuario {
-	
-	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
-	
+
+	private final List<Character> letrasNif = new ArrayList<>(Arrays.asList('T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P',
+			'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'));
+
 	private String nif;
 	private String nombre;
 
@@ -30,9 +31,9 @@ public class Usuario {
 	 * @param nombre
 	 * 
 	 * @throws IllegalArgumentException if the NIF is empty
-	 * @throws IllegalArgumentException     if the NIF is null
+	 * @throws IllegalArgumentException if the NIF is null
 	 * @throws IllegalArgumentException if the name is empty
-	 * @throws IllegalArgumentException     if the name is null
+	 * @throws IllegalArgumentException if the name is null
 	 * @throws IllegalArgumentException if the number of characters in the name
 	 *                                  exceeds 15
 	 * @throws IllegalArgumentException if the number of NIF digits exceeds 8
@@ -43,43 +44,43 @@ public class Usuario {
 	 *                                  letter
 	 */
 	public Usuario(String nif, String nombre) {
-		if(nif == null) {
+		if (nif == null) {
 			throw new IllegalArgumentException("Nif nulo\n");
 		}
-		if(nombre == null) {
+		if (nombre == null) {
 			throw new IllegalArgumentException("Nombre nulo\n");
 		}
-		if(nif.isEmpty()){
+		if (nif.isEmpty()) {
 			throw new IllegalArgumentException("Nif vacio\n");
 		}
-		if(nombre.isEmpty()) {
+		if (nombre.isEmpty()) {
 			throw new IllegalArgumentException("Nombre vacio\n");
 		}
-		if(nombre.length()>15) {
+		if (nombre.length() > 15) {
 			throw new IllegalArgumentException("Nombre demasiado largo\n");
 		}
-		if(nif.length()<=8) {
+		if (nif.length() <= 8) {
 			throw new IllegalArgumentException("Nif demasiado corto\n");
 		}
-		if(nif.length()>9) {
+		if (nif.length() > 9) {
 			throw new IllegalArgumentException("Nif demasiado largo\n");
 		}
-		if(!Character.isLetter(nif.charAt(8))) {
+		if (!Character.isLetter(nif.charAt(8))) {
 			throw new IllegalArgumentException("Nif no contiene la letra\n");
 		}
-		if(nif.charAt(8) == 'U' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ') {
+		if (nif.charAt(8) == 'U' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ') {
 			throw new IllegalArgumentException("Nif contiene la letra erronea\n");
 		}
-		//sacar si el valor de la letra corresponde con la division del numero
-		String cifras=nif.substring(0, nif.length()-1);
-		char letra=nif.charAt(8);
-		int numero=Integer.parseInt(cifras);
-		int resto=numero%23;
-		if(resto != letrasNif.indexOf(letra)) {
+		// sacar si el valor de la letra corresponde con la division del numero
+		String cifras = nif.substring(0, nif.length() - 1);
+		char letra = nif.charAt(8);
+		int numero = Integer.parseInt(cifras);
+		int resto = numero % 23;
+		if (resto != letrasNif.indexOf(letra)) {
 			throw new IllegalArgumentException("La letra del nif no corresponde con las cifras del nif\n");
 		}
-		this.nif=nif;
-		this.nombre=nombre;
+		this.nif = nif;
+		this.nombre = nombre;
 	}
 
 	/**
@@ -111,16 +112,16 @@ public class Usuario {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if(o == null) {
+		if (o == null) {
 			throw new IllegalArgumentException("El objeto es nulo\n");
 		}
-		if(getClass() != o.getClass()) {
+		if (getClass() != o.getClass()) {
 			return false;
 		}
-		if(this == o) {
+		if (this == o) {
 			return true;
 		}
-		Usuario user=(Usuario) o;
+		Usuario user = (Usuario) o;
 		return Objects.equals(nif, user.getNif()) && Objects.equals(nombre, user.getNombre());
 	}
 }

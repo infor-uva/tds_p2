@@ -82,7 +82,6 @@ class BilleteTest {
 
 	}
 
-	
 	@Test
 	public void testUsuarioNull() {
 		assertThrows(IllegalArgumentException.class, () -> {

@@ -589,8 +589,7 @@ class RecorridoTest {
 	@Test
 	@Tag("Cobertura")
 	void testEqualsConTransportsDiferentes() {
-		Recorrido other = new Recorrido(id, origin, destination, TRAIN, price, date, time, numAvailableSeats,
-				duration);
+		Recorrido other = new Recorrido(id, origin, destination, TRAIN, price, date, time, numAvailableSeats, duration);
 		assertNotEquals(recorrido, other);
 	}
 
@@ -630,16 +629,14 @@ class RecorridoTest {
 	@Test
 	@Tag("Cobertura")
 	void testEqualsConTotalSeatsDiferentes() {
-		Recorrido other = new Recorrido(id, origin, destination, transport, price, date, time, 12,
-				duration);
+		Recorrido other = new Recorrido(id, origin, destination, transport, price, date, time, 12, duration);
 		assertNotEquals(recorrido, other);
 	}
 
 	@Test
 	@Tag("Cobertura")
 	void testEqualsConDurationDiferentes() {
-		Recorrido other = new Recorrido(id, origin, destination, transport, price, date, time, numAvailableSeats,
-				360);
+		Recorrido other = new Recorrido(id, origin, destination, transport, price, date, time, numAvailableSeats, 360);
 		assertNotEquals(recorrido, other);
 	}
 

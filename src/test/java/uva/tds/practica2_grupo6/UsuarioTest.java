@@ -136,7 +136,7 @@ class UsuarioTest {
 	void testEqualsValido() {
 		assertEquals(user, user);
 		assertEquals(user, sameUser);
-		assertNotEquals(user,true);
+		assertNotEquals(user, true);
 		assertNotEquals(user, differentUser);
 	}
 

@@ -59,9 +59,11 @@ import java.util.List;
 public class System {
 
 	/**
-	 * List of the character indexed by the rest resulted of the division of nif and 23
+	 * List of the character indexed by the rest resulted of the division of nif and
+	 * 23
 	 */
-	private final List<Character> letrasNif=new ArrayList<>(Arrays.asList('T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'));
+	private final List<Character> letrasNif = new ArrayList<>(Arrays.asList('T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P',
+			'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'));
 	/**
 	 * {@link Recorrido#TRAIN}
 	 */
@@ -82,20 +84,20 @@ public class System {
 	/**
 	 * List of nifs of users registered in the system
 	 */
-	private List<String> users; 
-	
+	private List<String> users;
+
 	/**
 	 * List of routes registered in the system
 	 */
 	private List<Recorrido> routes;
-	
+
 	/**
 	 * Instance the System
 	 */
 	public System() {
-		tickets=new ArrayList<>();
-		users=new ArrayList<>();
-		routes=new ArrayList<>();
+		tickets = new ArrayList<>();
+		users = new ArrayList<>();
+		routes = new ArrayList<>();
 	}
 
 	/**
@@ -198,45 +200,44 @@ public class System {
 	 *                                  tickets.
 	 */
 	public double getPrecioTotalBilletesUsuario(String nif) {
-		if(nif == null)
+		if (nif == null)
 			throw new IllegalArgumentException("El nif es nulo\n");
 		if (nif.isEmpty())
 			throw new IllegalArgumentException("El nif esta vacio\n");
-		if(nif.length()>9)
+		if (nif.length() > 9)
 			throw new IllegalArgumentException("Nif demasiado largo\n");
-		if(nif.length()<=8)
+		if (nif.length() <= 8)
 			throw new IllegalArgumentException("Nif demasiado corto\n");
-		if(!Character.isLetter(nif.charAt(8)))
+		if (!Character.isLetter(nif.charAt(8)))
 			throw new IllegalArgumentException("Nif no contiene la letra\n");
-		if(nif.charAt(8) == 'U' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ')
+		if (nif.charAt(8) == 'U' || nif.charAt(8) == 'I' || nif.charAt(8) == 'O' || nif.charAt(8) == 'Ñ')
 			throw new IllegalArgumentException("Nif contiene la letra erronea\n");
-		String cifras=nif.substring(0, nif.length()-1);
-		char letra=nif.charAt(8);
-		int numero=Integer.parseInt(cifras);
-		int resto=numero%23;
-		if(resto != letrasNif.indexOf(letra))
+		String cifras = nif.substring(0, nif.length() - 1);
+		char letra = nif.charAt(8);
+		int numero = Integer.parseInt(cifras);
+		int resto = numero % 23;
+		if (resto != letrasNif.indexOf(letra))
 			throw new IllegalArgumentException("La letra del nif no corresponde con las cifras del nif\n");
 		if (!users.contains(nif))
 			throw new IllegalArgumentException("El nif no concuerda con ninguno del sistema\n");
-		boolean encuentraTiket=false;
-		for(Billete tiket : tickets) {
+		boolean encuentraTiket = false;
+		for (Billete tiket : tickets) {
 			if (tiket.getUsuario().getNif().equals(nif))
-				encuentraTiket=true;
+				encuentraTiket = true;
 		}
 		if (!encuentraTiket)
 			throw new IllegalStateException("El nif no tiene ningun billete asociado\n");
-		double precioTotal=0;
-		for(Billete tiket : tickets) {
+		double precioTotal = 0;
+		for (Billete tiket : tickets) {
 			if (tiket.getUsuario().getNif().equals(nif)) {
 				if (tiket.getRecorrido().getTransport().equals(TRAIN)) {
-					double precioDescuento=tiket.getRecorrido().getPrice()*0.9;
-					precioTotal+=precioDescuento;
-				}
-				else
-					precioTotal+=tiket.getRecorrido().getPrice();
+					double precioDescuento = tiket.getRecorrido().getPrice() * 0.9;
+					precioTotal += precioDescuento;
+				} else
+					precioTotal += tiket.getRecorrido().getPrice();
 			}
 		}
-		
+
 		return precioTotal;
 	}
 
@@ -253,17 +254,17 @@ public class System {
 	public List<Recorrido> getRecorridosDisponiblesFecha(LocalDate fecha) {
 		if (fecha == null)
 			throw new IllegalArgumentException("La fecha es nula\n");
-		boolean asociado=false;
-		List<Recorrido>salida=new ArrayList<>();
+		boolean asociado = false;
+		List<Recorrido> salida = new ArrayList<>();
 		for (Recorrido route : routes) {
-			if(route.getDate().equals(fecha)) {
-				asociado=true;
+			if (route.getDate().equals(fecha)) {
+				asociado = true;
 				salida.add(route);
 			}
 		}
-		if(!asociado)
+		if (!asociado)
 			throw new IllegalStateException("La fecha no corresponde con ningun recorrido\n");
-		
+
 		return salida;
 	}
 
@@ -471,7 +472,7 @@ public class System {
 		if (numBilletesReservar > recorrido.getNumAvailableSeats())
 			throw new IllegalStateException(
 					"No se puede reservar si el número de billetes es mayor a los asientos disponibles");
-		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats()/2)
+		if (recorrido.getNumAvailableSeats() < recorrido.getTotalSeats() / 2)
 			throw new IllegalStateException(
 					"No se puede reservar si el número de asientos disponibles es menor a la mitad del número total de asientos");
 		if (localizador.equals(""))
@@ -570,36 +571,36 @@ public class System {
 	 *                                  number of tickets with that locator
 	 */
 	public void devolverBilletes(String localizador, int numBilletesDevolver) {
-		if(localizador == null)
+		if (localizador == null)
 			throw new IllegalArgumentException("El localizador no puede ser null");
 		if (localizador.equals(""))
 			throw new IllegalArgumentException("El localizador no puede ser vacio");
 		if (numBilletesDevolver < 1)
-			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
+			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");
 		int counter = 0;
-		for (Billete billetes: this.tickets) {
+		for (Billete billetes : this.tickets) {
 			if (billetes.getLocalizador().equals(localizador)) {
 				counter += 1;
-				if(!billetes.getEstado().equals(ESTADO_COMPRADO))
+				if (!billetes.getEstado().equals(ESTADO_COMPRADO))
 					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
 			}
 		}
-		if(counter == 0)
+		if (counter == 0)
 			throw new IllegalStateException("El localizador no corresponde con tickets comprados");
-		
+
 		int count = 0;
-		for (Billete billetes: this.tickets) {
+		for (Billete billetes : this.tickets) {
 			if (billetes.getLocalizador().equals(localizador))
 				count += 1;
 		}
 		if (count < numBilletesDevolver)
-				throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
-		
+			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
+
 		Recorrido recorrido = this.tickets.get(0).getRecorrido();
 		int contador = 0;
 		while (contador < numBilletesDevolver) {
-			for (Billete billetes: this.tickets) {
-				if (billetes.getLocalizador().equals(localizador)) {					
+			for (Billete billetes : this.tickets) {
+				if (billetes.getLocalizador().equals(localizador)) {
 					tickets.remove(billetes);
 					contador += 1;
 					break;
@@ -639,7 +640,7 @@ public class System {
 			throw new IllegalArgumentException("El localizador es nulo\n");
 		if (localizador.isEmpty())
 			throw new IllegalArgumentException("El localizador esta vacio\n");
-		for(Billete tiket : tickets) {
+		for (Billete tiket : tickets) {
 			if (tiket.getLocalizador().equals(localizador)) {
 				throw new IllegalArgumentException("El localizador ya a sido usado\n");
 			}
@@ -648,18 +649,18 @@ public class System {
 			throw new IllegalArgumentException("El usuario es nulo\n");
 		if (recorrido == null)
 			throw new IllegalArgumentException("El recorrido es nulo\n");
-		if (numBilletes <1)
+		if (numBilletes < 1)
 			throw new IllegalArgumentException("El numero de billetes ha de ser superior a 0\n");
 		if (numBilletes > recorrido.getTotalSeats())
 			throw new IllegalArgumentException("El numero es superior a los asientos del vehiculo\n");
 		if (numBilletes > recorrido.getNumAvailableSeats())
 			throw new IllegalStateException("El numero es superior a los asientos disponibles\n");
-		List<Billete> salida=new ArrayList<>();
-		for (int i=0;i<numBilletes;i++) {
-			Billete aux=new Billete(localizador,recorrido, usr, ESTADO_COMPRADO);
+		List<Billete> salida = new ArrayList<>();
+		for (int i = 0; i < numBilletes; i++) {
+			Billete aux = new Billete(localizador, recorrido, usr, ESTADO_COMPRADO);
 			salida.add(aux);
 			tickets.add(aux);
-			
+
 		}
 		recorrido.decreaseAvailableSeats(numBilletes);
 		if (!users.contains(usr.getNif()))
