@@ -268,9 +268,8 @@ class SistemaPersistenciaTest {
 
 		database.addBillete(new Billete(localizador, recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall().times(numBilletes);
-
-		Recorrido clonRecorrido = new Recorrido(id, origin, destination, transport, price, date, time, numSeats,
-				duration);
+		
+		Recorrido clonRecorrido= recorrido.clone();
 		clonRecorrido.decreaseAvailableSeats(numBilletes);
 
 		database.actualizarRecorrido(clonRecorrido);
@@ -967,8 +966,7 @@ class SistemaPersistenciaTest {
 		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall();
 
-		Recorrido clonRecorrido = new Recorrido(id, origin, destination, transport, price, date, time, numSeats,
-				duration);
+		Recorrido clonRecorrido = recorrido.clone();
 		clonRecorrido.decreaseAvailableSeats(1);
 
 		database.actualizarRecorrido(clonRecorrido);
@@ -997,8 +995,7 @@ class SistemaPersistenciaTest {
 		database.addBillete(new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall().times(50);
 
-		Recorrido clonRecorrido = new Recorrido(id, origin, destination, transport, price, date, time, numSeats,
-				duration);
+		Recorrido clonRecorrido = recorrido.clone();
 		clonRecorrido.decreaseAvailableSeats(50);
 
 		database.actualizarRecorrido(clonRecorrido);
@@ -1184,7 +1181,7 @@ class SistemaPersistenciaTest {
 		database.addBillete(tiket);
 		EasyMock.expectLastCall().times(2);
 
-		Recorrido clonRecorrido = new Recorrido("dif", origin, destination, TRAIN, price, date, time, 250, duration);
+		Recorrido clonRecorrido = rec.clone();
 		clonRecorrido.decreaseAvailableSeats(2);
 
 		database.actualizarRecorrido(clonRecorrido);
@@ -1194,7 +1191,7 @@ class SistemaPersistenciaTest {
 		database.addUsuario(user);
 		EasyMock.expectLastCall();
 		EasyMock.replay(database);
-		sistema.comprarBilletes("ABC12345", user, differentRecorrido, 2);
+		sistema.comprarBilletes("ABC12345", user, rec, 2);
 		assertThrows(IllegalArgumentException.class, () -> {
 			sistema.comprarBilletes("ABC12345", differentUser, differentRecorrido, 1);
 		});
@@ -1212,7 +1209,7 @@ class SistemaPersistenciaTest {
 		database.addBillete(tiket);
 		EasyMock.expectLastCall().times(2);
 
-		Recorrido clonRecorrido = new Recorrido("dif", origin, destination, TRAIN, price, date, time, 250, duration);
+		Recorrido clonRecorrido = rec.clone();
 		clonRecorrido.decreaseAvailableSeats(2);
 
 		database.actualizarRecorrido(clonRecorrido);
@@ -1222,7 +1219,8 @@ class SistemaPersistenciaTest {
 		database.addUsuario(user);
 		EasyMock.expectLastCall();
 		EasyMock.replay(database);
-		sistema.comprarBilletes("ABC12345", user, differentRecorrido, 2);
+		
+		sistema.comprarBilletes("ABC12345", user, rec, 2);
 		assertThrows(IllegalArgumentException.class, () -> {
 			sistema.comprarBilletes("ABC12345", differentUser, recorrido, 1);
 		});
@@ -1255,14 +1253,13 @@ class SistemaPersistenciaTest {
 		database.addBillete(new Billete(localizador, differentRecorrido, user, ESTADO_COMPRADO));
 		EasyMock.expectLastCall();
 
-		Recorrido clonRecorridoPrimero = new Recorrido(id, origin, destination, transport, price, date, time, numSeats,
-				duration);
-		Recorrido clonRecorrido = new Recorrido("dif", origin, destination, TRAIN, price, date, time, numSeats,
-				duration);
+		Recorrido clonRecorridoPrimero = recorrido.clone();
+		Recorrido clonRecorrido = differentRecorrido.clone();
 		clonRecorridoPrimero.decreaseAvailableSeats(1);
 		clonRecorrido.decreaseAvailableSeats(1);
 
 		database.actualizarRecorrido(clonRecorridoPrimero);
+		EasyMock.expectLastCall();
 		database.actualizarRecorrido(clonRecorrido);
 		EasyMock.expectLastCall();
 
