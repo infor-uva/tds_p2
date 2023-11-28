@@ -134,10 +134,10 @@ class UsuarioTest {
 
 	@Test
 	void testEqualsValido() {
-		assertTrue(user.equals(user));
-		assertTrue(user.equals(sameUser));
-		assertFalse(user.equals(true));
-		assertFalse(user.equals(differentUser));
+		assertEquals(user, user);
+		assertEquals(user, sameUser);
+		assertNotEquals(user,true);
+		assertNotEquals(user, differentUser);
 	}
 
 	@Test

@@ -202,11 +202,20 @@ class SystemTest {
 			system.getPrecioTotalBilletesUsuario("");
 		});
 	}
+	
+	@Test
+	void testGetPrecioTotalBilletesUsuarioNoEnSystem() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			system.getPrecioTotalBilletesUsuario("32698478E");
+		});
+	}
 
 	@Test
 	void testGetPrecioTotalBilletesUsuarioSinBilletes() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			system.getPrecioTotalBilletesUsuario("39545696W");
+		system.comprarBilletes("1234T", user, recorrido, 5);
+		system.devolverBilletes("1234T", 5);
+		assertThrows(IllegalStateException.class, () -> {
+			system.getPrecioTotalBilletesUsuario(user.getNif());
 		});
 	}
 

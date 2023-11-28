@@ -203,7 +203,7 @@ public class System {
 				encuentraTiket=true;
 		}
 		if (!encuentraTiket)
-			throw new IllegalArgumentException("El nif no tiene ningun billete asociado\n");
+			throw new IllegalStateException("El nif no tiene ningun billete asociado\n");
 		double precioTotal=0;
 		for(Billete tiket : tickets) {
 			if (tiket.getUsuario().getNif().equals(nif)) {
@@ -561,7 +561,7 @@ public class System {
 				counter += 1;
 				if(!billetes.getEstado().equals(ESTADO_COMPRADO))
 					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
-		}
+			}
 		}
 		if(counter == 0)
 			throw new IllegalStateException("El localizador no corresponde con tickets comprados");
