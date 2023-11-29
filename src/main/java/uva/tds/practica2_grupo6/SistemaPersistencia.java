@@ -461,7 +461,7 @@ public class SistemaPersistencia {
 
 		List<Billete> billetes = new ArrayList<>();
 		for (int i = 0; i < numBilletesReservar; i++) {
-			Billete ticket = new Billete(localizador, recorrido, user, "reservado");
+			Billete ticket = new Billete(localizador, recorrido, user, ESTADO_RESERVADO);
 			billetes.add(ticket);
 			database.addBillete(ticket);
 		}
@@ -497,7 +497,8 @@ public class SistemaPersistencia {
 			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");	
 		
 		ArrayList<Billete> billetes = database.getBilletes(localizador);
-		if(billetes.size() < 1 || !billetes.get(0).getEstado().equals(ESTADO_RESERVADO)) {
+		if(billetes.size() < 1 || 
+		!billetes.get(0).getEstado().equals(ESTADO_RESERVADO)) {
 			throw new IllegalStateException("No hay tickets reservados con ese localizador");
 		}
 		
@@ -554,15 +555,17 @@ public class SistemaPersistencia {
 		
 		int billetesRestantes = billetes.size() - numBilletesDevolver;
 		database.eliminarBilletes(localizador);
-		if(billetesRestantes > 0) {
+
 			Billete b = billetes.get(0);
 			Recorrido r = b.getRecorrido();
 			r.increaseAvailableSeats(numBilletesDevolver);
+			database.actualizarRecorrido(r);
+			if(billetesRestantes > 0) {
 			for (int i = 0; i < billetesRestantes; i++) {
 				database.addBillete(b);
 			}
 			
-			database.actualizarRecorrido(r);
+
 		}
 
 
