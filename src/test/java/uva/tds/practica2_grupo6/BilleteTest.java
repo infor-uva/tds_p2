@@ -160,7 +160,7 @@ class BilleteTest {
 	void testEqualsRecorridoBillete() {
 		Recorrido recorridoC =  new Recorrido("c12543", origin, destination, transport, price, date, time, numAvailableSeats, duration);
 		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
-		Billete billete2 = new Billete("ABC1234", recorridoC, user, ESTADO_RESERVADO);
+		Billete billete2 = new Billete("ABC12345", recorridoC, user, ESTADO_RESERVADO);
 		assertNotEquals(billete,billete2);
 	}
 	
@@ -169,7 +169,7 @@ class BilleteTest {
 	void testEqualsUsuarioBillete() {
 		Usuario userC = new Usuario("71174681P", nombre);
 		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
-		Billete billete2 = new Billete("ABC1234", recorrido, userC, ESTADO_RESERVADO);
+		Billete billete2 = new Billete("ABC12345", recorrido, userC, ESTADO_RESERVADO);
 		assertNotEquals(billete,billete2);
 	}
 	
@@ -177,7 +177,7 @@ class BilleteTest {
 	@Tag("Cobertura")
 	void testEqualsEstadoBillete() {
 		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
-		Billete billete2 = new Billete("ABC1234", recorrido, user, ESTADO_COMPRADO);
+		Billete billete2 = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
 		assertNotEquals(billete,billete2);
 	}
 	

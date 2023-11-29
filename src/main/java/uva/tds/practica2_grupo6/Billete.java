@@ -124,8 +124,10 @@ public class Billete {
 			return false;
 		Billete tmp = (Billete) o;
 		// Comparamos los objetos
-		return (this.localizador.equals(tmp.getLocalizador()) && this.recorrido.equals(tmp.getRecorrido())
-				&& this.usuario.equals(tmp.getUsuario()) && this.estado.equals(tmp.getEstado()));
+		return (this.localizador.equals(tmp.getLocalizador()) 
+				&& this.recorrido.equals(tmp.getRecorrido())
+				&& this.usuario.equals(tmp.getUsuario()) 
+				&& this.estado.equals(tmp.getEstado()));
 		}
 	}
 
