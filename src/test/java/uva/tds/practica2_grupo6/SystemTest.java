@@ -333,6 +333,23 @@ class SystemTest {
 			system.getAssociatedBilletesToRoute(id);
 		});
 	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testGetAssociatedBilletesToRouteConVariasBilletesCoRecorridosDiferentesEnSystem() {
+		system.addRecorrido(recorrido);
+		system.addRecorrido(differentRecorrido);
+		String locator = "123";
+		String locator2 = "321";
+		system.comprarBilletes(locator, user, recorrido, 2);
+		system.comprarBilletes(locator2, user, differentRecorrido, 2);
+		
+		List<Billete> expected = new ArrayList<>();
+		for (int i = 0; i < 2; i++)
+			expected.add(new Billete(locator, recorrido, user, ESTADO_COMPRADO));
+
+		assertEquals(expected, system.getAssociatedBilletesToRoute(id));	
+	}	
 
 	/**
 	 * FINDME Tests for {@link System#getDateOfRecorrido(String)}
