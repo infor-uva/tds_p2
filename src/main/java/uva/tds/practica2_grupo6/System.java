@@ -519,31 +519,22 @@ public class System {
 			throw new IllegalArgumentException("El localizador no puede ser vacio");
 		if (numBilletesAnular < 1)
 			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");
-		int counter = 0;
-		for (Billete billetes : this.tickets) {
-			if (billetes.getLocalizador().equals(localizador)) {
-				counter += 1;
-				if (!billetes.getEstado().equals(ESTADO_RESERVADO))
+		List<Billete> packBilletes = new ArrayList<>();
+		for (Billete billete : this.tickets) {
+			if (billete.getLocalizador().equals(localizador)) {
+				packBilletes.add(billete);
+				if (!billete.getEstado().equals(ESTADO_RESERVADO))
 					throw new IllegalStateException("El localizador no corresponde con tickets reservados");
 			}
 		}
-		if (counter == 0)
+		if (packBilletes.isEmpty())
 			throw new IllegalStateException("El localizador no corresponde con tickets reservados");
-		if (counter < numBilletesAnular)
+		if (packBilletes.size() < numBilletesAnular)
 			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
 
-		Recorrido recorrido = this.tickets.get(0).getRecorrido();
-		int contador = 0;
-		while (contador < numBilletesAnular) {
-			for (Billete billetes : this.tickets) {
-				if (billetes.getLocalizador().equals(localizador)) {
-					tickets.remove(billetes);
-					contador += 1;
-					break;
-				}
-			}
-		}
-		recorrido.increaseAvailableSeats(numBilletesAnular);
+		
+		this.tickets.removeAll(packBilletes);
+		packBilletes.get(0).getRecorrido().increaseAvailableSeats(numBilletesAnular);
 
 	}
 
@@ -571,36 +562,23 @@ public class System {
 			throw new IllegalArgumentException("El localizador no puede ser vacio");
 		if (numBilletesDevolver < 1)
 			throw new IllegalArgumentException("No se puede reservar si el número de billetes es menor que 1");
-		int counter = 0;
-		for (Billete billetes : this.tickets) {
-			if (billetes.getLocalizador().equals(localizador)) {
-				counter += 1;
-				if (!billetes.getEstado().equals(ESTADO_COMPRADO))
+		List<Billete> packBilletes = new ArrayList<>();
+		for (Billete billete : this.tickets) {
+			if (billete.getLocalizador().equals(localizador)) {
+				packBilletes.add(billete);
+				if (!billete.getEstado().equals(ESTADO_COMPRADO))
 					throw new IllegalStateException("El localizador no corresponde con tickets comprados");
 			}
 		}
-		if (counter == 0)
+		if (packBilletes.isEmpty())
 			throw new IllegalStateException("El localizador no corresponde con tickets comprados");
 
-		int count = 0;
-		for (Billete billetes : this.tickets) {
-			if (billetes.getLocalizador().equals(localizador))
-				count += 1;
-		}
-		if (count < numBilletesDevolver)
+		if (packBilletes.size() < numBilletesDevolver)
 			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
 
 		Recorrido recorrido = this.tickets.get(0).getRecorrido();
-		int contador = 0;
-		while (contador < numBilletesDevolver) {
-			for (Billete billetes : this.tickets) {
-				if (billetes.getLocalizador().equals(localizador)) {
-					tickets.remove(billetes);
-					contador += 1;
-					break;
-				}
-			}
-		}
+		this.tickets.removeAll(packBilletes);
+				
 		recorrido.increaseAvailableSeats(numBilletesDevolver);
 
 	}

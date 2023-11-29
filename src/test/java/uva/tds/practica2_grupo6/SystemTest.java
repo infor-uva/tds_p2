@@ -1131,10 +1131,23 @@ class SystemTest {
 		int numBilletesAnular = 2;
 		system.addRecorrido(recorrido);
 		system.reservarBilletes(localizadorA, user, recorrido, numBilletesReservar);
+		system.reservarBilletes(localizadorB, user, recorrido, numBilletesReservar);
 		
 		system.anularReserva(localizadorA, numBilletesAnular);
-		assertThrows(IllegalStateException.class, () -> {
-			system.anularReserva(localizadorB, numBilletesAnular);
-		});
 	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testComprobarRamasLocalizadorDevolverBilletes() {
+		String localizadorA = "ABC12345";
+		String localizadorB = "BCA12345";
+		int numBilletesComprar = 3;
+		int numBilletesDevolver = 2;
+		system.addRecorrido(recorrido);
+		system.comprarBilletes(localizadorA, user, recorrido, numBilletesComprar);
+		system.comprarBilletes(localizadorB, user, recorrido, numBilletesDevolver);
+		
+		system.devolverBilletes(localizadorA, numBilletesDevolver);
+	}
+
 }
