@@ -3,6 +3,7 @@ package uva.tds.practica2_grupo6;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -145,5 +146,12 @@ class UsuarioTest {
 		assertThrows(IllegalArgumentException.class, () -> {
 			user.equals(null);
 		});
+	}
+	
+	@Tag("Cobertura")
+	@Test
+	void testEqualNifIgual() {
+		Usuario user2 = new Usuario(nif, "Gonzalo");
+		assertNotEquals(user, user2);
 	}
 }
