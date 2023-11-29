@@ -263,6 +263,14 @@ class SystemTest {
 			system.getPrecioTotalBilletesUsuario("32698478U");
 		});
 	}
+	
+	@Tag("Coberage")
+	@Test
+	void testGetPrecioTotalBilletesConBilletesAsociados() {
+		system.comprarBilletes("1234T", differentUser, recorrido, 5);
+		system.comprarBilletes("1234R", user, recorrido, 1);
+		assertEquals(1.0, system.getPrecioTotalBilletesUsuario(user.getNif()), ERROR_MARGIN);
+	}
 
 	/**
 	 * FINDME Tests for {@link System#getRecorridosDisponiblesFecha(LocalDate)}
