@@ -529,13 +529,7 @@ public class System {
 		}
 		if (counter == 0)
 			throw new IllegalStateException("El localizador no corresponde con tickets reservados");
-
-		int count = 0;
-		for (Billete billetes : this.tickets) {
-			if (billetes.getLocalizador().equals(localizador))
-				count += 1;
-		}
-		if (count < numBilletesAnular)
+		if (counter < numBilletesAnular)
 			throw new IllegalStateException("Hay menos tickets de los que se quieren anular con ese localizador");
 
 		Recorrido recorrido = this.tickets.get(0).getRecorrido();

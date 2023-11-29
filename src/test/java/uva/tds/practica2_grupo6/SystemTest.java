@@ -1122,4 +1122,19 @@ class SystemTest {
 		});
 	}
 
+	@Test
+	@Tag("Cobertura")
+	void testComprobarRamasLocalizadorAnularReserva() {
+		String localizadorA = "ABC12345";
+		String localizadorB = "BCA12345";
+		int numBilletesReservar = 3;
+		int numBilletesAnular = 2;
+		system.addRecorrido(recorrido);
+		system.reservarBilletes(localizadorA, user, recorrido, numBilletesReservar);
+		
+		system.anularReserva(localizadorA, numBilletesAnular);
+		assertThrows(IllegalStateException.class, () -> {
+			system.anularReserva(localizadorB, numBilletesAnular);
+		});
+	}
 }
