@@ -43,7 +43,7 @@ Trabajo asignado:
 
 Tiempo empleado: 
 - Fase Red: `4h 30min`
--Fase green: `10h 36min`
+- Fase green: `10h 36min`
     
 ### Hugo Cubino Cubino
 Trabajo asignado:
