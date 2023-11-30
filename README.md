@@ -22,11 +22,11 @@ Además, el sistema ofrece consultar información generada a través de las oper
 <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/System.java)
 
 ### [`IDatabaseManager.java`](./src/main/java/uva/tds/practica2_grupo6/IDatabaseManager.java)
-Por definir
+La interfaz de la base de datos externa. 
 <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/IDatabaseManager.java)
 
 ### [`SistemaPersistencia.java`](./src/main/java/uva/tds/practica2_grupo6/SistemaPersistencia.java)
-Por definir
+Sistema que delega la gestión de la información en una Database externa. 
 <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/SistemaPersistencia.java)
 
 ### [Tests](./src/test/java/uva/tds/practica2_grupo6/)
@@ -41,7 +41,9 @@ Trabajo asignado:
 - Feature 5.1 - Comprar billetes
 - Feature 7 - Obtención precio total billetes de un usuario y obtención recorridos disponibles en una fecha
 
-Tiempo empleado: `4h 30min`
+Tiempo empleado: 
+- Fase Red: `4h 30min`
+-Fase green: `10h 36min`
     
 ### Hugo Cubino Cubino
 Trabajo asignado:
@@ -52,6 +54,7 @@ Trabajo asignado:
 Tiempo empleado
 - Fase red: `3h 55min`
 - Fase green: `14h 45min`
+
 ### Miguel de las Moras Sastre
 Trabajo asignado:
 - Feature 2 - Recorrido
