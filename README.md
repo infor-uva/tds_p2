@@ -49,8 +49,9 @@ Trabajo asignado:
 - Feature 5.2 - Devolver billetes
 - Feature 6 - Reserva y anulación de reserva de billetes
 
-Tiempo empleado fase red: `3h 55min`
-Tiempo empleado fase green: `14h 45min`
+Tiempo empleado
+- Fase red: `3h 55min`
+- Fase green: `14h 45min`
 ### Miguel de las Moras Sastre
 Trabajo asignado:
 - Feature 2 - Recorrido
