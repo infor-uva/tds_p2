@@ -53,8 +53,8 @@ Tiempo empleado: `3h 55min`
 ### Miguel de las Moras Sastre
 Trabajo asignado:
 - Feature 2 - Recorrido
-- Feature 5.3 - Comprar billetes reservados
 - Feature 4 - Gestión de recorridos (añadir, eliminar y actualizar fecha y/o hora)
+- Feature 5.3 - Comprar billetes reservados
 
 Tiempo empleado:
 - Fase Red: `4h 25min` 
