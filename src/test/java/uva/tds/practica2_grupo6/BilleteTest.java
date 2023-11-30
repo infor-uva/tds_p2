@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 class BilleteTest {
@@ -83,20 +84,8 @@ class BilleteTest {
 	}
 
 	@Test
-	public void testRecorridoValido() {
-		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
-		assertSame(recorrido, billete.getRecorrido());
-	}
-
-	@Test
-	public void testUsuarioValido() {
-		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
-		assertSame(user, billete.getUsuario());
-	}
-
-	@Test
 	public void testUsuarioNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Billete("1234567890", recorrido, null, ESTADO_COMPRADO);
 		});
 
@@ -104,22 +93,22 @@ class BilleteTest {
 
 	@Test
 	public void testRecorridoNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			new Billete("1234567890", null, user, ESTADO_COMPRADO);
 		});
 	}
 
 	@Test
 	void testEstadoNull() {
-		assertThrows(NullPointerException.class, () -> {
-			new Billete("1234567890", recorrido, user, null);
+		assertThrows(IllegalArgumentException.class, () -> {
+			new Billete("1234567", recorrido, user, null);
 		});
 	}
 
 	@Test
 	void testEstadoDiferenteDeCompradoYReservado() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			new Billete("1234567890", recorrido, user, "OtroEstado");
+			new Billete("ABC12345", recorrido, user, "OtroEstado");
 		});
 	}
 
@@ -143,18 +132,53 @@ class BilleteTest {
 	void testEqualsValido() {
 		// Mismo paquete
 		Billete b2 = new Billete(locator, recorrido, user, ESTADO_RESERVADO);
-		assertTrue(ticket.equals(b2));
+		assertEquals(ticket,b2);
 
 		b2.setComprado();
-		assertFalse(ticket.equals(b2));
+		assertNotEquals(ticket,b2);
 
-		assertFalse(ticket.equals(false));
+		assertNotEquals(ticket,false);
 	}
 
 	@Test
 	void testEqualsNull() {
-		assertThrows(NullPointerException.class, () -> {
+		assertThrows(IllegalArgumentException.class, () -> {
 			ticket.equals(null);
 		});
 	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testEqualsLocalizadorBillete() {
+		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
+		Billete billete2 = new Billete("ABC1234", recorrido, user, ESTADO_RESERVADO);
+		assertNotEquals(billete,billete2);
+	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testEqualsRecorridoBillete() {
+		Recorrido recorridoC =  new Recorrido("c12543", origin, destination, transport, price, date, time, numAvailableSeats, duration);
+		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
+		Billete billete2 = new Billete("ABC12345", recorridoC, user, ESTADO_RESERVADO);
+		assertNotEquals(billete,billete2);
+	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testEqualsUsuarioBillete() {
+		Usuario userC = new Usuario("71174681P", nombre);
+		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
+		Billete billete2 = new Billete("ABC12345", recorrido, userC, ESTADO_RESERVADO);
+		assertNotEquals(billete,billete2);
+	}
+	
+	@Test
+	@Tag("Cobertura")
+	void testEqualsEstadoBillete() {
+		Billete billete = new Billete("ABC12345", recorrido, user, ESTADO_RESERVADO);
+		Billete billete2 = new Billete("ABC12345", recorrido, user, ESTADO_COMPRADO);
+		assertNotEquals(billete,billete2);
+	}
+	
 }
