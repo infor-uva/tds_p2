@@ -5,7 +5,7 @@ Este proyecto tiene como fin la creación de un sistema de gestión de usuarios,
 Este proyecto esta formado por las siguientes clases:
 
 ### [`Billete.java`](./src/main/java/uva/tds/practica2_grupo6/Billete.java)
-Esta clase representa los billetes del supuesto, conformada por varios atributos como el usuario al que pertenece, el recorrido asociado y su localizador único. Además, cuenta con un estado para diferenciar si está reservado o comprado. <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/Billete.java)
+Esta clase representa los billetes del supuesto, conformada por varios atributos como el usuario al que pertenece, el recorrido asociado y su localizador único. Además, cuenta con un estado para diferenciar si está reservado o comprado. <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/Billete.java) 
 
 ### [`Recorrido.java`](./src/main/java/uva/tds/practica2_grupo6/Recorrido.java)
 Clase encargada de representar y manejar la información de los recorridos (o rutas), esta cuenta con un origen y un destino, una duración, un precio, un identificador, un  medio de transporte y la hora y fecha de inicio del viaje. Con esta clase se puede conocer el número de asientos disponibles, ya sean los totales o los que actualmente están disponibles, y número de asientos que no hayan sido comprados o reservados. <br>[`+ información →`](./src/main/java/uva/tds/practica2_grupo6/Recorrido.java)
@@ -32,6 +32,17 @@ Sistema que delega la gestión de la información en una Database externa.
 ### [Tests](./src/test/java/uva/tds/practica2_grupo6/)
 Las clases anteriormente mencionadas estarán testeadas mediante le método Test-First o TDD (Test Driven Development), en base a las restricciones planteadas en el supuesto.
 <br>[`+ información →`](./src/test/java/uva/tds/practica2_grupo6/)
+
+## TestCode ratio
+----------------------------------
+
+|Clase|Lineas clase|Lineas de Test|Ratio|
+|--|:--:|:--:|:--:|
+|Billete|33|91|~2.75|
+|Usuario|40|75|~1.88|
+|Recorrido|131|434|~3.31|
+|System|232|646|~2.78|
+|SistemaPersistencia|209|1224|~5.86|
 
 ## Tiempo utilizado
 ----------------------------------
