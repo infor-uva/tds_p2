@@ -12,10 +12,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Class dedicated to execute the tests for the methods of the instances of
- * {@link Recorrido}. In this case the constructor
- * 
- * Ratio Code To Test: Recorrido: 121 lines RecorridoTest: 381 lines Ratio:
- * 381/121 ~= 3.14
+ * {@link Recorrido}.
  * 
  * @author diebomb
  * @author hugcubi
